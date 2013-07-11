@@ -1,0 +1,8 @@
+/store/user/sixie/BACON/V00-00-04/HHtoBBGG-8tev-START53_V7A/BACONNtuple.dihiggs-bbgg-8tev.1.root
+/store/user/sixie/BACON/V00-00-04/HHtoBBGG-8tev-START53_V7A/BACONNtuple.dihiggs-bbgg-8tev.2.root
+/store/user/sixie/BACON/V00-00-04/HHtoBBGG-8tev-START53_V7A/BACONNtuple.dihiggs-bbgg-8tev.3.root
+/store/user/sixie/BACON/V00-00-04/HHtoBBGG-8tev-START53_V7A/BACONNtuple.dihiggs-bbgg-8tev.4.root
+/store/user/sixie/BACON/V00-00-04/HHtoBBGG-8tev-START53_V7A/BACONNtuple.dihiggs-bbgg-8tev.5.root
+/store/user/sixie/BACON/V00-00-04/HHtoBBGG-8tev-START53_V7A/BACONNtuple.dihiggs-bbgg-8tev.6.root
+
+

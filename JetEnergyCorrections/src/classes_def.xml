@@ -1,0 +1,15 @@
+<lcgdict>
+<selection>
+  <class name="cmsana::FactorizedJetCorrector"/>
+  <class name="cmsana::JetCorrectorParameters"/>
+  <class name="cmsana::JetCorrectorParametersCollection"/>
+  <class name="cmsana::JetCorrectorParametersCollection::collection_type"/>
+  <class name="cmsana::JetCorrectorParametersCollection::pair_type"/>
+  <class name="cmsana::JetCorrectorParameters::Definitions"/>
+  <class name="cmsana::JetCorrectorParameters::Record"/>
+  <class name="std::vector<cmsana::JetCorrectorParameters>"/>
+  <class name="std::vector<cmsana::JetCorrectorParameters::Record>"/>
+  <class name="std::vector<cmsana::JetCorrectorParametersCollection>"/>
+  <class name="cmsana::SimpleJetCorrector"/>
+</selection>
+</lcgdict>

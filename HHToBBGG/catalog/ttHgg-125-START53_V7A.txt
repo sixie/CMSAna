@@ -1,0 +1,8 @@
+/store/user/sixie/BACON/V00-00-04/ttHgg-125-START53_V7A/BACONNtuple_1_1_LJ8.root
+/store/user/sixie/BACON/V00-00-04/ttHgg-125-START53_V7A/BACONNtuple_2_1_xmA.root
+/store/user/sixie/BACON/V00-00-04/ttHgg-125-START53_V7A/BACONNtuple_3_1_qVV.root
+/store/user/sixie/BACON/V00-00-04/ttHgg-125-START53_V7A/BACONNtuple_4_1_pd7.root
+/store/user/sixie/BACON/V00-00-04/ttHgg-125-START53_V7A/BACONNtuple_5_1_vfU.root
+/store/user/sixie/BACON/V00-00-04/ttHgg-125-START53_V7A/BACONNtuple_6_1_mA1.root
+
+

@@ -1,0 +1,8 @@
+/store/user/sixie/BACON/V00-00-03_SLHC4/DYToMMAge3H_STAR17_61_V6A/BACONNtuple_1_1_ILR.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/DYToMMAge3H_STAR17_61_V6A/BACONNtuple_2_1_zq4.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/DYToMMAge3H_STAR17_61_V6A/BACONNtuple_3_1_mT1.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/DYToMMAge3H_STAR17_61_V6A/BACONNtuple_4_1_2JK.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/DYToMMAge3H_STAR17_61_V6A/BACONNtuple_5_1_vhq.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/DYToMMAge3H_STAR17_61_V6A/BACONNtuple_6_1_a2F.root
+
+

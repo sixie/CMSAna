@@ -1,0 +1,21 @@
+######################################
+## Cross section in pb for datasets
+##
+## Higgs cross-sections: https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CrossSections
+## units are femtobarns
+
+#8 TeV XS
+HHtoBBGG-8tev-START53_V7A            8.16*0.577*0.00228*2 #NLO
+#ttHgg-125-START53_V7A	             
+#ggHgg-125-START53_V7A               
+#ZHgg-125-START53_V7A                
+#diphjets-START53_V7A                 1.15*75390
+#qcd_pt80To120-START53_V7A            1033680000
+
+
+#14 TeV XS
+HHtoBBGG-14tev-START53_V7A           33.89*0.577*0.00228*2 #NLO
+ttHgg-125-START53_V7A	             611.3*0.00228
+ggHgg-125-START53_V7A                50350*0.00228
+ZHgg-125-START53_V7A                 (1504+883)*0.00228
+ttjll-START53_V7A                    880000.4*(0.1080*3)*(0.1080*3)*1.42982

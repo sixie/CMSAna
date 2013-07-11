@@ -1,0 +1,10 @@
+/store/user/sixie/BACON/V00-00-03_SLHC4/TTbarAge0START_STAR17_61_V1A/BACONNtuple_1_1_dqO.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/TTbarAge0START_STAR17_61_V1A/BACONNtuple_2_1_xfD.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/TTbarAge0START_STAR17_61_V1A/BACONNtuple_3_1_Oqf.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/TTbarAge0START_STAR17_61_V1A/BACONNtuple_4_1_JoP.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/TTbarAge0START_STAR17_61_V1A/BACONNtuple_5_1_6YB.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/TTbarAge0START_STAR17_61_V1A/BACONNtuple_6_1_nG2.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/TTbarAge0START_STAR17_61_V1A/BACONNtuple_7_1_0su.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/TTbarAge0START_STAR17_61_V1A/BACONNtuple_8_1_hHz.root
+
+
