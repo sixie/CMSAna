@@ -78,8 +78,8 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   TH1F *histPhoHasPixelSeed_1 =  new TH1F( "histPhoHasPixelSeed_1", "; Has Pixel Seed; Number of Events", 2, -0.5, 1.5); 
   TH1F *histPhoIsConversion_1 =  new TH1F( "histPhoIsConversion_1", "; Is Conversion; Number of Events", 2, -0.5, 1.5); 
   TH1F *histPhoPassEleVeto_1 =  new TH1F( "histPhoPassEleVeto_1", "; Pass Ele Veto; Number of Events", 2, -0.5, 1.5); 
-  TH1F *histPhoHoverE_1 =  new TH1F( "histPhoHoverE_1", "; H/E; Number of Events", 100, 0, 0.05); 
-  TH1F *histPhoHoverESingleTower_1 =  new TH1F( "histPhoHoverESingleTower_1", "; H/E Single Tower; Number of Events", 100, 0, 0.05); 
+  TH1F *histPhoHoverE_1 =  new TH1F( "histPhoHoverE_1", "; H/E; Number of Events", 100, 0, 0.2); 
+  TH1F *histPhoHoverESingleTower_1 =  new TH1F( "histPhoHoverESingleTower_1", "; H/E Single Tower; Number of Events", 100, 0, 0.2); 
   
        //***shower shape _1***
   TH1F *histPhotonSigmaIEtaIEta_1 =  new TH1F( "histPhotonSigmaIEtaIEta_1", "; #sigma_{i#eta i#eta};Number of Events", 100, 0, 0.05);  
@@ -87,7 +87,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   TH1F *histPhotonSigmaIEtaIPhi_1 =  new TH1F( "histPhotonSigmaIEtaIPhi_1", "; #sigma_{i#eta i#phi};Number of Events", 100, -1, 1); 
   TH1F *histPhoSCEtaWidth_1 =  new TH1F( "histPhoSCEtaWidth_1", "; SC Eta Width ;Number of Events", 100, 0, 0.03); 
   TH1F *histPhoSCPhiWidth_1 =  new TH1F( "histPhoSCPhiWidth_1", "; SC Phi Width ;Number of Events", 100, 0, 0.3); 
-  TH1F *histPhoR9_1 =  new TH1F( "histPhoR9_1", "; R9 ;Number of Events", 100, 0.5, 1); 
+  TH1F *histPhoR9_1 =  new TH1F( "histPhoR9_1", "; R9 ;Number of Events", 100, 0.0, 1); 
   
        //***Isolation Variables _1***
   TH1F *histPhoTrkIso03_1 =  new TH1F( "histPhoTrkIso_1", "; Track Isolation 03; Number of Events", 100, 0, 10); 
@@ -143,8 +143,8 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   TH1F *histPhoHasPixelSeed_2 =  new TH1F( "histPhoHasPixelSeed_2", "; Has Pixel Seed; Number of Events", 2, -0.5, 1.5); 
   TH1F *histPhoIsConversion_2 =  new TH1F( "histPhoIsConversion_2", "; Is Conversion; Number of Events", 2, -0.5, 1.5); 
   TH1F *histPhoPassEleVeto_2 =  new TH1F( "histPhoPassEleVeto_2", "; Pass Ele Veto; Number of Events", 2, -0.5, 1.5); 
-  TH1F *histPhoHoverE_2 =  new TH1F( "histPhoHoverE_2", "; H/E; Number of Events", 100, 0, 0.05); 
-  TH1F *histPhoHoverESingleTower_2 =  new TH1F( "histPhoHoverESingleTower_2", "; H/E Single Tower; Number of Events", 100, 0, 0.05); 
+  TH1F *histPhoHoverE_2 =  new TH1F( "histPhoHoverE_2", "; H/E; Number of Events", 100, 0, 0.2); 
+  TH1F *histPhoHoverESingleTower_2 =  new TH1F( "histPhoHoverESingleTower_2", "; H/E Single Tower; Number of Events", 100, 0, 0.2); 
 
        //***shower shape _2***
   TH1F *histPhotonSigmaIEtaIEta_2 =  new TH1F( "histPhotonSigmaIEtaIEta_2", "; #sigma_{i#eta i#eta};Number of Events", 100, 0, 0.05);
@@ -152,7 +152,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   TH1F *histPhotonSigmaIEtaIPhi_2 =  new TH1F( "histPhotonSigmaIEtaIPhi_2", "; #sigma_{i#eta i#phi};Number of Events", 100, -1, 1);
   TH1F *histPhoSCEtaWidth_2 =  new TH1F( "histPhoSCEtaWidth_2", "; SC Eta Width ;Number of Events", 100, 0, 0.03);
   TH1F *histPhoSCPhiWidth_2 =  new TH1F( "histPhoSCPhiWidth_2", "; SC Phi Width ;Number of Events", 100, 0, 0.3); 
-  TH1F *histPhoR9_2 =  new TH1F( "histPhoR9_2", "; R9 ;Number of Events", 100, 0.5, 1); 
+  TH1F *histPhoR9_2 =  new TH1F( "histPhoR9_2", "; R9 ;Number of Events", 100, 0.0, 1); 
  
        //***Isolation Variables _2***
   TH1F *histPhoTrkIso03_2 =  new TH1F( "histPhoTrkIso_2", "; Track Isolation 03; Number of Events", 100, 0, 10); 
@@ -515,6 +515,8 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoHasPixelSeed_2->SetLineColor(kRed);
   histPhoHasPixelSeed_1->Draw("hist");
   histPhoHasPixelSeed_2->Draw("hist, same");
+  histPhoHasPixelSeed_1->SetMinimum(0.0);
+  histPhoHasPixelSeed_1->SetMaximum(1.0);
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_HasPixelSeed"+Label+".gif").c_str() );
 
@@ -551,6 +553,8 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoPassEleVeto_2->SetLineColor(kRed);
   histPhoPassEleVeto_1->Draw("hist");
   histPhoPassEleVeto_2->Draw("hist, same");
+  histPhoPassEleVeto_1->SetMinimum(0.0);
+  histPhoPassEleVeto_1->SetMaximum(1.0);
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_PassEleVeto"+Label+".gif").c_str() );
 
@@ -604,6 +608,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhotonSigmaIEtaIEta_2->SetLineColor(kRed);
   histPhotonSigmaIEtaIEta_1->Draw("hist");
   histPhotonSigmaIEtaIEta_2->Draw("hist, same");
+  histPhotonSigmaIEtaIEta_1->SetMaximum( 1.2 * fmax(histPhotonSigmaIEtaIEta_1->GetMaximum(),histPhotonSigmaIEtaIEta_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_SigmaIEtaIEta"+Label+".gif").c_str() );
 
@@ -621,6 +626,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhotonSigmaIPhiIPhi_2->SetLineColor(kRed);
   histPhotonSigmaIPhiIPhi_1->Draw("hist");
   histPhotonSigmaIPhiIPhi_2->Draw("hist, same");
+  histPhotonSigmaIPhiIPhi_1->SetMaximum( 1.2 * fmax(histPhotonSigmaIPhiIPhi_1->GetMaximum(),histPhotonSigmaIPhiIPhi_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_SigmaIPhiIPhi"+Label+".gif").c_str() );
  
@@ -638,6 +644,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhotonSigmaIEtaIPhi_2->SetLineColor(kRed);
   histPhotonSigmaIEtaIPhi_1->Draw("hist");
   histPhotonSigmaIEtaIPhi_2->Draw("hist, same");
+  histPhotonSigmaIEtaIPhi_1->SetMaximum( 1.2 * fmax(histPhotonSigmaIEtaIPhi_1->GetMaximum(),histPhotonSigmaIEtaIPhi_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_SigmaIEtaIPhi"+Label+".gif").c_str() );
 
@@ -655,6 +662,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoSCEtaWidth_2->SetLineColor(kRed);
   histPhoSCEtaWidth_1->Draw("hist");
   histPhoSCEtaWidth_2->Draw("hist, same");
+  histPhoSCEtaWidth_1->SetMaximum( 1.2 * fmax(histPhoSCEtaWidth_1->GetMaximum(),histPhoSCEtaWidth_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_SCEtaWidth"+Label+".gif").c_str() );
 
@@ -672,6 +680,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoSCPhiWidth_2->SetLineColor(kRed);
   histPhoSCPhiWidth_1->Draw("hist");
   histPhoSCPhiWidth_2->Draw("hist, same");
+  histPhoSCPhiWidth_1->SetMaximum( 1.2 * fmax(histPhoSCPhiWidth_1->GetMaximum(),histPhoSCPhiWidth_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_SCPhiWidth"+Label+".gif").c_str() );
 
@@ -689,6 +698,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoR9_2->SetLineColor(kRed);
   histPhoR9_1->Draw("hist");
   histPhoR9_2->Draw("hist, same");
+  histPhoR9_1->SetMaximum( 1.2 * fmax(histPhoR9_1->GetMaximum(),histPhoR9_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_R9"+Label+".gif").c_str() );
 
@@ -706,6 +716,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoTrkIso03_2->SetLineColor(kRed);
   histPhoTrkIso03_1->Draw("hist");
   histPhoTrkIso03_2->Draw("hist, same");
+  histPhoTrkIso03_1->SetMaximum( 1.2 * fmax(histPhoTrkIso03_1->GetMaximum(),histPhoTrkIso03_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_TrkIsolation03"+Label+".gif").c_str() );
 
@@ -723,6 +734,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoEMIso03_2->SetLineColor(kRed);
   histPhoEMIso03_1->Draw("hist");
   histPhoEMIso03_2->Draw("hist, same");
+  histPhoEMIso03_1->SetMaximum( 1.2 * fmax(histPhoEMIso03_1->GetMaximum(),histPhoEMIso03_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_EMIsolation03"+Label+".gif").c_str() );
 
@@ -741,6 +753,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoHadIso03_2->SetLineColor(kRed);
   histPhoHadIso03_1->Draw("hist");
   histPhoHadIso03_2->Draw("hist, same");
+  histPhoHadIso03_1->SetMaximum( 1.2 * fmax(histPhoHadIso03_1->GetMaximum(),histPhoHadIso03_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_HadIsolation03"+Label+".gif").c_str() );
  //*******************************************************************************************
@@ -757,6 +770,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoPFIso03_2->SetLineColor(kRed);
   histPhoPFIso03_1->Draw("hist");
   histPhoPFIso03_2->Draw("hist, same");
+  histPhoPFIso03_1->SetMaximum( 1.2 * fmax(histPhoPFIso03_1->GetMaximum(),histPhoPFIso03_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_PFIso03"+Label+".gif").c_str() );
 
@@ -775,6 +789,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoPFIso04_2->SetLineColor(kRed);
   histPhoPFIso04_1->Draw("hist");
   histPhoPFIso04_2->Draw("hist, same");
+  histPhoPFIso04_1->SetMaximum( 1.2 * fmax(histPhoPFIso04_1->GetMaximum(),histPhoPFIso04_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_PFIso04"+Label+".gif").c_str() );
 
@@ -793,6 +808,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histChargedIso_DR0p0To0p1_2->SetLineColor(kRed);
   histChargedIso_DR0p0To0p1_1->Draw("hist");
   histChargedIso_DR0p0To0p1_2->Draw("hist, same");
+  histChargedIso_DR0p0To0p1_1->SetMaximum( 1.2 * fmax(histChargedIso_DR0p0To0p1_1->GetMaximum(),histChargedIso_DR0p0To0p1_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("ChargedIso_DR0p0To0p1"+Label+".gif").c_str() );
 
@@ -810,6 +826,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histChargedIso_DR0p1To0p2_2->SetLineColor(kRed);
   histChargedIso_DR0p1To0p2_1->Draw("hist");
   histChargedIso_DR0p1To0p2_2->Draw("hist, same");
+  histChargedIso_DR0p1To0p2_1->SetMaximum( 1.2 * fmax(histChargedIso_DR0p1To0p2_1->GetMaximum(),histChargedIso_DR0p1To0p2_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("ChargedIso_DR0p1To0p2"+Label+".gif").c_str() );
 
@@ -827,6 +844,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histChargedIso_DR0p2To0p3_2->SetLineColor(kRed);
   histChargedIso_DR0p2To0p3_1->Draw("hist");
   histChargedIso_DR0p2To0p3_2->Draw("hist, same");
+  histChargedIso_DR0p2To0p3_1->SetMaximum( 1.2 * fmax(histChargedIso_DR0p2To0p3_1->GetMaximum(),histChargedIso_DR0p2To0p3_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("ChargedIso_DR0p2To0p3"+Label+".gif").c_str() );
 
@@ -844,6 +862,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histChargedIso_DR0p3To0p4_2->SetLineColor(kRed);
   histChargedIso_DR0p3To0p4_1->Draw("hist");
   histChargedIso_DR0p3To0p4_2->Draw("hist, same");
+  histChargedIso_DR0p3To0p4_1->SetMaximum( 1.2 * fmax(histChargedIso_DR0p3To0p4_1->GetMaximum(),histChargedIso_DR0p3To0p4_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("ChargedIso_DR0p3To0p4"+Label+".gif").c_str() );
 
@@ -861,6 +880,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histChargedIso_DR0p4To0p5_2->SetLineColor(kRed);
   histChargedIso_DR0p4To0p5_1->Draw("hist");
   histChargedIso_DR0p4To0p5_2->Draw("hist, same");
+  histChargedIso_DR0p4To0p5_1->SetMaximum( 1.2 * fmax(histChargedIso_DR0p4To0p5_1->GetMaximum(),histChargedIso_DR0p4To0p5_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("ChargedIso_DR0p4To0p5"+Label+".gif").c_str() );
 
@@ -878,6 +898,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histGammaIso_DR0p0To0p1_2->SetLineColor(kRed);
   histGammaIso_DR0p0To0p1_1->Draw("hist");
   histGammaIso_DR0p0To0p1_2->Draw("hist, same");
+  histGammaIso_DR0p0To0p1_1->SetMaximum( 1.2 * fmax(histGammaIso_DR0p0To0p1_1->GetMaximum(),histGammaIso_DR0p0To0p1_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("GammaIso_DR0p0To0p1"+Label+".gif").c_str() );
 
@@ -895,6 +916,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histGammaIso_DR0p1To0p2_2->SetLineColor(kRed);
   histGammaIso_DR0p1To0p2_1->Draw("hist");
   histGammaIso_DR0p1To0p2_2->Draw("hist, same");
+  histGammaIso_DR0p1To0p2_1->SetMaximum( 1.2 * fmax(histGammaIso_DR0p1To0p2_1->GetMaximum(),histGammaIso_DR0p1To0p2_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("GammaIso_DR0p1To0p2"+Label+".gif").c_str() );
 
@@ -912,6 +934,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histGammaIso_DR0p2To0p3_2->SetLineColor(kRed);
   histGammaIso_DR0p2To0p3_1->Draw("hist");
   histGammaIso_DR0p2To0p3_2->Draw("hist, same");
+  histGammaIso_DR0p2To0p3_1->SetMaximum( 1.2 * fmax(histGammaIso_DR0p2To0p3_1->GetMaximum(),histGammaIso_DR0p2To0p3_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("GammaIso_DR0p2To0p3"+Label+".gif").c_str() );
 
@@ -929,6 +952,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histGammaIso_DR0p3To0p4_2->SetLineColor(kRed);
   histGammaIso_DR0p3To0p4_1->Draw("hist");
   histGammaIso_DR0p3To0p4_2->Draw("hist, same");
+  histGammaIso_DR0p3To0p4_1->SetMaximum( 1.2 * fmax(histGammaIso_DR0p3To0p4_1->GetMaximum(),histGammaIso_DR0p3To0p4_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("GammaIso_DR0p3To0p4"+Label+".gif").c_str() );
 
@@ -946,6 +970,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histGammaIso_DR0p4To0p5_2->SetLineColor(kRed);
   histGammaIso_DR0p4To0p5_1->Draw("hist");
   histGammaIso_DR0p4To0p5_2->Draw("hist, same");
+  histGammaIso_DR0p4To0p5_1->SetMaximum( 1.2 * fmax(histGammaIso_DR0p4To0p5_1->GetMaximum(),histGammaIso_DR0p4To0p5_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("GammaIso_DR0p4To0p5"+Label+".gif").c_str() );
 
@@ -963,6 +988,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histNeutralHadronIso_DR0p0To0p1_2->SetLineColor(kRed);
   histNeutralHadronIso_DR0p0To0p1_1->Draw("hist");
   histNeutralHadronIso_DR0p0To0p1_2->Draw("hist, same");
+  histNeutralHadronIso_DR0p0To0p1_1->SetMaximum( 1.2 * fmax(histNeutralHadronIso_DR0p0To0p1_1->GetMaximum(),histNeutralHadronIso_DR0p0To0p1_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("NeutralHadronIso_DR0p0To0p1"+Label+".gif").c_str() );
 
@@ -980,6 +1006,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histNeutralHadronIso_DR0p1To0p2_2->SetLineColor(kRed);
   histNeutralHadronIso_DR0p1To0p2_1->Draw("hist");
   histNeutralHadronIso_DR0p1To0p2_2->Draw("hist, same");
+  histNeutralHadronIso_DR0p1To0p2_1->SetMaximum( 1.2 * fmax(histNeutralHadronIso_DR0p1To0p2_1->GetMaximum(),histNeutralHadronIso_DR0p1To0p2_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("NeutralHadronIso_DR0p1To0p2"+Label+".gif").c_str() );
 
@@ -997,6 +1024,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histNeutralHadronIso_DR0p2To0p3_2->SetLineColor(kRed);
   histNeutralHadronIso_DR0p2To0p3_1->Draw("hist");
   histNeutralHadronIso_DR0p2To0p3_2->Draw("hist, same");
+  histNeutralHadronIso_DR0p2To0p3_1->SetMaximum( 1.2 * fmax(histNeutralHadronIso_DR0p2To0p3_1->GetMaximum(),histNeutralHadronIso_DR0p2To0p3_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("NeutralHadronIso_DR0p2To0p3"+Label+".gif").c_str() );
 
@@ -1014,6 +1042,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histNeutralHadronIso_DR0p3To0p4_2->SetLineColor(kRed);
   histNeutralHadronIso_DR0p3To0p4_1->Draw("hist");
   histNeutralHadronIso_DR0p3To0p4_2->Draw("hist, same");
+  histNeutralHadronIso_DR0p3To0p4_1->SetMaximum( 1.2 * fmax(histNeutralHadronIso_DR0p3To0p4_1->GetMaximum(),histNeutralHadronIso_DR0p3To0p4_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("NeutralHadronIso_DR0p3To0p4"+Label+".gif").c_str() );
 
@@ -1031,6 +1060,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histNeutralHadronIso_DR0p4To0p5_2->SetLineColor(kRed);
   histNeutralHadronIso_DR0p4To0p5_1->Draw("hist");
   histNeutralHadronIso_DR0p4To0p5_2->Draw("hist, same");
+  histNeutralHadronIso_DR0p4To0p5_1->SetMaximum( 1.2 * fmax(histNeutralHadronIso_DR0p4To0p5_1->GetMaximum(),histNeutralHadronIso_DR0p4To0p5_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("NeutralHadronIso_DR0p4To0p5"+Label+".gif").c_str() );
 
@@ -1048,6 +1078,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histSCRawEnergy_2->SetLineColor(kRed);
   histSCRawEnergy_1->Draw("hist");
   histSCRawEnergy_2->Draw("hist, same");
+  histSCRawEnergy_1->SetMaximum( 1.2 * fmax(histSCRawEnergy_1->GetMaximum(),histSCRawEnergy_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_SCRawEnergy"+Label+".gif").c_str() );
 
@@ -1065,11 +1096,12 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPreShowerOverRaw_2->SetLineColor(kRed);
   histPreShowerOverRaw_1->Draw("hist");
   histPreShowerOverRaw_2->Draw("hist, same");
+  histPreShowerOverRaw_1->SetMaximum( 1.2 * fmax(histPreShowerOverRaw_1->GetMaximum(),histPreShowerOverRaw_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_R9"+Label+".gif").c_str() );
 
  //*******************************************************************************************
-  //Photon N Clusters
+  //Photon R9
   //*******************************************************************************************
   cv = new TCanvas("cv","cv", 800,600);
   legend = new TLegend(0.54,0.24,0.90,0.54);
@@ -1082,11 +1114,12 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoR9_2->SetLineColor(kRed);
   histPhoR9_1->Draw("hist");
   histPhoR9_2->Draw("hist, same");
+  histPhoR9_1->SetMaximum( 1.2 * fmax(histPhoR9_1->GetMaximum(),histPhoR9_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_R9"+Label+".gif").c_str() );
 
   //*******************************************************************************************
-  //Photon R9
+  //Photon NClusters
   //*******************************************************************************************
   cv = new TCanvas("cv","cv", 800,600);
   legend = new TLegend(0.54,0.24,0.90,0.54);
@@ -1099,6 +1132,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histNClusters_2->SetLineColor(kRed);
   histNClusters_1->Draw("hist");
   histNClusters_2->Draw("hist, same");
+  histNClusters_1->SetMaximum( 1.2 * fmax(histNClusters_1->GetMaximum(),histNClusters_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_NClusters"+Label+".gif").c_str() );
 
@@ -1116,6 +1150,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histEtaSeed_2->SetLineColor(kRed);
   histEtaSeed_1->Draw("hist");
   histEtaSeed_2->Draw("hist, same");
+  histEtaSeed_1->SetMaximum( 1.2 * fmax(histEtaSeed_1->GetMaximum(),histEtaSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_EtaSeed"+Label+".gif").c_str() );
 
@@ -1133,6 +1168,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhiSeed_2->SetLineColor(kRed);
   histPhiSeed_1->Draw("hist");
   histPhiSeed_2->Draw("hist, same");
+  histPhiSeed_1->SetMaximum( 1.2 * fmax(histPhiSeed_1->GetMaximum(),histPhiSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_PhiSeed"+Label+".gif").c_str() );
 
@@ -1150,6 +1186,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histESeed_2->SetLineColor(kRed);
   histESeed_1->Draw("hist");
   histESeed_2->Draw("hist, same");
+  histESeed_1->SetMaximum( 1.2 * fmax(histESeed_1->GetMaximum(),histESeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_ESeed"+Label+".gif").c_str() );
 
@@ -1167,6 +1204,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histE3x3Seed_2->SetLineColor(kRed);
   histE3x3Seed_1->Draw("hist");
   histE3x3Seed_2->Draw("hist, same");
+  histE3x3Seed_1->SetMaximum( 1.2 * fmax(histE3x3Seed_1->GetMaximum(),histE3x3Seed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_E3x3Seed"+Label+".gif").c_str() );
 
@@ -1184,6 +1222,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histE5x5Seed_2->SetLineColor(kRed);
   histE5x5Seed_1->Draw("hist");
   histE5x5Seed_2->Draw("hist, same");
+  histE5x5Seed_1->SetMaximum( 1.2 * fmax(histE5x5Seed_1->GetMaximum(),histE5x5Seed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_E5x5Seed"+Label+".gif").c_str() );
 
@@ -1201,6 +1240,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histEMaxSeed_2->SetLineColor(kRed);
   histEMaxSeed_1->Draw("hist");
   histEMaxSeed_2->Draw("hist, same");
+  histEMaxSeed_1->SetMaximum( 1.2 * fmax(histEMaxSeed_1->GetMaximum(),histEMaxSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_EMaxSeed"+Label+".gif").c_str() );
 
@@ -1218,6 +1258,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histE2ndSeed_2->SetLineColor(kRed);
   histE2ndSeed_1->Draw("hist");
   histE2ndSeed_2->Draw("hist, same");
+  histE2ndSeed_1->SetMaximum( 1.2 * fmax(histE2ndSeed_1->GetMaximum(),histE2ndSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_E2ndSeed"+Label+".gif").c_str() );
 
@@ -1235,6 +1276,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histETopSeed_2->SetLineColor(kRed);
   histETopSeed_1->Draw("hist");
   histETopSeed_2->Draw("hist, same");
+  histETopSeed_1->SetMaximum( 1.2 * fmax(histETopSeed_1->GetMaximum(),histETopSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_ETopSeed"+Label+".gif").c_str() );
 
@@ -1252,6 +1294,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histEBottomSeed_2->SetLineColor(kRed);
   histEBottomSeed_1->Draw("hist");
   histEBottomSeed_2->Draw("hist, same");
+  histEBottomSeed_1->SetMaximum( 1.2 * fmax(histEBottomSeed_1->GetMaximum(),histEBottomSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_EBottomSeed"+Label+".gif").c_str() );
 
@@ -1269,6 +1312,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histELeftSeed_2->SetLineColor(kRed);
   histELeftSeed_1->Draw("hist");
   histELeftSeed_2->Draw("hist, same");
+  histELeftSeed_1->SetMaximum( 1.2 * fmax(histELeftSeed_1->GetMaximum(),histELeftSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_ELeftSeed"+Label+".gif").c_str() );
 
@@ -1286,6 +1330,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histERightSeed_2->SetLineColor(kRed);
   histERightSeed_1->Draw("hist");
   histERightSeed_2->Draw("hist, same");
+  histERightSeed_1->SetMaximum( 1.2 * fmax(histERightSeed_1->GetMaximum(),histERightSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_ERightSeed"+Label+".gif").c_str() );
 
@@ -1303,6 +1348,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histE2x5MaxSeed_2->SetLineColor(kRed);
   histE2x5MaxSeed_1->Draw("hist");
   histE2x5MaxSeed_2->Draw("hist, same");
+  histE2x5MaxSeed_1->SetMaximum( 1.2 * fmax(histE2x5MaxSeed_1->GetMaximum(),histE2x5MaxSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_E2x5MaxSeed"+Label+".gif").c_str() );
 
@@ -1320,6 +1366,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histE2x5TopSeed_2->SetLineColor(kRed);
   histE2x5TopSeed_1->Draw("hist");
   histE2x5TopSeed_2->Draw("hist, same");
+  histE2x5TopSeed_1->SetMaximum( 1.2 * fmax(histE2x5TopSeed_1->GetMaximum(),histE2x5TopSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_E2x5TopSeed"+Label+".gif").c_str() );
 
@@ -1337,6 +1384,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histE2x5BottomSeed_2->SetLineColor(kRed);
   histE2x5BottomSeed_1->Draw("hist");
   histE2x5BottomSeed_2->Draw("hist, same");
+  histE2x5BottomSeed_1->SetMaximum( 1.2 * fmax(histE2x5BottomSeed_1->GetMaximum(),histE2x5BottomSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_E2x5BottomSeed"+Label+".gif").c_str() );
 
@@ -1354,6 +1402,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histE2x5LeftSeed_2->SetLineColor(kRed);
   histE2x5LeftSeed_1->Draw("hist");
   histE2x5LeftSeed_2->Draw("hist, same");
+  histE2x5LeftSeed_1->SetMaximum( 1.2 * fmax(histE2x5LeftSeed_1->GetMaximum(),histE2x5LeftSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_E2x5LeftSeed"+Label+".gif").c_str() );
 
@@ -1371,6 +1420,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histE2x5RightSeed_2->SetLineColor(kRed);
   histE2x5RightSeed_1->Draw("hist");
   histE2x5RightSeed_2->Draw("hist, same");
+  histE2x5RightSeed_1->SetMaximum( 1.2 * fmax(histE2x5RightSeed_1->GetMaximum(),histE2x5RightSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_E2x5RightSeed"+Label+".gif").c_str() );
 
@@ -1388,6 +1438,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histIEtaSeed_2->SetLineColor(kRed);
   histIEtaSeed_1->Draw("hist");
   histIEtaSeed_2->Draw("hist, same");
+  histIEtaSeed_1->SetMaximum( 1.2 * fmax(histIEtaSeed_1->GetMaximum(),histIEtaSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_IEtaSeed"+Label+".gif").c_str() );
 
@@ -1405,6 +1456,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histIPhiSeed_2->SetLineColor(kRed);
   histIPhiSeed_1->Draw("hist");
   histIPhiSeed_2->Draw("hist, same");
+  histIPhiSeed_1->SetMaximum( 1.2 * fmax(histIPhiSeed_1->GetMaximum(),histIPhiSeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_IPhiSeed"+Label+".gif").c_str() );
 
@@ -1422,6 +1474,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histEtaCrySeed_2->SetLineColor(kRed);
   histEtaCrySeed_1->Draw("hist");
   histEtaCrySeed_2->Draw("hist, same");
+  histEtaCrySeed_1->SetMaximum( 1.2 * fmax(histEtaCrySeed_1->GetMaximum(),histEtaCrySeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_EtaCrySeed"+Label+".gif").c_str() );
 
@@ -1439,6 +1492,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhiCrySeed_2->SetLineColor(kRed);
   histPhiCrySeed_1->Draw("hist");
   histPhiCrySeed_2->Draw("hist, same");
+  histPhiCrySeed_1->SetMaximum( 1.2 * fmax(histPhiCrySeed_1->GetMaximum(),histPhiCrySeed_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_PhiCrySeed"+Label+".gif").c_str() );
 
@@ -1456,6 +1510,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histGeneratedEnergy_2->SetLineColor(kRed);
   histGeneratedEnergy_1->Draw("hist");
   histGeneratedEnergy_2->Draw("hist, same");
+  histGeneratedEnergy_1->SetMaximum( 1.2 * fmax(histGeneratedEnergy_1->GetMaximum(),histGeneratedEnergy_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_GeneratedEnergy"+Label+".gif").c_str() );
 
@@ -1473,6 +1528,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoMomentum_Regression_V0_2->SetLineColor(kRed);
   histPhoMomentum_Regression_V0_1->Draw("hist");
   histPhoMomentum_Regression_V0_2->Draw("hist, same");
+  histPhoMomentum_Regression_V0_1->SetMaximum( 1.2 * fmax(histPhoMomentum_Regression_V0_1->GetMaximum(),histPhoMomentum_Regression_V0_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_PhoMomentum_Regression_V0"+Label+".gif").c_str() );
 
@@ -1490,6 +1546,7 @@ void ComparePhotonDistributions ( string filename1 = "PhotonNtuple1.root",
   histPhoMomentumError_Regression_V0_2->SetLineColor(kRed);
   histPhoMomentumError_Regression_V0_1->Draw("hist");
   histPhoMomentumError_Regression_V0_2->Draw("hist, same");
+  histPhoMomentumError_Regression_V0_1->SetMaximum( 1.2 * fmax(histPhoMomentumError_Regression_V0_1->GetMaximum(),histPhoMomentumError_Regression_V0_2->GetMaximum()));
   legend->Draw();
   cv->SaveAs(("PhotonDistribution_PhoMomentumError_Regression_V0"+Label+".gif").c_str() );
  
