@@ -93,6 +93,9 @@ void ComputeBTaggingEfficiency(const string inputfile, int type = 0, int option 
   TH1F *histDenominatorNpu = new TH1F ("histDenominatorNpu",";Electron Npu; Number of Events", 50, 0 , 100);
   TH1F *histNumeratorNpu = new TH1F ("histNumeratorNpu",";Electron Npu; Number of Events", 50, 0 , 100);
 
+  TH2F *histDenominatorPtEta = new TH2F ("histDenominatorPtEta",";Photon p_{T} [GeV/c] ; Photon #eta; Number of Events", 50, 0 , 200, 50, -3.0, 3.0);
+  TH2F *histNumeratorPtEta = new TH2F ("histNumeratorPtEta",";Photon p_{T} [GeV/c] ; Photon #eta; Number of Events", 50, 0 , 200, 50, -3.0, 3.0);
+
   //*******************************************************************************************
   //Read file
   //*******************************************************************************************                
@@ -110,6 +113,12 @@ void ComputeBTaggingEfficiency(const string inputfile, int type = 0, int option 
     }
 
     if (!passSelection(efftree.pt, efftree.eta, option)) continue;
+
+    //**** PT - ETA ****
+    histDenominatorPtEta->Fill(efftree.pt,efftree.eta);
+    if(efftree.pass) {
+      histNumeratorPtEta->Fill(efftree.pt,efftree.eta);
+    }
 
     //**** PT ****
     if (fabs(efftree.eta) < 2.4) {
@@ -182,12 +191,13 @@ void ComputeBTaggingEfficiency(const string inputfile, int type = 0, int option 
   // Make Efficiency Plots
   //==============================================================================================================
 
-  TGraphAsymmErrors *efficiency_pt = cmsana::createEfficiencyGraph(histNumeratorPt, histDenominatorPt, "MistagRate_CSVMedium_Pt" , vector<double>() ,  -99, -99, 0, 1);
-  TGraphAsymmErrors *efficiency_eta = cmsana::createEfficiencyGraph(histNumeratorEta, histDenominatorEta, "MistagRate_CSVMedium_Eta" , vector<double>() ,  -99, -99, 0, 1);
-  TGraphAsymmErrors *efficiency_phi = cmsana::createEfficiencyGraph(histNumeratorPhi, histDenominatorPhi, "MistagRate_CSVMedium_Phi" , vector<double>() ,  -99, -99, 0, 1);
-  TGraphAsymmErrors *efficiency_rho = cmsana::createEfficiencyGraph(histNumeratorRho, histDenominatorRho, "MistagRate_CSVMedium_Rho" , vector<double>() ,  -99, -99, 0, 1);
-  TGraphAsymmErrors *efficiency_npv = cmsana::createEfficiencyGraph(histNumeratorNpv, histDenominatorNpv, "MistagRate_CSVMedium_Npv" , vector<double>() ,  -99, -99, 0, 1);
-  TGraphAsymmErrors *efficiency_npu = cmsana::createEfficiencyGraph(histNumeratorNpu, histDenominatorNpu, "MistagRate_CSVMedium_Npu" , vector<double>() ,  -99, -99, 0, 1);  
+  TGraphAsymmErrors *efficiency_pt = cmsana::createEfficiencyGraph(histNumeratorPt, histDenominatorPt, "Efficiency_Pt" , vector<double>() ,  -99, -99, 0, 1);
+  TGraphAsymmErrors *efficiency_eta = cmsana::createEfficiencyGraph(histNumeratorEta, histDenominatorEta, "Efficiency_Eta" , vector<double>() ,  -99, -99, 0, 1);
+  TGraphAsymmErrors *efficiency_phi = cmsana::createEfficiencyGraph(histNumeratorPhi, histDenominatorPhi, "Efficiency_Phi" , vector<double>() ,  -99, -99, 0, 1);
+  TGraphAsymmErrors *efficiency_rho = cmsana::createEfficiencyGraph(histNumeratorRho, histDenominatorRho, "Efficiency_Rho" , vector<double>() ,  -99, -99, 0, 1);
+  TGraphAsymmErrors *efficiency_npv = cmsana::createEfficiencyGraph(histNumeratorNpv, histDenominatorNpv, "Efficiency_Npv" , vector<double>() ,  -99, -99, 0, 1);
+  TGraphAsymmErrors *efficiency_npu = cmsana::createEfficiencyGraph(histNumeratorNpu, histDenominatorNpu, "Efficiency_Npu" , vector<double>() ,  -99, -99, 0, 1);  
+  TH2F *efficiency_pteta = cmsana::createEfficiencyHist2D(histNumeratorPtEta, histDenominatorPtEta, "Efficiency_PtEta" , vector<double>() ,vector<double>());  
 
 
   //--------------------------------------------------------------------------------------------------------------
@@ -235,7 +245,7 @@ void ComputeBTaggingEfficiency(const string inputfile, int type = 0, int option 
   //--------------------------------------------------------------------------------------------------------------
   // Output
   //==============================================================================================================
-  TFile *file = TFile::Open(("BJetMistagRate"+Label+".root").c_str(), "UPDATE");
+  TFile *file = TFile::Open(("Efficiency"+Label+".root").c_str(), "UPDATE");
   file->cd();
   file->WriteTObject(efficiency_pt, efficiency_pt->GetName(), "WriteDelete");
   file->WriteTObject(efficiency_eta, efficiency_eta->GetName(), "WriteDelete");
@@ -243,6 +253,8 @@ void ComputeBTaggingEfficiency(const string inputfile, int type = 0, int option 
   file->WriteTObject(efficiency_rho, efficiency_rho->GetName(), "WriteDelete");
   file->WriteTObject(efficiency_npv, efficiency_npv->GetName(), "WriteDelete");
   file->WriteTObject(efficiency_npu, efficiency_npu->GetName(), "WriteDelete");
+  file->WriteTObject(efficiency_pteta, efficiency_pteta->GetName(), "WriteDelete");
+
   file->Close();
   delete file;       
 
