@@ -173,7 +173,7 @@ void MakeBJetEfficiencyNtuple(const string inputFilename, const string outputFil
     pfcandidateBr->GetEntry(ientry);
     genparticleBr->GetEntry(ientry);
     genjetBr->GetEntry(ientry);
-
+ 
 
     //********************************************************
     // Pileup Energy Density
@@ -188,7 +188,7 @@ void MakeBJetEfficiencyNtuple(const string inputFilename, const string outputFil
     //********************************************************
       for(Int_t k=0; k<genjetArr->GetEntries(); k++) {
         const cmsana::TGenJet *genjet = (cmsana::TGenJet*)((*genjetArr)[k]);
-               
+
         //some kinematic cuts to save ntupling time
         if (!(genjet->pt > 30)) continue;
         if (!(fabs(genjet->eta) < 2.5)) continue;        
