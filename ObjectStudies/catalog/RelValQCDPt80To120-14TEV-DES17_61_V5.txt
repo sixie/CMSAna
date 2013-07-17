@@ -1,0 +1,5 @@
+/store/user/sixie/BACON/V00-00-03_SLHC4/RelValQCDPt80To120-14TEV-DES17_61_V5/BACONNtuple_1_1_UFM.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/RelValQCDPt80To120-14TEV-DES17_61_V5/BACONNtuple_2_1_b9I.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/RelValQCDPt80To120-14TEV-DES17_61_V5/BACONNtuple_3_1_pGj.root
+
+

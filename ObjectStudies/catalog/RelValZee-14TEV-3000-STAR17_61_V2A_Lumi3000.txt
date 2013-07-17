@@ -1,0 +1,5 @@
+/store/user/sixie/BACON/V00-00-03_SLHC4/RelValZee-14TEV-3000-STAR17_61_V2A_Lumi3000/BACONNtuple_1_1_7jJ.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/RelValZee-14TEV-3000-STAR17_61_V2A_Lumi3000/BACONNtuple_2_1_ImV.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/RelValZee-14TEV-3000-STAR17_61_V2A_Lumi3000/BACONNtuple_3_1_2yG.root
+
+

@@ -1,0 +1,4 @@
+/store/user/sixie/BACON/V00-00-03_SLHC4/RelValZee-14TEV-STAR-STAR17_61_V1A/BACONNtuple_1_1_2Uy.root
+/store/user/sixie/BACON/V00-00-03_SLHC4/RelValZee-14TEV-STAR-STAR17_61_V1A/BACONNtuple_2_1_lbp.root
+
+
