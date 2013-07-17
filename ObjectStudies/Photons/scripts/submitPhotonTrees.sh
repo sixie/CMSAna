@@ -68,12 +68,14 @@ end
 
 
 set i=0
-foreach file(`cat /afs/cern.ch/work/s/sixie/public/releases/analysis/CMSSW_5_3_9_patch3/src/CMSAna/ObjectStudies/catalog/WZHgg-125-Age0_STAR17_61_V1A.txt `)
-  echo $file " " $i
-  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/Phase2Upgrade/PhotonTrees_WZHgg-125-Age0_STAR17_61_V1A_${i}.out -J Phase2Upgrade_PhotonTrees_WZHgg-125-Age0_STAR17_61_V1A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/ObjectStudies/ MakePhotonNtupleFromMC.C +\(\"root://eoscms//eos/cms/${file}\",\"PhotonNtuple.WZHgg-125-Age0_STAR17_61_V1A.${i}.root\",true\) PhotonNtuple.WZHgg-125-Age0_STAR17_61_V1A.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonStudies/ntuples/jobs/
+foreach file(`cat /afs/cern.ch/work/s/sixie/public/releases/analysis/CMSSW_5_3_9_patch3/src/CMSAna/ObjectStudies/catalog/WZHgg-125-Age0_STAR17_61_V1A.txt`)
+  foreach j(`seq 0 1 49`)
+    echo $file " " $i " - " $j
+    bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/Phase2Upgrade/PhotonTrees_WZHgg-125-Age0_STAR17_61_V1A_${i}.out -J Phase2Upgrade_PhotonTrees_WZHgg-125-Age0_STAR17_61_V1A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/ObjectStudies/ MakePhotonNtupleFromMC.C +\(\"root://eoscms//eos/cms/${file}\",\"PhotonNtuple.real.WZHgg-125-Age0_STAR17_61_V1A.${i}.${j}.root\",true,50,${j}\) PhotonNtuple.real.WZHgg-125-Age0_STAR17_61_V1A.${i}.${j}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonStudies/ntuples/jobs/
+    sleep 0.5
+  end
   @ i = $i + 1
 end
-
 
 
 
@@ -109,27 +111,45 @@ foreach file(`cat /afs/cern.ch/work/s/sixie/public/releases/analysis/CMSSW_5_3_9
 end
 
 ##########################
+# Summer12 ttHbb
+##########################
+set i=0
+foreach file(`cat /afs/cern.ch/work/s/sixie/public/releases/analysis/CMSSW_5_3_9_patch3/src/CMSAna/ObjectStudies/catalog/ttHbb-125-START53_V7A.txt`)
+  echo $file " " $i
+  bsub -q 2nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/Phase2Upgrade/PhotonTrees_ttHbb-125-START53_${i}.out -J Phase2Upgrade_PhotonTrees_ttHbb-125-START53_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/ObjectStudies/ MakePhotonNtupleFromMC.C +\(\"root://eoscms//eos/cms/${file}\",\"PhotonNtupleFake.ttHbb-125-START53.${i}.root\",false\) PhotonNtupleFake.ttHbb-125-START53.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonStudies/ntuples/jobs/
+  @ i = $i + 1
+end
+
+
+##########################
 # Phase1 ttbar, ttHbb
 ##########################
 
 set i=0
-foreach file(`cat /afs/cern.ch/work/s/sixie/public/releases/analysis/CMSSW_5_3_9_patch3/src/CMSAna/ObjectStudies/catalog/TTBARAge0.txt`)
-  echo $file " " $i
-  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/Phase2Upgrade/PhotonTrees_TTBARAge0_${i}.out -J Phase2Upgrade_PhotonTrees_TTBARAge0_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/ObjectStudies/ MakePhotonNtupleFromMC.C +\(\"root://eoscms//eos/cms/${file}\",\"PhotonNtupleFake.TTBARAge0.${i}.root\",false\) PhotonNtupleFake.TTBARAge0.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonStudies/ntuples/jobs/
-  @ i = $i + 1
-end
-
-set i=0
 foreach file(`cat /afs/cern.ch/work/s/sixie/public/releases/analysis/CMSSW_5_3_9_patch3/src/CMSAna/ObjectStudies/catalog/ttHbb-125-Age0_STAR17_61_V1A.txt`)
-  echo $file " " $i
-  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/Phase2Upgrade/PhotonTrees_ttHbb-125-Age0_STAR17_61_V1A_${i}.out -J Phase2Upgrade_PhotonTrees_ttHbb-125-Age0_STAR17_61_V1A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/ObjectStudies/ MakePhotonNtupleFromMC.C +\(\"root://eoscms//eos/cms/${file}\",\"PhotonNtupleFake.ttHbb-125-Age0_STAR17_61_V1A.${i}.root\",false\) PhotonNtupleFake.ttHbb-125-Age0_STAR17_61_V1A.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonStudies/ntuples/jobs/
+  foreach j(`seq 0 1 49`)
+    echo $file " " $i " - " $j
+    bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/Phase2Upgrade/PhotonTrees_ttHbb-125-Age0_STAR17_61_V1A_${i}.out -J Phase2Upgrade_PhotonTrees_ttHbb-125-Age0_STAR17_61_V1A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/ObjectStudies/ MakePhotonNtupleFromMC.C +\(\"root://eoscms//eos/cms/${file}\",\"PhotonNtuple.fake.ttHbb-125-Age0_STAR17_61_V1A.${i}.${j}.root\",false,50,${j}\) PhotonNtuple.fake.ttHbb-125-Age0_STAR17_61_V1A.${i}.${j}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonStudies/ntuples/jobs/
+    sleep 0.5
+  end
   @ i = $i + 1
 end
 
 set i=0
 foreach file(`cat /afs/cern.ch/work/s/sixie/public/releases/analysis/CMSSW_5_3_9_patch3/src/CMSAna/ObjectStudies/catalog/ttHbb-125-Age0DES_DES17_61_V5.txt`)
+  foreach j(`seq 0 1 49`)
+    echo $file " " $i " - " $j
+    bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/Phase2Upgrade/PhotonTrees_ttHbb-125-Age0DES_DES17_61_V5_${i}.out -J Phase2Upgrade_PhotonTrees_ttHbb-125-Age0DES_DES17_61_V5_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/ObjectStudies/ MakePhotonNtupleFromMC.C +\(\"root://eoscms//eos/cms/${file}\",\"PhotonNtuple.fake.ttHbb-125-Age0DES_DES17_61_V5.${i}.${j}.root\",false,50,${j}\) PhotonNtuple.fake.ttHbb-125-Age0DES_DES17_61_V5.${i}.${j}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonStudies/ntuples/jobs/
+  end
+  @ i = $i + 1
+end
+
+
+
+set i=0
+foreach file(`cat /afs/cern.ch/work/s/sixie/public/releases/analysis/CMSSW_5_3_9_patch3/src/CMSAna/ObjectStudies/catalog/TTBARAge0.txt`)
   echo $file " " $i
-  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/Phase2Upgrade/PhotonTrees_ttHbb-125-Age0DES_DES17_61_V5_${i}.out -J Phase2Upgrade_PhotonTrees_ttHbb-125-Age0DES_DES17_61_V5_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/ObjectStudies/ MakePhotonNtupleFromMC.C +\(\"root://eoscms//eos/cms/${file}\",\"PhotonNtupleFake.ttHbb-125-Age0DES_DES17_61_V5.${i}.root\",false\) PhotonNtupleFake.ttHbb-125-Age0DES_DES17_61_V5.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonStudies/ntuples/jobs/
+  bsub -q 2nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/Phase2Upgrade/PhotonTrees_TTBARAge0_${i}.out -J Phase2Upgrade_PhotonTrees_TTBARAge0_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/ObjectStudies/ MakePhotonNtupleFromMC.C +\(\"root://eoscms//eos/cms/${file}\",\"PhotonNtupleFake.TTBARAge0.${i}.root\",false\) PhotonNtupleFake.TTBARAge0.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonStudies/ntuples/jobs/
   @ i = $i + 1
 end
 
