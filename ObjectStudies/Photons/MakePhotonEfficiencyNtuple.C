@@ -187,7 +187,7 @@ void MakePhotonEfficiencyNtuple(const string inputFilename, const string outputF
     UInt_t EAEra = kDataEra_2012_Data;
 
     //********************************************************
-    // genjets denominator
+    // gen photon denominator
     //********************************************************
     if ( denominatorType == 10) {
       vector<double> genphotonsEta;
@@ -230,14 +230,23 @@ void MakePhotonEfficiencyNtuple(const string inputFilename, const string outputF
         //pass Photon cuts
         for(Int_t j=0; j<photonArr->GetEntriesFast(); j++) {
           const cmsana::TPhoton *photon = (cmsana::TPhoton*)((*photonArr)[j]);
-          if (!(photon->pt > 25)) continue;
-          if (!(fabs(photon->scEta) < 2.5)) continue;
-	  if (fabs(photon->scEta ) > 1.4442 && fabs(photon->scEta) < 1.566) continue;
 
           //match in dR?
           double DR = cmsana::deltaR(gen->eta,gen->phi,photon->eta,photon->phi);
           if (!(DR < 0.1)) continue;
 	  if ( !(passPhotonIDSimpleLoose( photon, pfcandidateArr, info->RhoKt6PFJets,kDataEra_2012_MC, false))) continue;
+          
+          //Do tighter electron veto
+          bool passEleVeto = true;
+          for(Int_t e=0; e<electronArr->GetEntriesFast(); e++) {
+            const cmsana::TElectron *tmpele =
+              (cmsana::TElectron*)((*electronArr)[e]);
+            if (cmsana::deltaR(tmpele->eta,tmpele->phi,photon->eta,photon->phi) < 0.1) {
+              passEleVeto = false;
+              break;
+            }
+          }
+          if (!passEleVeto) continue;
           
           pass = true;
           break;
@@ -271,24 +280,35 @@ void MakePhotonEfficiencyNtuple(const string inputFilename, const string outputF
     //********************************************************
     if ( denominatorType == 20) {
 
-      for(Int_t i=0; i<electronArr->GetEntriesFast(); i++) {
-        const cmsana::TElectron *ele =
-          (cmsana::TElectron*)((*electronArr)[i]);
+      vector<double> geneleEta;
+      vector<double> genelePhi;
+      geneleEta.clear();
+      genelePhi.clear();
+
+      for(Int_t k=0; k<genparticleArr->GetEntriesFast(); k++) {
+        const cmsana::TGenParticle *gen =
+          (cmsana::TGenParticle*)((*genparticleArr)[k]);
         
-        bool isRealElectron = false;
-        for(Int_t k=0; k<genparticleArr->GetEntriesFast(); k++) {
-          const cmsana::TGenParticle *gen =
-            (cmsana::TGenParticle*)((*genparticleArr)[k]);
-          
-          if ( abs(gen->pdgid) == 11 &&  abs(gen->motherPdgID) == 24
-               && cmsana::deltaR(gen->eta,gen->phi, ele->eta, ele->phi) < 0.1
-            ) {
-            isRealElectron = true;
-          }
+        //use only electrons that are daughters of W's or Z's
+        if ( !(abs(gen->pdgid) == 11 &&  ( abs(gen->motherPdgID) == 24 || abs(gen->motherPdgID) == 23 )
+               ) 
+          ) {
+          continue;
         }
-        if (!isRealElectron) continue;
-
-
+        
+        //Don't use photon that was already used
+        bool usedAlready = false;
+        for (int q=0;q<geneleEta.size();++q) {
+          if (cmsana::deltaR(geneleEta[q],genelePhi[q],gen->eta,gen->phi) < 0.1) 
+            usedAlready = true;
+        }
+        if (usedAlready) continue;
+        
+        geneleEta.push_back(gen->eta);
+        genelePhi.push_back(gen->phi);
+   
+        
+        
         bool pass = false;
         //pass Photon cuts
         for(Int_t j=0; j<photonArr->GetEntriesFast(); j++) {
@@ -298,21 +318,31 @@ void MakePhotonEfficiencyNtuple(const string inputFilename, const string outputF
 	  if (fabs(photon->scEta ) > 1.4442 && fabs(photon->scEta) < 1.566) continue;
 
           //match in dR?
-          double DR = cmsana::deltaR(ele->eta,ele->phi,photon->eta,photon->phi);
+          double DR = cmsana::deltaR(gen->eta,gen->phi,photon->eta,photon->phi);
           if (!(DR < 0.1)) continue;
 	  if ( !(passPhotonIDSimpleLoose( photon, pfcandidateArr, info->RhoKt6PFJets,kDataEra_2012_MC, false))) continue;
+
           //Do tighter electron veto
-          
-          
+          bool passEleVeto = true;
+          for(Int_t e=0; e<electronArr->GetEntriesFast(); e++) {
+            const cmsana::TElectron *tmpele =
+              (cmsana::TElectron*)((*electronArr)[e]);
+            if (cmsana::deltaR(tmpele->eta,tmpele->phi,photon->eta,photon->phi) < 0.1) {
+              passEleVeto = false;
+              break;
+            }
+          }
+          if (!passEleVeto) continue;
+
           pass = true;
           break;
         }
         
         effTree->weight = eventweight;
         effTree->mass = 0;
-        effTree->pt = ele->pt;
-        effTree->eta = ele->eta;
-        effTree->phi = ele->phi;
+        effTree->pt = gen->pt;
+        effTree->eta = gen->eta;
+        effTree->phi = gen->phi;
         effTree->rho = info->RhoKt6PFJets;
         effTree->q = 0;
         effTree->npv = info->nGoodPV;
@@ -328,51 +358,7 @@ void MakePhotonEfficiencyNtuple(const string inputFilename, const string outputF
         NDenominatorsFilled++;
         effTree->tree_->Fill();
 
-//         if (pass == true) {
-//           cout << "\n\nDebug Event: " << info->runNum << " " << info->lumiSec << " " << info->evtNum << "\n";
-//           for(Int_t k=0; k<genparticleArr->GetEntriesFast(); k++) {
-//             const cmsana::TGenParticle *p = (cmsana::TGenParticle*)((*genparticleArr)[k]);
-//             if (abs(p->pdgid) == 11 || p->pdgid == 22 ) {
-//               cout << p->pdgid << " " << p->status << " " << p->pt << " " << p->eta << " " << p->phi 
-//                    << " | " << p->motherPdgID << "\n";
-//             }
-//           }
-      
-//           for(Int_t k=0; k<photonArr->GetEntriesFast(); k++) {
-//             const cmsana::TPhoton *pho = (cmsana::TPhoton*)((*photonArr)[k]);
-//             if (!(pho->pt > 25)) continue;
-//             if (!(fabs(pho->scEta) < 2.5)) continue;
-//             if (fabs(pho->scEta) > 1.4442 && fabs(pho->scEta) < 1.566) continue;
-//             cout << "Photon " << i << " : " << pho->pt << " " << pho->eta << " " << pho->phi << " : " 
-//                  << passPhotonIDSimpleLoose( pho, pfcandidateArr, info->RhoKt6PFJets, kDataEra_2012_MC, false)
-//                  << "\n";
-//           }
-
-//           for(Int_t k=0; k<electronArr->GetEntriesFast(); k++) {
-//             const cmsana::TElectron *ele = (cmsana::TElectron*)((*electronArr)[k]);
-        
-//             if (!(ele->pt > 20)) continue;
-//             if (!(fabs(ele->scEta) < 2.5)) continue;
-
-//             cout << "ele : " << ele->pt << " " << ele->eta << " " << ele->phi << " : " 
-//                  << "\n";
-
-//           }
-
-//           cout << "All Gen Particles\n";
-//           for(Int_t k=0; k<genparticleArr->GetEntriesFast(); k++) {
-//             const cmsana::TGenParticle *p = (cmsana::TGenParticle*)((*genparticleArr)[k]);
-//             cout << p->pdgid << " " << p->status << " " << p->pt << " " << p->eta << " " << p->phi 
-//                  << " | " << p->motherPdgID << "\n";
-//           }
-//           cout << "\n\n";
-
-//         }
-
-
-
-
-      }
+        }
     }
   
 
