@@ -22,8 +22,11 @@ namespace cmsana
         ZHgg = 3,
         ggHgg = 4,        
         ttbar = 5,
-        diphotonjets = 6,
-        qcd = 7
+        BBGG = 6,
+        GGPlusTwoMistag = 7,
+        BBPlusTwoFakePhotons = 8,
+        CCMistagPlusTwoFakePhotons = 9,
+        TwoLightJetsMistagPlusTwoFakePhotons = 10,
       };
    
       /// variables
