@@ -90,7 +90,8 @@ end
 set i=0
 foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/ttjll-START53_V7A.txt `)
   echo $file " " $i
-  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_ttjll-START53_V7A_${i}.out -J HHToBBGGSelection_ttjll-START53_V7A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ttjll-START53_V7A.${i}.root\",1\) HHToBBGGNtuple.ttjll-START53_V7A.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_ttjll-START53_V7A_${i}.out -J HHToBBGGSelection_ttjll-START53_V7A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection_TTBAR.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ttjll-START53_V7A.${i}.root\",5\) HHToBBGGNtuple.ttjll-START53_V7A.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  sleep 0.25
   @ i = $i + 1
 end
 
