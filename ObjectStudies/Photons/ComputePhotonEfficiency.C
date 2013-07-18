@@ -63,6 +63,15 @@ bool passSelection( double pt, double eta, int option) {
 }
 
 
+// Define as quark
+bool isQuark( Int_t matchedPdgId) {
+  bool isquark = false;
+  if (fabs(matchedPdgId) >0 && fabs(matchedPdgId) <6) {
+    isquark = true;
+  }
+  return isquark;
+}
+
 
 //=== MAIN MACRO ================================================================================================= 
 
@@ -106,11 +115,14 @@ void ComputePhotonEfficiency(const string inputfile, int type = 0, int option = 
   for (int n=0;n<efftree.tree_->GetEntries();n++) { 
     efftree.tree_->GetEntry(n);
 
-    if (type == 0) {
+    if (type == -1) {
       if ( abs(efftree.matchedPdgId) == 22 ) continue;
+    } else if (type == 0) {
+      //use type == 0 for quarks (ie. not gluons)
+      if (!isQuark(efftree.matchedPdgId)) continue;   
     } else if ( (type >= 1 && type <= 5) || type == 21 || type == 22 || type == 11) {
       if (!(abs(efftree.matchedPdgId) == type)) continue;
-    }
+    } 
 
     if (!passSelection(efftree.pt, efftree.eta, option)) continue;
 

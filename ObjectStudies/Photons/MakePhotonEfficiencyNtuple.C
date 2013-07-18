@@ -186,6 +186,86 @@ void MakePhotonEfficiencyNtuple(const string inputFilename, const string outputF
     Double_t rho = info->RhoKt6PFJets;
     UInt_t EAEra = kDataEra_2012_Data;
 
+
+    //********************************************************
+    // genjets denominator
+    //********************************************************
+    if ( denominatorType == 0) {
+      for(Int_t k=0; k<genjetArr->GetEntries(); k++) {
+        const cmsana::TGenJet *genjet = (cmsana::TGenJet*)((*genjetArr)[k]);
+               
+        //some kinematic cuts to save ntupling time
+        if (!(genjet->pt > 20)) continue;
+        if (!(fabs(genjet->eta) < 2.5)) continue;
+	
+	//make sure it doesn't match to a prompt photon
+	bool matchPhoton = false;
+	for(Int_t i=0; i<genparticleArr->GetEntriesFast(); i++) {
+	  const cmsana::TGenParticle *gen =
+	    (cmsana::TGenParticle*)((*genparticleArr)[i]);
+	  
+	  if (abs(gen->pdgid) == 22 
+	      && ( gen->motherPdgID == 25 || abs(gen->motherPdgID) <= 6
+		   || 
+		   (abs(gen->motherPdgID) >= 11 && abs(gen->motherPdgID)
+		    <= 16) ||
+		   abs(gen->motherPdgID) == 23 || abs(gen->motherPdgID)
+		   == 24 || abs(gen->motherPdgID) == 21
+		   )
+	      ) {
+	    if
+	      (cmsana::deltaR(gen->eta,gen->phi,genjet->eta,genjet->phi) < 0.1) {
+	      matchPhoton = true;
+	      break;
+	    }
+	  } 
+	}
+	if (matchPhoton) continue;
+	
+        bool pass = false;
+        //pass Photon cuts
+        for(Int_t i=0; i<photonArr->GetEntriesFast(); i++) {
+          const cmsana::TPhoton *photon = (cmsana::TPhoton*)((*photonArr)[i]);
+          //if (!(photon->pt > 25)) continue;
+          //if (!(fabs(photon->scEta) < 2.5)) continue;
+	  //if (fabs(photon->scEta ) > 1.4442 && fabs(photon->scEta) < 1.566) continue;
+          //match in dR?
+          double DR = cmsana::deltaR(photon->eta,photon->phi,genjet->eta,genjet->phi);
+          if (!(DR < 0.5)) continue;
+
+	  if ( !(passPhotonIDSimpleLoose( photon, pfcandidateArr, info->RhoKt6PFJets,kDataEra_2012_MC, false))) continue;
+          
+
+          pass = true;
+          break;
+        }
+        
+        effTree->weight = eventweight;
+        effTree->mass = 0;
+        effTree->pt = genjet->pt;
+        effTree->eta = genjet->eta;
+        effTree->phi = genjet->phi;
+        effTree->rho = info->RhoKt6PFJets;
+        effTree->q = 0;
+        effTree->npv = info->nGoodPV;
+        effTree->npu = info->nPU;
+        effTree->run = info->runNum;
+        effTree->lumi = info->lumiSec;
+        effTree->event = info->evtNum;
+        effTree->pass = pass;
+	effTree->matchedPdgId = genjet->matchedPdgId;
+        //***********************
+        //Fill Denominator
+        //***********************
+        NDenominatorsFilled++;
+        effTree->tree_->Fill();
+
+      }//loop over genjet denominators
+    } // if denominator is genjet
+
+
+
+
     //********************************************************
     // gen photon denominator
     //********************************************************
