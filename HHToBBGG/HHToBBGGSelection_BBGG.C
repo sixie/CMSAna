@@ -242,7 +242,6 @@ void HHToBBGGSelection_BBGG(const string inputfile,          // input file
     }
 
     outputEventTree->sampletype = stype;
-    //outputEventTree->weight = info->eventweight;
     outputEventTree->run = info->runNum;
     outputEventTree->lumi = info->lumiSec;
     outputEventTree->event = info->evtNum;
@@ -446,15 +445,6 @@ void HHToBBGGSelection_BBGG(const string inputfile,          // input file
     if (genPhoton1) outputEventTree->HT += genPhoton1->pt;
     if (genPhoton2) outputEventTree->HT += genPhoton2->pt;
     
-
-    //***********************************************************
-    //Filter for events with 2 bjets, 2photons, and mgg in [110, 140]
-    //***********************************************************
-    if ( !(genPhoton1 && genPhoton2 && genBJet1 && genBJet2 && genPhoton1->pt > 25 && genPhoton2->pt > 25 && genBJet1->pt > 30 && genBJet2->pt > 30
-           && diphotonv.M() > 110 && diphotonv.M() < 140)
-      ) continue;
-
-
     //********************************************************
     //Fill Output Tree
     //********************************************************
