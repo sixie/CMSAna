@@ -150,5 +150,7 @@ void SetStyle()
   MYStyle->SetTitleFont  (42,"Y");
 
   MYStyle->SetOptStat    (0);
+
+  MYStyle->SetPalette    (1);
   return;
 }
