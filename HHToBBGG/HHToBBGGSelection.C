@@ -2,8 +2,9 @@
 //
 // Select HH->bbgammagamma
 //
-//root -l -b -q  CMSAna/HHToBBGG/HHToBBGGSelection.C+'("root://eoscms//eos/cms/store/user/sixie/BACON/V00-00-02/HHtoBBGG-14tev-START53_V7A/BACONNtuple.dihiggs-bbgg-14tev.1.root","HHToBBGG.root",1)'
-//root -l -b -q  CMSAna/HHToBBGG/HHToBBGGSelection.C+'("root://eoscms//eos/cms/store/user/sixie/BACON/V00-00-00/ttHgg-125-START53_V7A/BACONNtuple_1_1_CaY.root","ttH.root",2)'
+//root -l -b -q  CMSAna/HHToBBGG/HHToBBGGSelection.C+'("root://eoscms//eos/cms/store/user/sixie/BACON/V00-00-04/HHtoBBGG-14tev-START53_V7A/BACONNtuple.dihiggs-bbgg-14tev.1.root","HHToBBGG.root",1)'
+//root -l -b -q  CMSAna/HHToBBGG/HHToBBGGSelection.C+'("root://eoscms//eos/cms/store/user/sixie/BACON/V00-00-04/ttHgg-125-START53_V7A/BACONNtuple_1_1_LJ8.root","ttH.root",2)'
+//root -l -b -q  CMSAna/HHToBBGG/HHToBBGGSelection.C+'("root://eoscms//eos/cms/store/user/sixie/BACON/V00-00-04/ZHgg-125-START53_V7A/BACONNtuple_1_1_pgY.root","ZH.root",3)'
 //root -l -b -q  CMSAna/HHToBBGG/HHToBBGGSelection.C+'("BACONNtuple.root","test.root",0)'
 //
 //________________________________________________________________________________________________
@@ -214,7 +215,6 @@ void HHToBBGGSelection(const string inputfile,          // input file
           }
         }
       }
-
     }
     
     //sampleType
@@ -225,8 +225,11 @@ void HHToBBGGSelection(const string inputfile,          // input file
     if (SampleType == 3) stype = cmsana::HHToBBGGEventTree::ZHgg;
     if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::ggHgg;
     if (SampleType == 5) stype = cmsana::HHToBBGGEventTree::ttbar;
-    if (SampleType == 6) stype = cmsana::HHToBBGGEventTree::diphotonjets;
-    if (SampleType == 7) stype = cmsana::HHToBBGGEventTree::qcd;
+    if (SampleType == 6) stype = cmsana::HHToBBGGEventTree::BBGG;
+    if (SampleType == 7) stype = cmsana::HHToBBGGEventTree::GGPlusTwoMistag;
+    if (SampleType == 8) stype = cmsana::HHToBBGGEventTree::BBPlusTwoFakePhotons;
+    if (SampleType == 9) stype = cmsana::HHToBBGGEventTree::CCMistagPlusTwoFakePhotons;
+    if (SampleType == 10) stype = cmsana::HHToBBGGEventTree::TwoLightJetsMistagPlusTwoFakePhotons;
 
     outputEventTree->sampletype = stype;
     outputEventTree->weight = info->eventweight;
@@ -376,6 +379,19 @@ void HHToBBGGSelection(const string inputfile,          // input file
 
       if ( !(passPhotonIDSimpleLoose( pho, pfcandidateArr, info->RhoKt6PFJets,
                                        kDataEra_2012_MC, false))) continue;
+
+      //Do tighter electron veto
+      bool passEleVeto = true;
+      for(Int_t e=0; e<electronArr->GetEntriesFast(); e++) {
+        const cmsana::TElectron *tmpele =
+          (cmsana::TElectron*)((*electronArr)[e]);
+        if (cmsana::deltaR(tmpele->eta,tmpele->phi,pho->eta,pho->phi) < 0.1) {
+          passEleVeto = false;
+          break;
+        }
+      }
+      if (!passEleVeto) continue;
+      
 
       //save good photons
       goodPhotons.push_back(pho);     
@@ -652,8 +668,8 @@ void HHToBBGGSelection(const string inputfile,          // input file
         bool isTruthB = false;
         if ( genB1 && cmsana::deltaR(genjet->eta,genjet->phi,genB1->eta,genB1->phi) < 0.5) isTruthB=true;
         if ( genB2 && cmsana::deltaR(genjet->eta,genjet->phi,genB2->eta,genB2->phi) < 0.5) isTruthB=true;        
-        for(Int_t i=0; i<genparticleArr->GetEntriesFast(); i++) {
-          const cmsana::TGenParticle *p = (cmsana::TGenParticle*)((*genparticleArr)[i]);
+        for(Int_t j=0; j<genparticleArr->GetEntriesFast(); j++) {
+          const cmsana::TGenParticle *p = (cmsana::TGenParticle*)((*genparticleArr)[j]);
           if (abs(p->pdgid) == 5  && p->status == 3 && p->pt > 1 && cmsana::deltaR(p->eta,p->phi,genjet->eta,genjet->phi) < 0.5) {
             isTruthB = true;
           }
