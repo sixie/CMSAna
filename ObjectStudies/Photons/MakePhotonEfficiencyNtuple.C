@@ -233,9 +233,20 @@ void MakePhotonEfficiencyNtuple(const string inputFilename, const string outputF
           double DR = cmsana::deltaR(photon->eta,photon->phi,genjet->eta,genjet->phi);
           if (!(DR < 0.5)) continue;
 
-	  if ( !(passPhotonIDSimpleLoose( photon, pfcandidateArr, info->RhoKt6PFJets,kDataEra_2012_MC, false))) continue;
+	  if ( !(passPhotonIDSimpleLoose( photon, pfcandidateArr, info->RhoKt6PFJets,kDataEra_2012_MC, false))) continue;          
           
-
+          //Do tighter electron veto
+          bool passEleVeto = true;
+          for(Int_t e=0; e<electronArr->GetEntriesFast(); e++) {
+            const cmsana::TElectron *tmpele =
+              (cmsana::TElectron*)((*electronArr)[e]);
+            if (cmsana::deltaR(tmpele->eta,tmpele->phi,photon->eta,photon->phi) < 0.1) {
+              passEleVeto = false;
+              break;
+            }
+          }
+          if (!passEleVeto) continue;
+          
           pass = true;
           break;
         }
