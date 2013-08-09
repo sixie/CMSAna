@@ -65,13 +65,14 @@ set i=0
 foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/ggHgg-125-START53_V7A.txt`)
   echo $file " " $i
   bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_ggHgg-125-START53_V7A_${i}.out -J HHToBBGGSelection_ggHgg-125-START53_V7A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ggHgg-125-START53_V7A.${i}.root\",4\) HHToBBGGNtuple.ggHgg-125-START53_V7A.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  sleep 0.25
   @ i = $i + 1
 end
 
 
 
 #############
-# Diphoton+Jets : bbgg
+# Diphoton+BB : bb+gg
 #############
 
 
@@ -79,6 +80,20 @@ set i=0
 foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/DiPhotonBB_M60To200_14TeV.txt`)
   echo $file " " $i
   bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_BBGG_DiPhotonBB_M60To200_14TeV_${i}.out -J HHToBBGGSelection_BBGG_DiPhotonBB_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection_BBGG.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.DiPhotonBB_M60To200_14TeV-BBGG.${i}.root\",6\) HHToBBGGNtuple.DiPhotonBB_M60To200_14TeV-BBGG.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  sleep 0.25
+  @ i = $i + 1
+end
+
+#############
+# Diphoton+Jets : gg+jj
+#############
+
+
+set i=0
+foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/DiPhotonJJ_M60To200_14TeV.txt`)
+  echo $file " " $i
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_DiPhotonJJ_M60To200_14TeV_${i}.out -J HHToBBGGSelection_DiPhotonJJ_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelectionMistags.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.DiPhotonJJ_M60To200_14TeV.${i}.root\",7\) HHToBBGGNtuple.DiPhotonJJ_M60To200_14TeV.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  sleep 0.25
   @ i = $i + 1
 end
 

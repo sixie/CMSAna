@@ -23,7 +23,7 @@ HHtoBBGG-14tev-START53_V7A           33.89*0.577*0.00228*2 #NLO
 ttHgg-125-START53_V7A	             611.3*0.00228
 ggHgg-125-START53_V7A                50350*0.00228
 ZHgg-125-START53_V7A                 (1504+883)*0.00228
-ttjll-START53_V7A                    880000.4*(0.1080*3)*(0.1080*3)*1.42982
+ttjll-START53_V7A                    880000*(0.1080*3)*(0.1080*3)
 
 #numbers from private email with Nicolas Chanon. kfactor of 1.1 is found in SM diphoton measurement. 1.46 is the scale factor to get from 8TeV to 14TeV CM energy.
 diphjetsSherpa-START53_V7A_DoubleBTagSkim (32895.0/14028000.0)*1.46*1.1*120354
@@ -47,3 +47,7 @@ bbjets-HT250To500-START53_V7A        5528000
 BBJJ_M110To140_14TeV                 214000000
 CCJJ_M110To140_14TeV                 214400000
 JJJJ_14TeV                           20440000000
+
+#heft XS from madgraph
+bbH_M60To200_14TeV                   0.1717
+
