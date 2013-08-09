@@ -2,10 +2,6 @@
 //
 // Select HH->bbgammagamma
 //
-//root -l -b -q  CMSAna/HHToBBGG/HHToBBGGSelection.C+'("root://eoscms//eos/cms/store/user/sixie/BACON/V00-00-02/HHtoBBGG-14tev-START53_V7A/BACONNtuple.dihiggs-bbgg-14tev.1.root","HHToBBGG.root",1)'
-//root -l -b -q  CMSAna/HHToBBGG/HHToBBGGSelection.C+'("root://eoscms//eos/cms/store/user/sixie/BACON/V00-00-00/ttHgg-125-START53_V7A/BACONNtuple_1_1_CaY.root","ttH.root",2)'
-//root -l -b -q  CMSAna/HHToBBGG/HHToBBGGSelection.C+'("BACONNtuple.root","test.root",0)'
-//
 //root -l -b -q  CMSAna/HHToBBGG/HHToBBGGSelectionMistags.C+'("root://eoscms//eos/cms//store/group/phys_higgs/future/sixie/Madgraph/DiPhotonJJ_M60To200_14TeV-v2/BACON/BACONNtuple_GenOnly_DiphotonJJ_14TeV_16.root","HHToBBGGNtuple.DiPhotonJJ_M60To200_14TeV.16.root",7)'
 //________________________________________________________________________________________________
 
@@ -62,17 +58,6 @@ void HHToBBGGSelectionMistags(const string inputfile,          // input file
   //============================================================================================================== 
   bool printdebug = false;
 
-
-  //*****************************************************************************************
-  //Setup Jet Energy Corrections
-  //*****************************************************************************************
-  std::vector<cmsana::JetCorrectorParameters> correctionParameters;
-  correctionParameters.push_back(cmsana::JetCorrectorParameters( ( getenv("CMSSW_BASE") + string("/src/CMSAna/JetEnergyCorrections/data/GR_R_52_V9_L1FastJet_AK5PF.txt")).c_str()));
-  correctionParameters.push_back(cmsana::JetCorrectorParameters( ( getenv("CMSSW_BASE") + string("/src/CMSAna/JetEnergyCorrections/data/GR_R_52_V9_L2Relative_AK5PF.txt")).c_str()));
-  correctionParameters.push_back(cmsana::JetCorrectorParameters( ( getenv("CMSSW_BASE") + string("/src/CMSAna/JetEnergyCorrections/data/GR_R_52_V9_L3Absolute_AK5PF.txt")).c_str()));
-  cmsana::FactorizedJetCorrector *JetCorrector = new cmsana::FactorizedJetCorrector(correctionParameters);
-
-
   //--------------------------------------------------------------------------------------------------------------
   // Main analysis code 
   //==============================================================================================================  
@@ -101,20 +86,17 @@ void HHToBBGGSelectionMistags(const string inputfile,          // input file
   cmsana::TEventInfo *info  = new cmsana::TEventInfo();
   TClonesArray *genparticleArr = new TClonesArray("cmsana::TGenParticle");
   TClonesArray *genjetArr = new TClonesArray("cmsana::TGenJet");
-  //TClonesArray *photonArr = new TClonesArray("cmsana::TPhoton");
-  //TClonesArray *muonArr = new TClonesArray("cmsana::TMuon");
-  //TClonesArray *electronArr = new TClonesArray("cmsana::TElectron");
-  //TClonesArray *jetArr = new TClonesArray("cmsana::TJet");
-  //TClonesArray *pfcandidateArr = new TClonesArray("cmsana::TPFCandidate");
-  //edit
-  TFile *fileZeroWeight = TFile::Open("/afs/cern.ch/work/d/daan/public/releases/CMSSW_5_3_9_patch3/src/Efficiency/Trees/BJetMistagRate_type0_nocuts.root");
-  TFile *fileFourWeight = TFile::Open("/afs/cern.ch/work/d/daan/public/releases/CMSSW_5_3_9_patch3/src/Efficiency/Trees/BJetMistagRate_type4_nocuts.root");
-  TFile *fileRealPhoWeight = TFile::Open("/afs/cern.ch/work/d/daan/public/releases/CMSSW_5_3_9_patch3/src/CMSAna/HHToBBGG/data/PhotonEfficiency_PromptPhoton.root");
-  TH2F *typeZeroWeight = (TH2F*)fileZeroWeight->Get("MistagRate_CSVMedium_Pt_Eta");
-  TH2F *typeFourWeight = (TH2F*)fileFourWeight->Get("MistagRate_CSVMedium_Pt_Eta");
-  TH2F *RealPhoWeight = (TH2F*)fileRealPhoWeight->Get("Efficiency_PtEta");
-  TH2F *bjet1Weight = 0;
-  TH2F *bjet2Weight = 0;
+
+  TFile *BJetMistagRateLightJetsFile = TFile::Open("/afs/cern.ch/work/s/sixie/public/releases/analysis/CMSSW_5_3_9_patch3/src/CMSAna/HHToBBGG/data/BTaggingEfficiency_LightJetsMistagRate.root");
+  TFile *BJetMistagRateCharmJetsFile = TFile::Open("/afs/cern.ch/work/s/sixie/public/releases/analysis/CMSSW_5_3_9_patch3/src/CMSAna/HHToBBGG/data/BTaggingEfficiency_CharmJetsMistagRate.root");
+  TFile *PhotonEfficiencyFile = TFile::Open("/afs/cern.ch/work/s/sixie/public/releases/analysis/CMSSW_5_3_9_patch3/src/CMSAna/HHToBBGG/data/PhotonEfficiency_PromptPhoton.root");
+  TH2F *BJetMistagRateLightJetsHist = (TH2F*)BJetMistagRateLightJetsFile->Get("MistagRate_CSVMedium_Pt_Eta");
+  TH2F *BJetMistagRateCharmJetsHist = (TH2F*)BJetMistagRateCharmJetsFile->Get("MistagRate_CSVMedium_Pt_Eta");
+  TH2F *PhotonEfficiencyHist = (TH2F*)PhotonEfficiencyFile->Get("Efficiency_PtEta");
+  TH2F *bjet1FakeRateHist = 0;
+  TH2F *bjet2FakeRateHist = 0;
+  double bjet1Eff = 0;
+  double bjet2Eff = 0;
 
   // Read input file and get the TTrees
   cout << "Processing " << inputfile << "..." << endl;
@@ -140,7 +122,6 @@ void HHToBBGGSelectionMistags(const string inputfile,          // input file
     infoBr->GetEntry(ientry);
 
     NEvents->Fill(0);
-    //edit
     NEventsTwoRealPho->Fill(0);
     NPUMean->Fill(info->nPUMean);
 
@@ -155,48 +136,15 @@ void HHToBBGGSelectionMistags(const string inputfile,          // input file
     genparticleBr->GetEntry(ientry);
     genjetBr->GetEntry(ientry);
 
+    double tmpHT = 0;
+
     //***********************************************************
     // Find Gen-Level particles
     //***********************************************************
     const cmsana::TGenParticle *genPhoton1 = 0;
     const cmsana::TGenParticle *genPhoton2 = 0;
-    const cmsana::TGenParticle *genB1 = 0;
-    const cmsana::TGenParticle *genB2 = 0;
-    const cmsana::TGenJet *genBJet1 = 0;
-    const cmsana::TGenJet *genBJet2 = 0;
     for(Int_t i=0; i<genparticleArr->GetEntriesFast(); i++) {
       const cmsana::TGenParticle *p = (cmsana::TGenParticle*)((*genparticleArr)[i]);
-
-      if ( SampleType == cmsana::HHToBBGGEventTree::HHToBBGG) {
-        if (abs(p->pdgid) == 5 && p->motherPdgID == 25 && p->status == 2) {
-          if (!genB1) {
-            genB1 = p;
-          } else {
-            if (!genB2) genB2 = p;
-          }
-        }
-      }
-      if ( SampleType == cmsana::HHToBBGGEventTree::ttHgg 
-           || SampleType == cmsana::HHToBBGGEventTree::ttbar
-        ) {
-        if (abs(p->pdgid) == 5 && abs(p->motherPdgID) == 6 && p->status == 2) {
-          if (!genB1) {
-            genB1 = p;
-          } else {
-            if (!genB2) genB2 = p;
-          }
-        }
-      }
-      if ( SampleType == cmsana::HHToBBGGEventTree::ZHgg 
-        ) {
-        if (abs(p->pdgid) == 5 && p->motherPdgID == 23 && p->status == 2) {
-          if (!genB1) {
-            genB1 = p;
-          } else {
-            if (!genB2) genB2 = p;
-          }
-        }
-      }
 
       //***********************************************************
       // Find Gen Photons
@@ -215,17 +163,7 @@ void HHToBBGGSelectionMistags(const string inputfile,          // input file
     
     //sampleType
     cmsana::HHToBBGGEventTree::SampleType stype = cmsana::HHToBBGGEventTree::none;
-    if (SampleType == 0) stype = cmsana::HHToBBGGEventTree::data;
-    if (SampleType == 1) stype = cmsana::HHToBBGGEventTree::HHToBBGG;
-    if (SampleType == 2) stype = cmsana::HHToBBGGEventTree::ttHgg;
-    if (SampleType == 3) stype = cmsana::HHToBBGGEventTree::ZHgg;
-    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::ggHgg;
-    if (SampleType == 5) stype = cmsana::HHToBBGGEventTree::ttbar;
-    if (SampleType == 6) stype = cmsana::HHToBBGGEventTree::BBGG;
     if (SampleType == 7) stype = cmsana::HHToBBGGEventTree::GGPlusTwoMistag;
-    if (SampleType == 8) stype = cmsana::HHToBBGGEventTree::BBPlusTwoFakePhotons;
-    if (SampleType == 9) stype = cmsana::HHToBBGGEventTree::CCMistagPlusTwoFakePhotons;
-    if (SampleType == 10) stype = cmsana::HHToBBGGEventTree::TwoLightJetsMistagPlusTwoFakePhotons;
 
     outputEventTree->sampletype = stype;
     outputEventTree->run = info->runNum;
@@ -235,148 +173,154 @@ void HHToBBGGSelectionMistags(const string inputfile,          // input file
     outputEventTree->rho = info->RhoKt6PFJets;
     outputEventTree->nvtx = info->nGoodPV;
 
-    cmsana::FourVectorM photon1v;
-    cmsana::FourVectorM photon2v;
-    cmsana::FourVectorM diphotonv;
-    outputEventTree->pho1 = null;      //default 4-vector
-    outputEventTree->pho2 = null;
-    outputEventTree->diphoton = null;    
-
+    cmsana::FourVectorM genpho1v;
+    cmsana::FourVectorM genpho2v;
+    outputEventTree->genpho1 = null;
+    outputEventTree->genpho2 = null;
     if (genPhoton1) {
-      photon1v.SetPt(genPhoton1->pt);
-      photon1v.SetEta(genPhoton1->eta);
-      photon1v.SetPhi(genPhoton1->phi);
-      photon1v.SetM(0);
-      outputEventTree->pho1 = photon1v;
-    } 
-
-    if (genPhoton2) {
-      photon2v.SetPt(genPhoton2->pt);
-      photon2v.SetEta(genPhoton2->eta);
-      photon2v.SetPhi(genPhoton2->phi);
-      photon2v.SetM(0);
-      outputEventTree->pho2 = photon2v;
+      genpho1v.SetPt(genPhoton1->pt);
+      genpho1v.SetEta(genPhoton1->eta);
+      genpho1v.SetPhi(genPhoton1->phi);
+      genpho1v.SetM(0);
+      outputEventTree->genpho1 = genpho1v;
     }
-    
-    if (genPhoton1 && genPhoton2) {
-      diphotonv = photon1v + photon2v;
-      outputEventTree->diphoton = diphotonv;
+    if (genPhoton2) {
+      genpho2v.SetPt(genPhoton2->pt);
+      genpho2v.SetEta(genPhoton2->eta);
+      genpho2v.SetPhi(genPhoton2->phi);
+      genpho2v.SetM(0);   
+      outputEventTree->genpho2 = genpho2v;    
     }
 
     cmsana::FourVectorM genb1v;
     cmsana::FourVectorM genb2v;
     outputEventTree->genb1 = null;
     outputEventTree->genb2 = null;
-    if (genB1) {
-      genb1v.SetPt(genB1->pt);
-      genb1v.SetEta(genB1->eta);
-      genb1v.SetPhi(genB1->phi);
-      genb1v.SetM(0);
-      outputEventTree->genb1 = genb1v;
-    }
-    if (genB2) {
-      genb2v.SetPt(genB2->pt);
-      genb2v.SetEta(genB2->eta);
-      genb2v.SetPhi(genB2->phi);
-      genb2v.SetM(0);   
-      outputEventTree->genb2 = genb2v;
-    }
 
-    //***********************************************************
-    // Find B Gen-Jets
-    //***********************************************************    
+    //****************************************************************
+    // Loop over genjets to make collection of eligible denominators
+    //****************************************************************   
     UInt_t njets = 0;
     UInt_t ncentraljets = 0;
     vector<const cmsana::TGenJet*> goodBJets;
     for(Int_t i=0; i<genjetArr->GetEntriesFast(); i++) {
       const cmsana::TGenJet *genjet = (cmsana::TGenJet*)((*genjetArr)[i]);
 
-      bool isTruthB = false;
-      if ( genB1 && cmsana::deltaR(genjet->eta,genjet->phi,genB1->eta,genB1->phi) < 0.5) isTruthB=true;
-      if ( genB2 && cmsana::deltaR(genjet->eta,genjet->phi,genB2->eta,genB2->phi) < 0.5) isTruthB=true;
+      bool passBJetCuts = true;
+//       if ( !(genPhoton1 && genPhoton2) ) passBJetCuts = false; //Si: not sure this is useful
 
-      if (isTruthB) {
-        if (!genBJet1) {
-          genBJet1 = genjet;
-        } else {
-          if (!genBJet2) genBJet2 = genjet;
-        }      
-      }
-
-      bool passCuts = true;
-      if ( !(genPhoton1 && genPhoton2) ) passCuts = false;
-      //more cuts
-      if (!(genjet->pt > 30)) passCuts = false;
-      if (!(fabs(genjet->eta) < 2.4)) passCuts = false;
-
-      if (passCuts && genjet->pt > 30) {
-        njets++;
-        if (fabs(genjet->eta) < 2.5) ncentraljets++;
-      }
-
-      if (passCuts) {      
+      //***************************************************
+      //bjet cuts
+      //***************************************************
+      if (!(genjet->pt > 30)) passBJetCuts = false;
+      if (!(fabs(genjet->eta) < 2.4)) passBJetCuts = false;
+      if (passBJetCuts) {      
         //save good bjets
         goodBJets.push_back((cmsana::TGenJet*)genjet->Clone()); //new object created
       }
-    }
 
-    // switch bjet1 and bjet2 to match gen bjets
-    if (genBJet1) {
-      if ( genB2 && cmsana::deltaR(genBJet1->eta, genBJet1->phi, genB2->eta, genB2->phi) < 0.5) {
-        const cmsana::TGenJet* tmp = genBJet2;
-        genBJet2 = genBJet1;
-        genBJet1 = tmp;
+      //***************************************************
+      //jet counting
+      //***************************************************
+      if (genjet->pt > 30) {
+        tmpHT += genjet->pt;
+        njets++;
+        if (fabs(genjet->eta) < 2.5) ncentraljets++;
       }
     }
-    
+
+
+    //***************************************************
+    //No real bjets in this sample
+    //***************************************************
     cmsana::FourVectorM genbjet1v;
     cmsana::FourVectorM genbjet2v;
     outputEventTree->genbjet1 = null;    
     outputEventTree->genbjet2 = null;    
-    if (genBJet1) {
-      genbjet1v.SetPt(genBJet1->pt);
-      genbjet1v.SetEta(genBJet1->eta);
-      genbjet1v.SetPhi(genBJet1->phi);
-      genbjet1v.SetM(genBJet1->mass);
-      outputEventTree->genbjet1 = genbjet1v;
+    
+    
+    //***************************************************
+    //selected photons
+    //***************************************************
+    const cmsana::TGenParticle *photon1 = 0;
+    const cmsana::TGenParticle *photon2 = 0;
+
+    if (genPhoton1) photon1 = genPhoton1;
+    if (genPhoton2) photon2 = genPhoton2;
+
+    cmsana::FourVectorM photon1v;
+    cmsana::FourVectorM photon2v;
+    cmsana::FourVectorM diphotonv;
+    double pho1eff = 0;
+    double pho2eff = 0;
+    outputEventTree->pho1 = null;      //default 4-vector
+    outputEventTree->pho2 = null;
+    outputEventTree->diphoton = null;    
+
+    if (photon1) {
+      photon1v.SetPt(photon1->pt);
+      photon1v.SetEta(photon1->eta);
+      photon1v.SetPhi(photon1->phi);
+      photon1v.SetM(0);
+      outputEventTree->pho1 = photon1v;
+      pho1eff = PhotonEfficiencyHist->GetBinContent(PhotonEfficiencyHist->FindFixBin(fmax(fmin(photon1->pt,99.9),0.01),
+                                                                    fmax(fmin(photon1->eta,2.49),-2.49)));
+    } 
+
+    if (photon2) {
+      photon2v.SetPt(photon2->pt);
+      photon2v.SetEta(photon2->eta);
+      photon2v.SetPhi(photon2->phi);
+      photon2v.SetM(0);
+      outputEventTree->pho2 = photon2v;
+      pho2eff = PhotonEfficiencyHist->GetBinContent(PhotonEfficiencyHist->FindFixBin(fmax(fmin(photon2->pt,99.9),0.01),
+                                                                    fmax(fmin(photon2->eta,2.49),-2.49)));
     }
-    if (genBJet2) {
-      genbjet2v.SetPt(genBJet2->pt);
-      genbjet2v.SetEta(genBJet2->eta);
-      genbjet2v.SetPhi(genBJet2->phi);
-      genbjet2v.SetM(genBJet2->mass);   
-      outputEventTree->genbjet2 = genbjet2v;    
+    
+    if (photon1 && photon2) {
+      diphotonv = photon1v + photon2v;
+      outputEventTree->diphoton = diphotonv;
     }
+    
+    if (photon1) tmpHT += photon1->pt;
+    if (photon2) tmpHT += photon2->pt;
 
     //cout << " Number of good BJets: " << goodBJets.size() << endl;
+
+    //***************************************************************************************************************
     // now that I have all the possible goodBJets, loop through them and choose two pairwise unique goodBJets to
     // promote to bjet1 and bjet2 and store this event into the tree (don't forget to weight the event)
-
-    //********************************************************
+    //
+    //***************************************************************************************************************
     //Select all pairwise goodBJets (i.e. possible bjets)
-    //********************************************************
+    //***************************************************************************************************************
     if (goodBJets.size() > 1) {
-      for (Int_t i=0; i<goodBJets.size()-1; i++) {
-        for (Int_t j=i+1; j<goodBJets.size(); j++) {
+      for (UInt_t i=0; i<goodBJets.size()-1; i++) {
+        for (UInt_t j=i+1; j<goodBJets.size(); j++) {
           const cmsana::TGenJet* bjet1 = 0;
           const cmsana::TGenJet* bjet2 = 0;
           bjet1 = goodBJets[i];
           bjet2 = goodBJets[j];
-          //cout << bjet1->pt << " | " << bjet2->pt << endl;
           if (bjet2->pt > bjet1->pt) {
             const cmsana::TGenJet* tmp = bjet2;
             bjet2 = bjet1;
             bjet1 = tmp;
           }
 
-
-          cout << bjet1->matchedPdgId << " | " << bjet2->matchedPdgId << endl;
+          //**************************************************
+          //skip any jet pairs that have real b jets
+          //**************************************************
           if ( abs(bjet1->matchedPdgId) == 5 || abs(bjet2->matchedPdgId) == 5) continue;
-          if ( abs(bjet1->matchedPdgId) == 4) bjet1Weight = typeFourWeight;
-          else bjet1Weight = typeZeroWeight;
-          if ( abs(bjet2->matchedPdgId) == 4) bjet2Weight = typeFourWeight;
-          else bjet2Weight = typeZeroWeight;
 
+          //**************************************************
+          //assign mistag rates for light jets and charm
+          //**************************************************          
+          if ( abs(bjet1->matchedPdgId) == 4) bjet1FakeRateHist = BJetMistagRateCharmJetsHist;
+          else bjet1FakeRateHist = BJetMistagRateLightJetsHist;
+          if ( abs(bjet2->matchedPdgId) == 4) bjet2FakeRateHist = BJetMistagRateCharmJetsHist;
+          else bjet2FakeRateHist = BJetMistagRateLightJetsHist;
+          bjet1Eff = bjet1FakeRateHist->GetBinContent(bjet1FakeRateHist->FindBin(fmax(fmin(bjet1->pt,119.9),0.01),fmax(fmin(bjet1->eta,2.49),-2.49)));
+          bjet2Eff = bjet2FakeRateHist->GetBinContent(bjet2FakeRateHist->FindBin(fmax(fmin(bjet1->pt,119.9),0.01),fmax(fmin(bjet1->eta,2.49),-2.49)));
       
           cmsana::FourVectorM bjet1v;
           cmsana::FourVectorM bjet2v;
@@ -412,7 +356,7 @@ void HHToBBGGSelectionMistags(const string inputfile,          // input file
           //********************************************************    
           cmsana::FourVectorM bbggSystemv;
           outputEventTree->bbgg = null;
-          if (bjet1 && bjet2 && genPhoton1 && genPhoton2) {
+          if (bjet1 && bjet2 && photon1 && photon2) {
             bbggSystemv = (photon1v + photon2v + bjet1v + bjet2v);
             outputEventTree->bbgg = bbggSystemv;
           }
@@ -432,29 +376,32 @@ void HHToBBGGSelectionMistags(const string inputfile,          // input file
           outputEventTree->DRgg = -1;
           outputEventTree->DRbb = -1;
           outputEventTree->minDRgb = -1;
-          if (genPhoton1 && genPhoton2 && bjet1 && bjet2 ) {
-            outputEventTree->DRgg = cmsana::deltaR(genPhoton1->eta, genPhoton1->phi, genPhoton2->eta, genPhoton2->phi);
+          if (photon1 && photon2 && bjet1 && bjet2 ) {
+            outputEventTree->DRgg = cmsana::deltaR(photon1->eta, photon1->phi, photon2->eta, photon2->phi);
             outputEventTree->DRbb = cmsana::deltaR(bjet1->eta, bjet1->phi, bjet2->eta, bjet2->phi);
-            outputEventTree->minDRgb = fmin(fmin(fmin( cmsana::deltaR(genPhoton1->eta, genPhoton1->phi, bjet1->eta, bjet1->phi), 
-                                                       cmsana::deltaR(genPhoton1->eta, genPhoton1->phi, bjet2->eta, bjet2->phi)),
-                                                 cmsana::deltaR(genPhoton2->eta, genPhoton2->phi, bjet1->eta, bjet1->phi)),
-                                            cmsana::deltaR(genPhoton2->eta, genPhoton2->phi, bjet2->eta, bjet2->phi));      
+            outputEventTree->minDRgb = fmin(fmin(fmin( cmsana::deltaR(photon1->eta, photon1->phi, bjet1->eta, bjet1->phi), 
+                                                       cmsana::deltaR(photon1->eta, photon1->phi, bjet2->eta, bjet2->phi)),
+                                                 cmsana::deltaR(photon2->eta, photon2->phi, bjet1->eta, bjet1->phi)),
+                                            cmsana::deltaR(photon2->eta, photon2->phi, bjet2->eta, bjet2->phi));      
           }
       
-          outputEventTree->pfmet = sqrt( info->pfMEx*info->pfMEx + info->pfMEy*info->pfMEy);
-          outputEventTree->pfTrackMET = sqrt( info->pfTrackMEx*info->pfTrackMEx + info->pfTrackMEy*info->pfTrackMEy);
+          outputEventTree->pfmet = 0;
+          outputEventTree->pfTrackMET = 0;          
+          outputEventTree->HT = tmpHT;
           
           //Note: currently not computing HT. we may add it later.
 
           //********************************************************
           //Fill Output Tree
           //********************************************************
-          outputEventTree->weight = bjet1Weight->GetBinContent(bjet1Weight->FindBin(fmax(fmin(bjet1->pt,99.9),0.01),fmax(fmin(bjet1->eta,2.49),-2.49))) * bjet2Weight->GetBinContent(bjet2Weight->FindBin(fmax(fmin(bjet2->pt,99.9),0.01),fmax(fmin(bjet2->eta,2.49),-2.49))) * RealPhoWeight->GetBinContent(RealPhoWeight->FindBin(fmax(fmin(genPhoton1->pt,99.9),0.01),fmax(fmin(genPhoton1->eta,2.49),-2.49))) * RealPhoWeight->GetBinContent(RealPhoWeight->FindBin(fmax(fmin(genPhoton2->pt,99.9),0.01),fmax(fmin(genPhoton2->eta,2.49),-2.49)));
+          outputEventTree->weight = bjet1Eff * bjet2Eff * pho1eff * pho2eff;
           outputEventTree->tree_->Fill();
           nEventsTwoRealPho++;
         }
       }
     }
+
+
     //********************************************************
     //Clean up Memory
     //********************************************************
@@ -462,7 +409,9 @@ void HHToBBGGSelectionMistags(const string inputfile,          // input file
       if (goodBJets[k]) delete goodBJets[k];
     }
     nEvents++;
-  }
+
+  } //loop over all events
+
 
   delete infile;
   infile=0, eventTree=0;      
