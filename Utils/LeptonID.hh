@@ -27,7 +27,7 @@ Double_t ComputeElePFIsoRings( const cmsana::TElectron *ele,
                                Double_t maxDR,
                                Bool_t printDebug = kFALSE);
 
-Bool_t PassMuonIDVeto(const cmsana::TMuon *muon, Double_t pfIso03);
+Bool_t PassMuonIDVeto(const cmsana::TMuon *muon);
 
 
 
