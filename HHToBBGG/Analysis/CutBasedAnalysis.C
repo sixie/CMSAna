@@ -9,7 +9,7 @@
 #include <vector>
 #include <map>
 
-Int_t bkgColors[10] = { kRed, kBlue,  kGreen+2, kMagenta, kCyan, kBlue-9, kBlack, kRed-6, kBlue-6, kMagenta+3 };
+Int_t bkgColors[10] = { kRed, kBlue,  kGreen+2, kMagenta, kCyan, kGreen+3, kBlack, kRed-6, kBlue-6, kMagenta+3 };
 string bkgLegendLabels[10] = { "HH#rightarrow bb#gamma#gamma", 
                              "ttH,H#rightarrow#gamma#gamma",
                              "ZH#rightarrow bb #gamma#gamma",
