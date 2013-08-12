@@ -205,7 +205,7 @@ void MakeNtuple(const string inputFilename, const string outputFilename, bool se
   for(UInt_t ientry=firstEvent; ientry < lastEvent; ientry++) {       	
     infoBr->GetEntry(ientry);
 		
-    if (ientry % 1 == 0) cout << "Event " << ientry << endl;
+    if (ientry % 1000 == 0) cout << "Event " << ientry << endl;
 
     Double_t eventweight = info->eventweight;
 
@@ -257,7 +257,7 @@ void MakeNtuple(const string inputFilename, const string outputFilename, bool se
 
           //Fill Photon
           NPhotonsFilled++;
-          FillPhotonTree( phoTree, gen, pho, pfcandidateArr, genparticleArr, rho, EAEra, 
+          FillPhotonTree( phoTree, gen, pho, pfcandidateArr, genparticleArr, rho, EAEra,                           
                           info, 1.0);
           
         } //found proper gen photon

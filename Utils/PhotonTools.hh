@@ -17,10 +17,7 @@ void FillPhotonTree(cmsana::PhotonTree *phoTree,
                     TClonesArray *pfCandidates, 
                     TClonesArray *genParticles, 
                     Double_t rho, UInt_t DataEra,
-                    UInt_t NPV,
-                    UInt_t runNum,
-                    UInt_t lumiSec,
-                    UInt_t evtNum,
+                    cmsana::TEventInfo *info,
                     Float_t weight = 1.0
                     
   ) {
@@ -39,10 +36,10 @@ void FillPhotonTree(cmsana::PhotonTree *phoTree,
 
   if (pho) {
     phoTree->fWeight = weight;
-    phoTree->fRunNumber = runNum;
-    phoTree->fLumiSectionNumber = lumiSec;
-    phoTree->fEventNumber = evtNum;
-    phoTree->fPhoEventNumberParity = (evtNum % 2 == 0);
+    phoTree->fRunNumber = info->runNum;
+    phoTree->fLumiSectionNumber = info->lumiSec;
+    phoTree->fEventNumber = info->evtNum;
+    phoTree->fPhoEventNumberParity = (info->evtNum % 2 == 0);
     phoTree->fPhoPt = pho->pt; 
     phoTree->fPhoEta = pho->eta; 
     phoTree->fPhoPhi = pho->phi; 
@@ -51,7 +48,7 @@ void FillPhotonTree(cmsana::PhotonTree *phoTree,
     phoTree->fPhoSCPhi = pho->scPhi; 
     phoTree->fPhoTriggerBit = 0;
     phoTree->fRho = rho; 
-    phoTree->fNVertices = NPV; 
+    phoTree->fNVertices = info->nGoodPV; 
     phoTree->fPhoHasPixelSeed = pho->hasPixelSeed; 
     phoTree->fPhoIsConversion = pho->isConversion;
     phoTree->fPhoPassEleVeto = pho->passEleVeto;
