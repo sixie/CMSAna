@@ -15,3 +15,5 @@ root -l -b -q CMSAna/HHToBBGG/macros/NormalizeNtuple.C+'("/afs/cern.ch/work/s/si
 root -l -b -q CMSAna/HHToBBGG/macros/NormalizeNtuple.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/HHToBBGGNtuple.DiPhotonJJ_M60To200_14TeV.root","DiPhotonJJ_M60To200_14TeV","/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/normalizedNtuples/HHToBBGGNtuple.DiPhotonJJ_M60To200_14TeV.normalized.root")'
 
 root -l -b -q CMSAna/HHToBBGG/macros/NormalizeNtuple.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/HHToBBGGNtuple.ttjll-START53_V7A.root","ttjll-START53_V7A","/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/normalizedNtuples/HHToBBGGNtuple.ttjll-START53_V7A.normalized.root")'
+
+root -l -b -q CMSAna/HHToBBGG/macros/NormalizeNtuple.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/HHToBBGGNtuple.bbH_M60To200_14TeV.root","bbH_M60To200_14TeV","/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/normalizedNtuples/HHToBBGGNtuple.bbH_M60To200_14TeV.normalized.root")'

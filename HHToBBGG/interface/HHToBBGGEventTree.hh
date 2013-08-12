@@ -27,6 +27,10 @@ namespace cmsana
         BBPlusTwoFakePhotons = 8,
         CCMistagPlusTwoFakePhotons = 9,
         TwoLightJetsMistagPlusTwoFakePhotons = 10,
+	BBJG = 11,
+	CCJG = 12,
+	JJJG = 13,
+        BBHGG = 20,
       };
    
       /// variables

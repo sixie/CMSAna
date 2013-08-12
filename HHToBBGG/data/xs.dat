@@ -48,6 +48,11 @@ BBJJ_M110To140_14TeV                 214000000
 CCJJ_M110To140_14TeV                 214400000
 JJJJ_14TeV                           20440000000
 
-#heft XS from madgraph
-bbH_M60To200_14TeV                   0.1717
+#heft XS from madgraph 
+#bbH_M60To200_14TeV                   0.1717*0.9528 #madgraphXS * correction in XS*BR from mH=120 to mH=125, because I produced the madgraph sample mistakenly at mH=120
+bbH_M60To200_14TeV                   0.1888
 
+#Photon+Jets
+BBJG_M60To200_14TeV                  806200
+CCJG_M60To200_14TeV                  2584000
+JJJG_M60To200_14TeV                  33840000

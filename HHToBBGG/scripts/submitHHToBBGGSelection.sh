@@ -110,3 +110,16 @@ foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ca
   @ i = $i + 1
 end
 
+
+#############
+# BBH->GG
+#############
+
+
+set i=0
+foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/bbH_M60To200_14TeV.txt`)
+  echo $file " " $i
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_BBHGG_bbH_M60To200_14TeV_${i}.out -J HHToBBGGSelection_BBHGG_bbH_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection_BBHGG.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.bbH_M60To200_14TeV.${i}.root\",20\) HHToBBGGNtuple.bbH_M60To200_14TeV.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  sleep 0.25
+  @ i = $i + 1
+end
