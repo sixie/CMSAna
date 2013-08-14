@@ -20,7 +20,7 @@ namespace cmsana
         HHToBBGG = 1,
         ttHgg = 2,
         ZHgg = 3,
-        ggHgg = 4,        
+        bbHgg = 4,        
         ttbar = 5,
         BBGG = 6,
         GGPlusTwoMistag = 7,
@@ -30,7 +30,6 @@ namespace cmsana
 	BBJG = 11,
 	CCJG = 12,
 	JJJG = 13,
-        BBHGG = 20,
       };
    
       /// variables
