@@ -51,7 +51,8 @@
 
 void HHToBBGGSelection_BBGG(const string inputfile,          // input file
                             const string outputfile,         // output directory
-                            Int_t SampleType = 6
+                            Int_t SampleType = 6,
+                            Bool_t applyExtrapWeightTo140PU = kFALSE
   ) {
   
   //--------------------------------------------------------------------------------------------------------------
@@ -445,6 +446,23 @@ void HHToBBGGSelection_BBGG(const string inputfile,          // input file
     if (genPhoton1) outputEventTree->HT += genPhoton1->pt;
     if (genPhoton2) outputEventTree->HT += genPhoton2->pt;
     
+
+    //************************************
+    //Extrapolation to 140 Pileup
+    //************************************
+    double pho1EffScalingForPU140 = 1.0;
+    double pho2EffScalingForPU140 = 1.0;
+    double bjet1EffScalingForPU140 = 1.0;
+    double bjet2EffScalingForPU140 = 1.0;
+    pho1EffScalingForPU140 = (0.85/0.95)*(0.85/0.95);
+    pho2EffScalingForPU140 = (0.85/0.95)*(0.85/0.95);
+    bjet1EffScalingForPU140 = (0.55/0.65);
+    bjet2EffScalingForPU140 = (0.55/0.65);
+    if (applyExtrapWeightTo140PU) {
+      outputEventTree->weight = outputEventTree->weight * pho1EffScalingForPU140*pho2EffScalingForPU140*bjet1EffScalingForPU140*bjet2EffScalingForPU140;
+    }
+
+
     //********************************************************
     //Fill Output Tree
     //********************************************************

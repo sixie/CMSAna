@@ -50,8 +50,10 @@
 //=== MAIN MACRO ================================================================================================= 
 
 void HHToBBGGSelectionMistags(const string inputfile,          // input file
-                       const string outputfile,         // output directory
-                       Int_t SampleType = 1) {
+                              const string outputfile,         // output directory
+                              Int_t SampleType = 7,
+                              Bool_t applyExtrapWeightTo140PU = kFALSE
+  ) {
   
   //--------------------------------------------------------------------------------------------------------------
   // Settings 
@@ -391,10 +393,41 @@ void HHToBBGGSelectionMistags(const string inputfile,          // input file
           
           //Note: currently not computing HT. we may add it later.
 
+          //*******************************************************
+          //Apply mistag and photon selection efficiencies
+          //*******************************************************
+          outputEventTree->weight = bjet1Eff * bjet2Eff * pho1eff * pho2eff;
+
+          //************************************
+          //Extrapolation to 140 Pileup
+          //************************************
+          double pho1EffScalingForPU140 = 1.0;
+          double pho2EffScalingForPU140 = 1.0;
+          double bjet1EffScalingForPU140 = 1.0;
+          double bjet2EffScalingForPU140 = 1.0;
+          pho1EffScalingForPU140 = (0.85/0.95)*(0.85/0.95);
+          pho2EffScalingForPU140 = (0.85/0.95)*(0.85/0.95);
+
+          //Don't do extrapolation for mistag rate at this point in time
+//           if ( abs(bjet1->matchedPdgId) == 4) {
+//             bjet1EffScalingForPU140 = 0.15/0.10;
+//           } else {
+//             bjet1EffScalingForPU140 = 0.03/0.015;
+//           }
+//           if ( abs(bjet2->matchedPdgId) == 4) {
+//             bjet2EffScalingForPU140 = 0.15/0.10;
+//           } else {
+//             bjet2EffScalingForPU140 = 0.03/0.015;
+//           }
+
+          if (applyExtrapWeightTo140PU) {
+            outputEventTree->weight = outputEventTree->weight * pho1EffScalingForPU140*pho2EffScalingForPU140*bjet1EffScalingForPU140*bjet2EffScalingForPU140;
+          }
+
+
           //********************************************************
           //Fill Output Tree
           //********************************************************
-          outputEventTree->weight = bjet1Eff * bjet2Eff * pho1eff * pho2eff;
           outputEventTree->tree_->Fill();
           nEventsTwoRealPho++;
         }

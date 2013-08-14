@@ -54,7 +54,8 @@
 
 void HHToBBGGSelection(const string inputfile,          // input file
                        const string outputfile,         // output directory
-                       Int_t SampleType = 1
+                       Int_t SampleType = 1,
+                       Bool_t applyExtrapWeightTo140PU = kFALSE
   ) {
   
   //--------------------------------------------------------------------------------------------------------------
@@ -205,7 +206,7 @@ void HHToBBGGSelection(const string inputfile,          // input file
       if ( SampleType == cmsana::HHToBBGGEventTree::HHToBBGG
            || SampleType == cmsana::HHToBBGGEventTree::ttHgg
            || SampleType == cmsana::HHToBBGGEventTree::ZHgg
-           || SampleType == cmsana::HHToBBGGEventTree::ggHgg
+           || SampleType == cmsana::HHToBBGGEventTree::bbHgg
         ) {
         if (p->pdgid == 22 && p->motherPdgID == 25) {
           if (!genPhoton1) {
@@ -223,7 +224,7 @@ void HHToBBGGSelection(const string inputfile,          // input file
     if (SampleType == 1) stype = cmsana::HHToBBGGEventTree::HHToBBGG;
     if (SampleType == 2) stype = cmsana::HHToBBGGEventTree::ttHgg;
     if (SampleType == 3) stype = cmsana::HHToBBGGEventTree::ZHgg;
-    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::ggHgg;
+    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::bbHgg;
     if (SampleType == 5) stype = cmsana::HHToBBGGEventTree::ttbar;
     if (SampleType == 6) stype = cmsana::HHToBBGGEventTree::BBGG;
     if (SampleType == 7) stype = cmsana::HHToBBGGEventTree::GGPlusTwoMistag;
@@ -418,8 +419,6 @@ void HHToBBGGSelection(const string inputfile,          // input file
       }
     }
      
-
-
   
     cmsana::FourVectorM photon1v;
     cmsana::FourVectorM photon2v;
@@ -449,6 +448,8 @@ void HHToBBGGSelection(const string inputfile,          // input file
       outputEventTree->diphoton = diphotonv;
     }
    
+    
+
 
     //********************************************************
     //Select b-jets
@@ -639,6 +640,22 @@ void HHToBBGGSelection(const string inputfile,          // input file
     if (photon1) outputEventTree->HT += photon1->pt;
     if (photon2) outputEventTree->HT += photon2->pt;
     
+
+    //************************************
+    //Extrapolation to 140 Pileup
+    //************************************
+    double pho1EffScalingForPU140 = 1.0;
+    double pho2EffScalingForPU140 = 1.0;
+    double bjet1EffScalingForPU140 = 1.0;
+    double bjet2EffScalingForPU140 = 1.0;
+    pho1EffScalingForPU140 = (0.85/0.95)*(0.85/0.95);
+    pho2EffScalingForPU140 = (0.85/0.95)*(0.85/0.95);
+    bjet1EffScalingForPU140 = (0.55/0.65);
+    bjet2EffScalingForPU140 = (0.55/0.65);
+    if (applyExtrapWeightTo140PU) {
+      outputEventTree->weight = pho1EffScalingForPU140*pho2EffScalingForPU140*bjet1EffScalingForPU140*bjet2EffScalingForPU140;
+    }
+
 
     //********************************************************
     //Fill Output Tree

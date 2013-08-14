@@ -88,8 +88,9 @@ double GetSmearedPhotonPt( double pt, double eta, vector<double> PtBins, vector<
 //=== MAIN MACRO ================================================================================================= 
 
 void HHToBBGGSelection_BBHGG(const string inputfile,          // input file
-                            const string outputfile,         // output directory
-                            Int_t SampleType = 6
+                             const string outputfile,         // output directory
+                             Int_t SampleType = 4,
+                             Bool_t applyExtrapWeightTo140PU = kFALSE                             
   ) {
   
   //--------------------------------------------------------------------------------------------------------------
@@ -275,7 +276,7 @@ void HHToBBGGSelection_BBHGG(const string inputfile,          // input file
     //***********************************************************    
     for(Int_t i=0; i<genparticleArr->GetEntriesFast(); i++) {
       const cmsana::TGenParticle *p = (cmsana::TGenParticle*)((*genparticleArr)[i]);
-      if ( SampleType == cmsana::HHToBBGGEventTree::BBHGG) {
+      if ( SampleType == cmsana::HHToBBGGEventTree::bbHgg) {
         if (p->pdgid == 22 && ( p->motherPdgID == 25 ) && p->status == 3 ) {
           if (!genPhoton1) {
             genPhoton1 = p;
@@ -311,7 +312,7 @@ void HHToBBGGSelection_BBHGG(const string inputfile,          // input file
 
     //sampleType
     cmsana::HHToBBGGEventTree::SampleType stype = cmsana::HHToBBGGEventTree::none;
-    if (SampleType == 20) stype = cmsana::HHToBBGGEventTree::BBHGG;
+    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::bbHgg;
     else {
       cout << "Warning: sample type not diphoton jets. Unintended use of this macro. \n";
     }
@@ -520,6 +521,25 @@ void HHToBBGGSelection_BBHGG(const string inputfile,          // input file
     if (genPhoton1) outputEventTree->HT += genPhoton1->pt;
     if (genPhoton2) outputEventTree->HT += genPhoton2->pt;
     
+
+    //************************************
+    //Extrapolation to 140 Pileup
+    //************************************
+    double pho1EffScalingForPU140 = 1.0;
+    double pho2EffScalingForPU140 = 1.0;
+    double bjet1EffScalingForPU140 = 1.0;
+    double bjet2EffScalingForPU140 = 1.0;
+    pho1EffScalingForPU140 = (0.85/0.95)*(0.85/0.95);
+    pho2EffScalingForPU140 = (0.85/0.95)*(0.85/0.95);
+    bjet1EffScalingForPU140 = (0.55/0.65);
+    bjet2EffScalingForPU140 = (0.55/0.65);
+    if (applyExtrapWeightTo140PU) {
+      outputEventTree->weight = outputEventTree->weight * pho1EffScalingForPU140*pho2EffScalingForPU140*bjet1EffScalingForPU140*bjet2EffScalingForPU140;
+    }
+
+
+
+
     //********************************************************
     //Fill Output Tree
     //********************************************************
