@@ -11,6 +11,8 @@
 #include <utility>
 #include <TGraphAsymmErrors.h>
 #include <TEfficiency.h>
+#include <iostream> 
+#include <iomanip> 
 
 namespace cmsana
 {
@@ -367,11 +369,15 @@ TH3F* rebin(TH3F* hist, vector<double> xlowedges, vector<double> ylowedges, vect
 //--------------------------------------------------------------------------------------------------
 // Create Efficiency Histogram. 
 //--------------------------------------------------------------------------------------------------
+
+/*
 TGraphAsymmErrors* createEfficiencyGraph(TH1F* numerator, TH1F* denominator,
                                          string histname, 
                                          vector<Double_t> bins, 
                                          Double_t xlow, Double_t xhigh, 
-                                         Double_t ylow, Double_t yhigh ) {
+                                         Double_t ylow, Double_t yhigh,
+                                         bool smallerr = false
+                                         ) {
   TH1F *n = numerator;
   TH1F *d = denominator;  
   if (bins.size() > 0) {   
@@ -400,7 +406,7 @@ TGraphAsymmErrors* createEfficiencyGraph(TH1F* numerator, TH1F* denominator,
   //don't take the overflow bins
   for (int b=0; b<nbins ; ++b) {
 
-    x[b] = n->GetXaxis()->GetBinCenter(b+1);    
+    x[b] = n->GetXaxis()->GetBinCenter(b+1);   
     xErr[b] = 0.0;
 
     Double_t ratio = 0;
@@ -409,6 +415,7 @@ TGraphAsymmErrors* createEfficiencyGraph(TH1F* numerator, TH1F* denominator,
 
     Double_t n1 = TMath::Nint(n->GetBinContent(b+1));
     Double_t n2 = TMath::Nint(d->GetBinContent(b+1));
+    cout << "numerator: " << n1 << " and denominator: " << n2 << endl;
     if (n1 > n2) n1 = n2;
 
     if (n2>0) {
@@ -422,13 +429,36 @@ TGraphAsymmErrors* createEfficiencyGraph(TH1F* numerator, TH1F* denominator,
     y[b] = ratio;
     yErrLow[b] = errLow;
     yErrHigh[b] = errHigh;
+
+    cout << "x value: " << x[b] << " and y value: " << y[b] << endl; 
+
   }
 
+  //get rid of points with large relative errorbars
+  if(smallerr) { 
+    for (int b=0; b<nbins ; ++b) { 
+      if((yErrHigh[b] >= .8*y[b]) | (yErrLow[b] >= .8*y[b])) { 
+        yErrHigh[b] = 0.0; 
+        yErrLow[b] = 0.0; 
+        y[b] = 0.0; 
+        xErr[b] = 0.0; 
+        x[b] = 0.0; 
+      }
+      //if(x[b] > 160) { 
+      //  yErrHigh[b] = 0.0; 
+      //  yErrLow[b] = 0.0; 
+      //  y[b] = 0.0; 
+      //  xErr[b] = 0.0; 
+      //  x[b] = 0.0; 
+      //}
+    }
+  } 
+
   TGraphAsymmErrors *efficiency = new TGraphAsymmErrors(nbins, x, y, xErr, xErr, yErrLow,yErrHigh );
-  efficiency->SetName(histname.c_str());
-  efficiency->SetTitle(histname.c_str());
-  efficiency->GetXaxis()->SetTitle(n->GetXaxis()->GetTitle());
-  efficiency->GetYaxis()->SetTitle("Efficiency");
+//  efficiency->SetName(histname.c_str());
+//  efficiency->SetTitle(histname.c_str());
+//  efficiency->GetXaxis()->SetTitle(n->GetXaxis()->GetTitle());
+//  efficiency->GetYaxis()->SetTitle("Efficiency");
 
   if (yhigh != -99)
     efficiency->SetMaximum(yhigh);
@@ -437,12 +467,116 @@ TGraphAsymmErrors* createEfficiencyGraph(TH1F* numerator, TH1F* denominator,
   if (xlow != -99 && xhigh != -99) 
     efficiency->GetXaxis()->SetRangeUser(xlow,xhigh);
 
-  efficiency->SetMarkerSize(1);
-  efficiency->SetLineWidth(2);
+//  efficiency->SetMarkerSize(1);
+//  efficiency->SetLineWidth(2);
 
   return efficiency;
 }
+*/
 
+TGraphAsymmErrors* createEfficiencyGraph(TH1F* numerator, TH1F* denominator,
+                                         string histname, 
+                                         vector<Double_t> bins, 
+                                         Double_t xlow, Double_t xhigh, 
+                                         Double_t ylow, Double_t yhigh,
+                                         bool smallerr = false
+                                         ) {
+  TH1F *n = numerator;
+  TH1F *d = denominator;  
+  if (bins.size() > 0) {   
+    n = cmsana::rebin(numerator,bins);
+    d = cmsana::rebin(denominator,bins);
+  }
+
+  Int_t nbins = n->GetNbinsX();
+
+  assert(nbins <= 200);
+
+  //define vectors to temporarily hold graph values
+  vector<double> X; 
+  vector<double> Y; 
+  vector<double> Xerr; 
+  vector<double> Yerrhigh;
+  vector<double> Yerrlow; 
+  
+  //don't take the overflow bins
+  for (int b=0; b<nbins ; ++b) {
+
+    Double_t xtemp = n->GetXaxis()->GetBinCenter(b+1); 
+    Double_t xerrtemp = 0.0;  
+
+    Double_t ratio = 0;
+    Double_t errLow = 0;
+    Double_t errHigh = 0;
+
+    Double_t n1 = TMath::Nint(n->GetBinContent(b+1));
+    Double_t n2 = TMath::Nint(d->GetBinContent(b+1));
+    //cout << "numerator: " << n1 << " and denominator: " << n2 << endl;
+    if (n1 > n2) n1 = n2;
+
+    if (n2>0) {
+      ratio = n1/n2;
+      if (ratio > 1) ratio = 1;
+      errLow = ratio - TEfficiency::ClopperPearson((UInt_t)n2, (UInt_t)n1, 0.68269, kFALSE);
+      errHigh = TEfficiency::ClopperPearson((UInt_t)n2, (UInt_t)n1, 0.68269, kTRUE) - ratio;
+    }
+
+//     cerr << " done bin " << b << " " << x[b] << " : " << n1 << "(" << n->GetBinContent(b+1) << ")" << " / " << n2 << "(" << d->GetBinContent(b+1) << ")" << " = " << ratio << " " << errLow << " " << errHigh << endl;
+    Double_t ytemp = ratio;
+    Double_t yerrlowtemp = errLow;
+    Double_t yerrhightemp = errHigh;
+    
+    if(smallerr) { 
+      if((yerrhightemp >= .5*ytemp) | (yerrlowtemp >= .5*ytemp)) continue; 
+      //if(xtemp > 160) continue; 
+    }
+
+    cout << "x: " << xtemp << " and y: " << ytemp << endl;
+
+    X.push_back(xtemp);  
+    Y.push_back(ytemp); 
+    Xerr.push_back(xerrtemp);
+    Yerrhigh.push_back(yerrhightemp);
+    Yerrlow.push_back(yerrlowtemp);
+  
+  }
+
+  //count entries in vector
+  int nindices = X.size();
+
+  Double_t x[nindices];
+  Double_t y[nindices];
+  Double_t xErr[nindices];
+  Double_t yErrLow[nindices];
+  Double_t yErrHigh[nindices];
+
+  //fill array from vector
+  for (int i=0;i < nindices; i++) {
+    x[i] = X.at(i);
+    y[i] = Y.at(i);
+    xErr[i] = Xerr.at(i);
+    yErrLow[i] = Yerrlow.at(i);
+    yErrHigh[i] = Yerrhigh.at(i);
+  }
+
+  TGraphAsymmErrors *efficiency = new TGraphAsymmErrors(nbins, x, y, xErr, xErr, yErrLow,yErrHigh );
+//  efficiency->SetName(histname.c_str());
+//  efficiency->SetTitle(histname.c_str());
+//  efficiency->GetXaxis()->SetTitle(n->GetXaxis()->GetTitle());
+//  efficiency->GetYaxis()->SetTitle("Efficiency");
+
+  if (yhigh != -99)
+    efficiency->SetMaximum(yhigh);
+  if (ylow != -99)
+    efficiency->SetMinimum(ylow);
+  if (xlow != -99 && xhigh != -99) 
+    efficiency->GetXaxis()->SetRangeUser(xlow,xhigh);
+
+//  efficiency->SetMarkerSize(1);
+//  efficiency->SetLineWidth(2);
+
+  return efficiency;
+}
 
 //--------------------------------------------------------------------------------------------------
 // Create Efficiency Graph. Use Clopper Pearson uncertainty intervals.
