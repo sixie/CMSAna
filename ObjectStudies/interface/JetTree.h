@@ -47,7 +47,7 @@ namespace cmsana
       Float_t                 fJetProbabilityBJetTagsDisc;
       Float_t                 fJetBProbabilityBJetTagsDisc;
       Float_t                 fJetArea;
-
+      Int_t                   fJetMatchedPdgId;
 
     public:
       /// this is the main element
@@ -90,7 +90,7 @@ namespace cmsana
         fJetProbabilityBJetTagsDisc                  = 0.0;
         fJetBProbabilityBJetTagsDisc                 = 0.0;
         fJetArea                                     = 0.0;
-
+        fJetMatchedPdgId                             = 0;
       }
     
       /// load a JetTree
@@ -131,6 +131,7 @@ namespace cmsana
         tree_->Branch("ProbabilityBJetTagsDisc",&fJetProbabilityBJetTagsDisc,"ProbabilityBJetTagsDisc/F"); 
         tree_->Branch("BProbabilityBJetTagsDisc",&fJetBProbabilityBJetTagsDisc,"BProbabilityBJetTagsDisc/F"); 
         tree_->Branch("Area",&fJetArea,"Area/F"); 
+        tree_->Branch("MatchedPdgId",&fJetMatchedPdgId,"MatchedPdgId/I"); 
 
       } 
 
@@ -167,6 +168,7 @@ namespace cmsana
         tree_->SetBranchAddress("ProbabilityBJetTagsDisc",&fJetProbabilityBJetTagsDisc);
         tree_->SetBranchAddress("BProbabilityBJetTagsDisc",&fJetBProbabilityBJetTagsDisc);
         tree_->SetBranchAddress("Area",&fJetArea);
+        tree_->SetBranchAddress("MatchedPdgId",&fJetMatchedPdgId);
 
         gErrorIgnoreLevel = currentState;
       }
