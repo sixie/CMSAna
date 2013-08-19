@@ -57,13 +57,15 @@
 using namespace RooFit;
 TCanvas *cv = 0;
 int alreadyPlotted = 0;
-Float_t ResAnalysisNum = 13./15.49;
 
 void plotInitialFit(TH1F *hist, TF1 *func, const string outputName);
 void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfileBjet, const string inputfileTwoD, Int_t plotOption);
 void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D);
 
-void FitMassTwoD(const string inputfilePho = "/afs/cern.ch/work/d/daan/public/releases/CMSSW_5_3_9_patch3/src/CMSAna/HHToBBGG/data/HHToBBGG_SignalBkgd_AfterCuts_diphotonMass.root", const string inputfileBjet = "/afs/cern.ch/work/d/daan/public/releases/CMSSW_5_3_9_patch3/src/CMSAna/HHToBBGG/data/HHToBBGG_SignalBkgd_AfterCuts_dibjetMass.root", const string inputfileTwoD = "/afs/cern.ch/work/d/daan/public/releases/CMSSW_5_3_9_patch3/src/CMSAna/HHToBBGG/data/HHToBBGG_SignalBkgd_AfterCuts_twoDMass.root", Int_t plotOption = 0, Int_t storeOption = 1, Int_t NToys = 5000) {
+//-------------------------------------------------------------
+//Main macro for generating data and fitting
+//=============================================================  
+void FitMassTwoD(const string inputfilePho = "/afs/cern.ch/work/d/daan/public/releases/CMSSW_5_3_9_patch3/src/CMSAna/HHToBBGG/data/HHToBBGG_SignalBkgd_AfterCuts_diphotonMass.root", const string inputfileBjet = "/afs/cern.ch/work/d/daan/public/releases/CMSSW_5_3_9_patch3/src/CMSAna/HHToBBGG/data/HHToBBGG_SignalBkgd_AfterCuts_dibjetMass.root", const string inputfileTwoD = "/afs/cern.ch/work/d/daan/public/releases/CMSSW_5_3_9_patch3/src/CMSAna/HHToBBGG/data/HHToBBGG_SignalBkgd_AfterCuts_twoDMass.root", Int_t plotOption = 1, Int_t storeOption = 1, Int_t NToys = 5000) {
 
   TRandom3 *randomnumber = new TRandom3(1200);
   RooWorkspace* ws = new RooWorkspace("CMSAna/HHToBBGG/fits/Workspace");
@@ -82,20 +84,19 @@ void FitMassTwoD(const string inputfilePho = "/afs/cern.ch/work/d/daan/public/re
     
   //Variables to set constant
   RooRealVar *sigMeanBjet = ws->var("sigMeanBjet"); sigMeanBjet->setConstant();
-  RooRealVar *sigSigmaBjet = ws->var("sigSigmaBjet");
-  sigSigmaBjet->setVal(sigSigmaBjet->getVal()*ResAnalysisNum);
-  sigSigmaBjet->setConstant();
+  RooRealVar *sigSigmaBjet = ws->var("sigSigmaBjet"); sigSigmaBjet->setConstant();
   RooRealVar *sigAlpha = ws->var("sigAlpha"); sigAlpha->setConstant();
   RooRealVar *sigPower = ws->var("sigPower"); sigPower->setConstant();
   RooRealVar *resMeanBjet = ws->var("resMeanBjet"); resMeanBjet->setConstant();
-  RooRealVar *resSigmaBjet = ws->var("resSigmaBjet");
-  resSigmaBjet->setVal(resSigmaBjet->getVal()*ResAnalysisNum);
-  resSigmaBjet->setConstant();
+  RooRealVar *resSigmaBjet = ws->var("resSigmaBjet"); resSigmaBjet->setConstant();
   RooRealVar *resAlpha = ws->var("resAlpha"); resAlpha->setConstant();
   RooRealVar *resPower = ws->var("resPower"); resPower->setConstant();
+  RooRealVar *resExpo = ws->var("resExpo"); resExpo->setConstant();
+  RooRealVar *nbbH = ws->var("nbbH"); nbbH->setConstant();
+  RooRealVar *nOthers = ws->var("nOthers"); nOthers->setConstant();
   
   //Create TTree to store the resulting yield data
-  TFile *f = new TFile(Form("CMSAna/HHToBBGG/data/MassFitResults/ResolutionAnalysis/MassFitTwoD_ResStep%.1f.root", ResAnalysisNum*15.49), "RECREATE");
+  TFile *f = new TFile("CMSAna/HHToBBGG/data/MassFitResults/MassFitTwoD.root", "RECREATE");
   TTree *resultTree = new TTree("resultTree", "Parameter results from fitting");
   Float_t nsigOut, nresOut, nnonresOut;
   Float_t nsigStd, nresStd, nnonresStd;
@@ -107,22 +108,20 @@ void FitMassTwoD(const string inputfilePho = "/afs/cern.ch/work/d/daan/public/re
   resultTree->Branch("nresStd",&nresStd, "nresStd/F");
   resultTree->Branch("nnonresStd",&nnonresStd, "nnonresStd/F");
   
-  //-------------------------------------------------------------
-  //Generate Toy MC experiment data and fit
-  //=============================================================  		
+  //Generate Toy MC experiment data and fits
   for(UInt_t t=0; t < NToys; ++t) {
     
     nsig->setVal(constNsig.getVal()); nres->setVal(constNres.getVal()); nnonres->setVal(constNnonres.getVal());
     expRateBjet->setVal(constexpBjet.getVal()); expRatePho->setVal(constexpPho.getVal());
-    RooDataSet *pseudoData2D = model2Dpdf->generate(RooArgList(*massBjet,*massPho), randomnumber->Poisson(328.5));//127.5, 328.5
+    Float_t ran = randomnumber->Poisson(325.);
+    RooDataSet *pseudoData2D = model2Dpdf->generate(RooArgList(*massBjet,*massPho), ran);
     RooFitResult *fitResult2D = model2Dpdf->fitTo(*pseudoData2D, RooFit::Save(), RooFit::Extended(kTRUE), RooFit::Strategy(2));
     ws->import(*pseudoData2D, kTRUE);
     ws->import(*pseudoData2D, Rename("pseudoData2D"));
     
     if (plotOption == 1) MakePlots(ws, fitResult2D);
-    //-------------------------------------------------------------
+    
     //Store fit parameters into ROOT file
-    //=============================================================
     if (storeOption == 1) {
       //Save variables into separate branches of root tree
   		nsigOut = nsig->getVal();
@@ -131,7 +130,7 @@ void FitMassTwoD(const string inputfilePho = "/afs/cern.ch/work/d/daan/public/re
   		nsigStd = nsig->getPropagatedError(*fitResult2D);
   		nresStd = nres->getPropagatedError(*fitResult2D);
   		nnonresStd = nnonres->getPropagatedError(*fitResult2D);
-  		
+  		//cout << "\n\n\n\n\n\n" << nsigOut << " | " << nresOut << " | " << nnonresOut << " | " << ran  << "\n\n\n\n\n" << endl;
   		resultTree->Fill();
     }
   }
@@ -140,7 +139,6 @@ void FitMassTwoD(const string inputfilePho = "/afs/cern.ch/work/d/daan/public/re
   resultTree->Write();
   f->Close();
   delete ws;
-  
 }
 
 void plotInitialFit(TH1F *hist, TF1 *func, const string outputName) {
@@ -154,42 +152,38 @@ void plotInitialFit(TH1F *hist, TF1 *func, const string outputName) {
   func->Draw("SAME");
   TLatex *tex = new TLatex();
   tex->SetNDC();
-  tex->SetTextSize(0.032);
-  tex->SetTextFont(2);
+  tex->SetTextSize(0.048);
+  tex->SetTextFont(42);
   if (outputName == "sigPhoHistFit") {
-  	tex->DrawLatex(0.72, 0.86, Form("#bar{M}_{#gamma#gamma} = %.2f", func->GetParameter(1)));
-  	tex->DrawLatex(0.72, 0.82, Form("#sigma_{#gamma#gamma} = %.2f", func->GetParameter(2)));
+  	tex->DrawLatex(0.64, 0.84, Form("#bar{M}_{#gamma#gamma} = %.2f", func->GetParameter(1)));
+  	tex->DrawLatex(0.64, 0.79, Form("#sigma_{#gamma#gamma} = %.2f", func->GetParameter(2)));
   }
   else if (outputName == "resPhoHistFit") {
-  	tex->DrawLatex(0.72, 0.86, Form("#bar{M}_{#gamma#gamma} = %.2f", func->GetParameter(1)));
-  	tex->DrawLatex(0.72, 0.82, Form("#sigma_{#gamma#gamma} = %.2f", func->GetParameter(2)));
+  	tex->DrawLatex(0.64, 0.84, Form("#bar{M}_{#gamma#gamma} = %.2f", func->GetParameter(1)));
+  	tex->DrawLatex(0.64, 0.79, Form("#sigma_{#gamma#gamma} = %.2f", func->GetParameter(2)));
   }
   else if (outputName == "nonresPhoHistFitExpo") {
-  	tex->DrawLatex(0.72, 0.86, Form("#lambda_{#gamma#gamma} = %.3f", func->GetParameter(1)));
+  	tex->DrawLatex(0.64, 0.84, Form("#lambda_{#gamma#gamma} = %.3f", func->GetParameter(1)));
   }
   else if (outputName == "sigBjetHistFit") {
-  	tex->DrawLatex(0.72, 0.86, Form("#bar{M}_{bb} = %.2f", func->GetParameter(1)));
-  	tex->DrawLatex(0.72, 0.82, Form("#sigma_{bb} = %.2f", func->GetParameter(2)));
+  	tex->DrawLatex(0.64, 0.84, Form("#bar{M}_{bb} = %.2f", func->GetParameter(1)));
+  	tex->DrawLatex(0.64, 0.79, Form("#sigma_{bb} = %.2f", func->GetParameter(2)));
   }
   else if (outputName == "resBjetHistExtFit") {
-  	tex->DrawLatex(0.72, 0.86, Form("#bar{M}_{bb} = %.2f", func->GetParameter(1)));
-  	tex->DrawLatex(0.72, 0.82, Form("#sigma_{bb} = %.2f", func->GetParameter(2)));
+  	tex->DrawLatex(0.64, 0.84, Form("#bar{M}_{bb} = %.2f", func->GetParameter(1)));
+  	tex->DrawLatex(0.64, 0.79, Form("#sigma_{bb} = %.2f", func->GetParameter(2)));
   }
   else if (outputName == "nonresBjetHistFitExpo") {
-  	tex->DrawLatex(0.72, 0.86, Form("#lambda_{bb} = %.3f", func->GetParameter(1)));
+  	tex->DrawLatex(0.64, 0.84, Form("#lambda_{bb} = %.3f", func->GetParameter(1)));
   }
   tex->Draw();
   cv->Update();
-  cv->SaveAs(("Plots/AllSignalBkgd/Fits/"+outputName+".gif").c_str());
+  cv->SaveAs(("Plots/AllSignalBkgd/Fits/InitialFits/"+outputName+"_test.gif").c_str());
 }
 
 void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfileBjet, const string inputfileTwoD, Int_t plotOption) {
 
   gStyle->SetOptFit(0111);
-  
-  //-------------------------------------------------------------
-  //Make Histograms
-  //=============================================================
   
   //Import the sample histograms
   TFile *filePho = new TFile(inputfilePho.c_str(), "READ");
@@ -210,10 +204,7 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   
   std::cout << "Correlation Factors {sig, res, nonres}: {" << sigMassTwoD->GetCorrelationFactor() << ", " << resMassTwoD->GetCorrelationFactor() << ", " << nonresMassTwoD->GetCorrelationFactor() << "}"<< std::endl;
   
-  //-------------------------------------------------------------
-  //Fit Signal + Background and store parameters
-  //=============================================================
-  
+  //Preliminary Fits of Signal + Background and Store Parameters
   //fitting diphoton signal and background
   TF1 *sigPhoFunc = new TF1("Signal diPhoton Function","gaus",100,150);
   TF1 *resPhoFunc = new TF1("Resonant Background diPhoton Function","gaus",100,150);
@@ -241,6 +232,7 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   resBjetFuncExt->GetParameters(&parBkgBjet[0]);
   nonresBjetExpo->GetParameters(&parBkgBjet[3]);
   
+  //plot preliminary fits
   if (plotOption == 1) {
     plotInitialFit(sigPhoMass,sigPhoFunc,"sigPhoHistFit");
   	plotInitialFit(resPhoMass,resPhoFunc,"resPhoHistFit");
@@ -250,55 +242,70 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   	plotInitialFit(resBjetMassExt,resBjetFuncExt,"resBjetHistExtFit");
   	plotInitialFit(nonresBjetMass,nonresBjetExpo,"nonresBjetHistFitExpo");
   }
-
+  
   //-------------------------------------------------------------
   //Make Variables for 2D Fits
   //=============================================================
     
   //Variables for diBjet
   RooRealVar massBjet("massBjet","M_{bb}",70.,200.,"GeV/c^{2}");
-  RooRealVar massBjetExt("massBjetExt","M_{bb} (Ext)",40.,200.,"GeV/c^{2}");
+  RooRealVar massBjetExt("massBjetExt","M_{bb}",40.,200.,"GeV/c^{2}");
+  RooRealVar massBjetCut("massBjetCut","M_{bb}",70.,170.,"GeV/c^{2}");
   //Signal diBjet
   RooRealVar sigMeanBjet("sigMeanBjet", "#bar{M}_{bb}", parSigBjet[1], 119., 131., "GeV/c^{2}");
-  RooRealVar sigSigmaBjet("sigSigmaBjet", "#sigma_{bb}", parSigBjet[2], 9., 25., "GeV/c^{2}"); //12,20
+  RooRealVar sigSigmaBjet("sigSigmaBjet", "#sigma_{bb}", parSigBjet[2], 12., 20., "GeV/c^{2}");
   RooRealVar sigAlpha("sigAlpha","#alpha_{bb} (cut)", 1., 0.1, 2.);
   RooRealVar sigPower("sigPower", "n_{bb} (power)", 3., 1., 5.);
   //Resonant Background diBjet
   RooRealVar resMeanBjet("resMeanBjet", "#bar{M}_{bb} (ResBkg)", parBkgBjet[1], 80., 100., "GeV/c^{2}");
-  RooRealVar resSigmaBjet("resSigmaBjet", "#sigma_{bb} (ResBkg)", parBkgBjet[2], 0., 20., "GeV/c^{2}");//5,15
+  RooRealVar resSigmaBjet("resSigmaBjet", "#sigma_{bb} (ResBkg)", parBkgBjet[2], 5., 15., "GeV/c^{2}");
   RooRealVar resAlpha("resAlpha","#alpha_{bb} (ResBkg) (cut)", -1.1, -2., -0.1);
   RooRealVar resPower("resPower", "n_{bb} (ResBkg) (power)", 3., 1., 5.);
+  RooRealVar resExpo("resExpo", "#lambda_{bb} (ResBkg)", -.01, -.1, 0);
   //Non-Resonant Background diBjet
-  RooRealVar expRateBjet("expRateBjet", "#lambda_{bb}", parBkgBjet[4], -0.1, 0.0);
+  RooRealVar expRateBjet("expRateBjet", "#lambda_{bb}", parBkgBjet[4]);
+  //Weights for Resonant Background
+  RooRealVar nbbH("nbbH", "# bbH events", 3.2, 0,5);
+  RooRealVar nOthers("nOthers", "# resonant background events - bbH", 24.2, 0,50);
   
   //Variables for diPhoton (everything fixed except for expo rate)
   RooRealVar massPho("massPho","M_{#gamma#gamma}",100.,150.,"GeV/c^{2}");
   RooRealVar meanPho("meanPho", "#bar{M}_{#gamma#gamma}", parSigPho[1], "GeV/c^{2}");
   RooRealVar sigmaPho("sigmaPho", "#sigma_{#gamma#gamma}", parSigPho[2], "GeV/c^{2}");
-  RooRealVar expRatePho("expRatePho", "#lambda_{#gamma#gamma}", parBkgPho[4], -0.1, 0.0);
+  RooRealVar expRatePho("expRatePho", "#lambda_{#gamma#gamma}", parBkgPho[4]);
   
   //Weights for the 2D fit
-  RooRealVar nsig("N (Sig)", "# signal events", 16.5, -50,100);//12.3, 16.5
-  RooRealVar nres("N (ResBkg)", "# resonant background events", 27.5, -50,100);//17.6, 27.5
-  RooRealVar nnonres("N (NonResBkg)", "# non-resonant background events", 284.4, -50,1000);//95.6, 284.4
-
+  RooRealVar nsig("N (Sig)", "# signal events", 16.3, -50,100);
+  RooRealVar nres("N (ResBkg)", "# resonant background events", 27.4, -50,100);
+  RooRealVar nnonres("N (NonResBkg)", "# non-resonant background events", 281.3, 0,1000);
+  
   //-------------------------------------------------------------
   //Make PDFs for Signal + Background
   //=============================================================
-    
   //PDFs for diPhoton
   RooGaussian sigPDFPho("sigPDFPho", "Signal PDF #gamma#gamma", massPho, meanPho, sigmaPho);
   RooGaussian resPDFPho("resPDFPho", "Resonant Background PDF #gamma#gamma", massPho, meanPho, sigmaPho);
   RooExponential nonresPDFPho("nonresPDFPho", "Non-Resonant Background PDF #gamma#gamma", massPho, expRatePho);
-    
+  
   //PDFs for diBjet
+  //Signal
+  RooCBShape sigPDFBjetCut("sigPDFBjetCut", "Signal PDF bb", massBjetCut, sigMeanBjet, sigSigmaBjet, sigAlpha, sigPower);
+  //Preliminary Fit for Cut Signal
+  RooDataHist sigBjetData("sigBjetData", "sigBjetData", massBjetCut, sigBjetMass);
+  RooFitResult *sigCBResult = sigPDFBjetCut.fitTo(sigBjetData, RooFit::Extended(kTRUE), RooFit::Strategy(2));
   RooCBShape sigPDFBjet("sigPDFBjet", "Signal PDF bb", massBjet, sigMeanBjet, sigSigmaBjet, sigAlpha, sigPower);
-  RooDataHist sigBjetData("sigBjetData", "sigBjetData", massBjet, sigBjetMass);
-  RooFitResult *sigCBResult = sigPDFBjet.fitTo(sigBjetData);
-  RooCBShape resPDFBjetExt("resPDFBjetExt", "Extended Resonant Background PDF bb", massBjetExt, resMeanBjet, resSigmaBjet, resAlpha, resPower);
+  //Extended Resonant Background
+  RooCBShape resPDFBjetCBExt("resPDFBjetCBExt", "Resonant CB Background PDF bb", massBjetExt, resMeanBjet, resSigmaBjet, resAlpha, resPower);
+  RooExponential resPDFExpoExt("resPDFExpoExt", "Resonant Exponential Background PDF bb", massBjetExt, resExpo);
+  RooAddPdf resPDFBjetExt("resPDFBjetExt", "Extended Resonant Background PDF bb", RooArgList(resPDFBjetCBExt, resPDFExpoExt), RooArgList(nOthers, nbbH));
+  //Preliminary Fit for Extended Resonant Background
   RooDataHist resBjetDataExt("resBjetDataExt", "resBjetDataExt", massBjetExt, resBjetMassExt);
-  RooFitResult *resCBResult = resPDFBjetExt.fitTo(resBjetDataExt);
-  RooCBShape resPDFBjet("resPDFBjet", "Resonant Background PDF bb", massBjet, resMeanBjet, resSigmaBjet, resAlpha, resPower);
+  RooFitResult *resCBResult = resPDFBjetExt.fitTo(resBjetDataExt, RooFit::Extended(kTRUE), RooFit::Strategy(2));
+  //Resonant Background
+  RooCBShape resPDFBjetCB("resPDFBjetCB", "Resonant CB Background PDF bb", massBjet, resMeanBjet, resSigmaBjet, resAlpha, resPower);
+  RooExponential resPDFExpo("resPDFExp", "Resonant Exponential Background PDF bb", massBjet, resExpo);
+  RooAddPdf resPDFBjet("resPDFBjet", "Resonant Background PDF bb", RooArgList(resPDFBjetCB, resPDFExpo), RooArgList(nOthers, nbbH));
+  //Non-Resonant background
   RooExponential nonresPDFBjet("nonresPDFBjet", "Non-Resonant Background PDF bb", massBjet, expRateBjet);
     
   //PDFs for diPhoton*diBjet (2D)
@@ -310,6 +317,7 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   //Add all 2D stuff to workspace
   model2Dpdf.graphVizTree("fullModel.dot");
   ws->import(sigBjetData, Rename("sigBjetData"));
+  ws->import(sigPDFBjetCut);
   ws->import(resBjetDataExt, Rename("resBjetDataExt"));
   ws->import(resPDFBjetExt);
   ws->import(model2Dpdf);
@@ -320,7 +328,6 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
 //=============================================================
 void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   
-  RooPlot *plot = 0;
   RooPlot* framex = 0;
   RooPlot* framey = 0;
   
@@ -329,8 +336,9 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   RooRealVar *nres = ws->var("N (ResBkg)");
   RooRealVar *nnonres = ws->var("N (NonResBkg)");
   //Select and plot only one experiment
-  if (! (nsig->getVal() >= 16.3 && nsig->getVal() <= 16.7
-  				&& nres->getVal() >= 27.3 && nres->getVal() <= 27.7))
+  if (! (nsig->getVal() >= 15.6 && nsig->getVal() <= 17.0
+  				&& nres->getVal() >= 27.9 && nres->getVal() <= 28.0
+  				&& nnonres->getVal() <= 287.))
   	return;
   if (alreadyPlotted) return;  
   alreadyPlotted = 1;
@@ -341,6 +349,7 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   RooAbsPdf *resPDFPho = ws->pdf("resPDFPho");
   RooAbsPdf *nonresPDFPho = ws->pdf("nonresPDFPho");
   RooAbsPdf *sigPDFBjet = ws->pdf("sigPDFBjet");
+  RooAbsPdf *sigPDFBjetCut = ws->pdf("sigPDFBjetCut");
   RooAbsPdf *resPDFBjet = ws->pdf("resPDFBjet");
   RooAbsPdf *resPDFBjetExt = ws->pdf("resPDFBjetExt");
   RooAbsPdf *nonresPDFBjet = ws->pdf("nonresPDFBjet");
@@ -348,6 +357,7 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   RooRealVar *massPho = ws->var("massPho");
   RooRealVar *massBjet = ws->var("massBjet");
   RooRealVar *massBjetExt = ws->var("massBjetExt");
+  RooRealVar *massBjetCut = ws->var("massBjetCut");
   //sig variables
   RooRealVar *sigMeanBjet = ws->var("sigMeanBjet");
   RooRealVar *sigSigmaBjet = ws->var("sigSigmaBjet");
@@ -358,6 +368,9 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   RooRealVar *resSigmaBjet = ws->var("resSigmaBjet");
   RooRealVar *resAlpha = ws->var("resAlpha");
   RooRealVar *resPower = ws->var("resPower");
+  RooRealVar *resExpo = ws->var("resExpo");
+  RooRealVar *nbbH = ws->var("nbbH");
+  RooRealVar *nOthers = ws->var("nOthers");
   //simulated data
   RooDataHist *sigBjetData = (RooDataHist *)ws->data("sigBjetData");
   RooDataHist *resBjetDataExt = (RooDataHist *)ws->data("resBjetDataExt");
@@ -365,39 +378,41 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   
   //Plot the Crystal Ball Fit for Signal Bjet
   cv = new TCanvas("cv","cv",800,600);
-  framex = massBjet->frame(Bins(50));
+  framex = massBjetCut->frame(Bins(50));
   sigBjetData->plotOn(framex, DrawOption("B"), DataError(RooAbsData::None), FillColor(kRed));
-  sigPDFBjet->plotOn(framex);
+  sigPDFBjetCut->plotOn(framex);
+  framex->SetTitle(""); framex->SetXTitle("M_{bb} [GeV/c^{2}]");  framex->SetYTitle("Number of Events");
   framex->Draw();
   TLatex *tex = new TLatex();
   tex->SetNDC();
-  tex->SetTextSize(0.032);
-  tex->SetTextFont(2);
-  tex->DrawLatex(0.72, 0.86, Form("#bar{M}_{bb} = %.2f", sigMeanBjet->getVal()));
-  tex->DrawLatex(0.72, 0.82, Form("#sigma_{bb} = %.2f", sigSigmaBjet->getVal()));
-  tex->DrawLatex(0.72, 0.78, Form("#alpha_{bb} = %.2f", sigAlpha->getVal()));
-  tex->DrawLatex(0.72, 0.74, Form("n_{bb} = %.2f", sigPower->getVal()));
+  tex->SetTextSize(0.048);
+  tex->SetTextFont(42);
+  tex->DrawLatex(0.64, 0.84, Form("#bar{M}_{bb} = %.2f", sigMeanBjet->getVal()));
+  tex->DrawLatex(0.64, 0.79, Form("#sigma_{bb} = %.2f", sigSigmaBjet->getVal()));
+  //tex->DrawLatex(0.64, 0.74, Form("#alpha_{bb} = %.2f", sigAlpha->getVal()));
+  //tex->DrawLatex(0.64, 0.69, Form("n_{bb} = %.2f", sigPower->getVal()));
   tex->Draw();
   cv->Update();
-  cv->SaveAs("Plots/AllSignalBkgd/Fits/sigBjetHistFitCB.gif");
+  cv->SaveAs("Plots/AllSignalBkgd/Fits/InitialFits/sigBjetHistCutFitCB.gif");
   
   //Plot the Crystal Ball Fit for Bjet Resonant Background
   cv = new TCanvas("cv","cv",800,600);
   framex = massBjetExt->frame(Bins(50));
   resBjetDataExt->plotOn(framex, DrawOption("B"), DataError(RooAbsData::None), FillColor(kOrange));
   resPDFBjetExt->plotOn(framex);
+  framex->SetTitle(""); framex->SetXTitle("M_{bb} [GeV/c^{2}]");  framex->SetYTitle("Number of Events");
   framex->Draw();
   TLatex *tex = new TLatex();
   tex->SetNDC();
-  tex->SetTextSize(0.032);
-  tex->SetTextFont(2);
-  tex->DrawLatex(0.72, 0.86, Form("#bar{M}_{bb} = %.2f", resMeanBjet->getVal()));
-  tex->DrawLatex(0.72, 0.82, Form("#sigma_{bb} = %.2f", resSigmaBjet->getVal()));
-  tex->DrawLatex(0.72, 0.78, Form("#alpha_{bb} = %.2f", resAlpha->getVal()));
-  tex->DrawLatex(0.72, 0.74, Form("n_{bb} = %.2f", resPower->getVal()));
+  tex->SetTextSize(0.048);
+  tex->SetTextFont(42);
+  tex->DrawLatex(0.64, 0.84, Form("#bar{M}_{bb} = %.2f", resMeanBjet->getVal()));
+  tex->DrawLatex(0.64, 0.79, Form("#sigma_{bb} = %.2f", resSigmaBjet->getVal()));
+  //tex->DrawLatex(0.64, 0.74, Form("#alpha_{bb} = %.2f", resAlpha->getVal()));
+  //tex->DrawLatex(0.64, 0.69, Form("n_{bb} = %.2f", resPower->getVal()));
   tex->Draw();
   cv->Update();
-  cv->SaveAs("Plots/AllSignalBkgd/Fits/resBjetHistExtFitCB.gif");
+  cv->SaveAs("Plots/AllSignalBkgd/Fits/InitialFits/resBjetHistExtFitCB.gif");
   
   
   //Plot of 2D generated data and fits
@@ -409,26 +424,31 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   cv = new TCanvas("cv","cv",1600,600);
   cv->Divide(2);
   cv->cd(1); gPad->SetLeftMargin(0.15); data2d->Draw("LEGO2");
-  data2d->GetXaxis()->SetTitleOffset(2);
-  data2d->GetYaxis()->SetTitleOffset(2);
+  data2d->SetTitle("");
+  data2d->GetXaxis()->SetTitleOffset(2); data2d->GetXaxis()->SetTitle("M_{bb} [GeV/c^{2}]");
+  data2d->GetYaxis()->SetTitleOffset(2.2); data2d->GetYaxis()->SetTitle("M_{#gamma#gamma} [GeV/c^{2}]");
   data2d->GetZaxis()->SetTitleOffset(1.75);
   
   cv->cd(2); gPad->SetLeftMargin(0.15); fit2d->Draw("SURF1");
-  fit2d->GetXaxis()->SetTitleOffset(2);
-  fit2d->GetYaxis()->SetTitleOffset(2);
+  fit2d->SetTitle("");
+  fit2d->GetXaxis()->SetTitleOffset(2); data2d->GetXaxis()->SetTitle("M_{bb} [GeV/c^{2}]");
+  fit2d->GetYaxis()->SetTitleOffset(2.2); data2d->GetYaxis()->SetTitle("M_{#gamma#gamma} [GeV/c^{2}]");
   fit2d->GetZaxis()->SetTitleOffset(1.75);
-  cv->SaveAs(Form("Plots/AllSignalBkgd/Fits/twoDimensionalFits_%d.gif",0));
+  cv->SaveAs(Form("Plots/AllSignalBkgd/Fits/Toys/twoDimensionalFits_%d.gif",1));
   
   //Plot of massBjet and massPho projections from 2D fit
+  massPho->setRange("PhoWindow",120,130);
   framex = massBjet->frame(Bins(50)); 
-  pseudoData2D->plotOn(framex);
-  model2Dpdf->plotOn(framex, VisualizeError(*fitResult2D), FillStyle(3001));
-  model2Dpdf->plotOn(framex);
-  model2Dpdf->plotOn(framex,Components("sigPDFBjet"), LineStyle(kDashed), LineColor(kRed));
-  model2Dpdf->plotOn(framex,Components("resPDFBjet"), LineStyle(kDashed), LineColor(kOrange));
-  model2Dpdf->plotOn(framex,Components("nonresPDFBjet"), LineStyle(kDashed), LineColor(kGreen));
+  framex->SetTitle(""); framex->SetXTitle("M_{bb} [GeV/c^{2}]");  framex->SetYTitle("Number of Events");
+  pseudoData2D->plotOn(framex, CutRange("PhoWindow"));
+  model2Dpdf->plotOn(framex, ProjectionRange("PhoWindow"), VisualizeError(*fitResult2D), FillStyle(3001));
+  model2Dpdf->plotOn(framex, ProjectionRange("PhoWindow"));
+  model2Dpdf->plotOn(framex, ProjectionRange("PhoWindow"), Components("sigPDFBjet"), LineStyle(kDashed), LineColor(kRed));
+  model2Dpdf->plotOn(framex, ProjectionRange("PhoWindow"), Components("resPDFBjet"), LineStyle(kDashed), LineColor(kOrange));
+  model2Dpdf->plotOn(framex, ProjectionRange("PhoWindow"), Components("nonresPDFBjet"), LineStyle(kDashed), LineColor(kGreen));
   
   framey = massPho->frame(Bins(50)); 
+  framey->SetTitle(""); framey->SetXTitle("M_{#gamma#gamma} [GeV/c^{2}]");  framey->SetYTitle("Number of Events");
   pseudoData2D->plotOn(framey);
   model2Dpdf->plotOn(framey, VisualizeError(*fitResult2D), FillStyle(3001));
   model2Dpdf->plotOn(framey);
@@ -436,26 +456,25 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   model2Dpdf->plotOn(framey,Components("resPDFPho"), LineStyle(kDashed), LineColor(kOrange));
   model2Dpdf->plotOn(framey,Components("nonresPDFPho"), LineStyle(kDashed), LineColor(kGreen));
   
-  
   cv = new TCanvas("cv","cv",1600,600);
   cv->Divide(2);
   cv->cd(1); framex->Draw();
   TLatex *tex = new TLatex();
   tex->SetNDC();
-  tex->SetTextSize(0.024);
-  tex->SetTextFont(2);
-  tex->DrawLatex(0.64, 0.86, Form("N (Sig) = %.2f +/- %.2f", nsig->getVal(), nsig->getPropagatedError(*fitResult2D)));
-  tex->DrawLatex(0.64, 0.82, Form("N (ResBkg) = %.2f +/- %.2f", nres->getVal(), nres->getPropagatedError(*fitResult2D)));
-  tex->DrawLatex(0.64, 0.78, Form("N (NonResBkg) = %.2f +/- %.2f", nnonres->getVal(), nnonres->getPropagatedError(*fitResult2D)));
+  tex->SetTextSize(0.042);
+  tex->SetTextFont(42);
+  tex->DrawLatex(0.52, 0.84, Form("N_{Sig} = %.2f +/- %.2f", nsig->getVal(), nsig->getPropagatedError(*fitResult2D)));
+  tex->DrawLatex(0.52, 0.79, Form("N_{ResBkg} = %.2f +/- %.2f", nres->getVal(), nres->getPropagatedError(*fitResult2D)));
+  tex->DrawLatex(0.52, 0.74, Form("N_{NonResBkg} = %.2f +/- %.2f", nnonres->getVal(), nnonres->getPropagatedError(*fitResult2D)));
   tex->Draw();
   cv->Update();
   cv->cd(2); framey->Draw();
-  tex->DrawLatex(0.64, 0.86, Form("N (Sig) = %.2f +/- %.2f", nsig->getVal(), nsig->getPropagatedError(*fitResult2D)));
-  tex->DrawLatex(0.64, 0.82, Form("N (ResBkg) = %.2f +/- %.2f", nres->getVal(), nres->getPropagatedError(*fitResult2D)));
-  tex->DrawLatex(0.64, 0.78, Form("N (NonResBkg) = %.2f +/- %.2f", nnonres->getVal(), nnonres->getPropagatedError(*fitResult2D)));
+  tex->DrawLatex(0.52, 0.84, Form("N_{Sig} = %.2f +/- %.2f", nsig->getVal(), nsig->getPropagatedError(*fitResult2D)));
+  tex->DrawLatex(0.52, 0.79, Form("N_{ResBkg} = %.2f +/- %.2f", nres->getVal(), nres->getPropagatedError(*fitResult2D)));
+  tex->DrawLatex(0.52, 0.74, Form("N_{NonResBkg} = %.2f +/- %.2f", nnonres->getVal(), nnonres->getPropagatedError(*fitResult2D)));
   tex->Draw();
   cv->Update();
-  cv->SaveAs(Form("Plots/AllSignalBkgd/Fits/projectionFits_%d.gif",0));
+  cv->SaveAs(Form("Plots/AllSignalBkgd/Fits/Toys/projectionFits_%d.gif",1));
 }
 
 
