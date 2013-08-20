@@ -140,12 +140,12 @@ void CutBasedAnalysis ( string InputFilename    = "/afs/cern.ch/work/s/sixie/pub
     minDRgb[i-1]->SetStats(false);
 
 
-    diphotonPt.push_back( new TH1F( Form("diphotonPt_%d",i), "; p_{T #gamma#gamma};Number of Events", 25, 0, 300));
+    diphotonPt.push_back( new TH1F( Form("diphotonPt_%d",i), "; p_{T #gamma#gamma} [GeV/c];Number of Events", 25, 0, 300));
     diphotonPt[i-1]->SetFillColor(bkgColors[i-1]);
     diphotonPt[i-1]->SetLineColor(bkgColors[i-1]);
     diphotonPt[i-1]->SetStats(false);
 
-    dibjetPt.push_back( new TH1F( Form("dibjetPt_%d",i), "; p_{T bb};Number of Events", 25, 0, 300));
+    dibjetPt.push_back( new TH1F( Form("dibjetPt_%d",i), "; p_{T bb} [GeV/c];Number of Events", 25, 0, 300));
     dibjetPt[i-1]->SetFillColor(bkgColors[i-1]);
     dibjetPt[i-1]->SetLineColor(bkgColors[i-1]);
     dibjetPt[i-1]->SetStats(false);
@@ -668,6 +668,7 @@ void CutBasedAnalysis ( string InputFilename    = "/afs/cern.ch/work/s/sixie/pub
   stackdiphotonPt->GetHistogram()->GetYaxis()->SetTitle(((TH1F*)(stackdiphotonPt->GetHists()->At(0)))->GetYaxis()->GetTitle());
   legend->Draw();
   cv->SaveAs("diphotonPt.gif");
+  cv->SaveAs("diphotonPt.pdf");
 
   //*******************************************************************************************
   //dibjetPt
@@ -692,6 +693,7 @@ void CutBasedAnalysis ( string InputFilename    = "/afs/cern.ch/work/s/sixie/pub
   stackdibjetPt->GetHistogram()->GetYaxis()->SetTitle(((TH1F*)(stackdibjetPt->GetHists()->At(0)))->GetYaxis()->GetTitle());
   legend->Draw();
   cv->SaveAs("dibjetPt.gif");
+  cv->SaveAs("dibjetPt.pdf");
 
 
 
