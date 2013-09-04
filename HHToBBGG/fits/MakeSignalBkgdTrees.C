@@ -64,6 +64,18 @@ void MakeSignalBkgdTrees(const string filename = "/afs/cern.ch/work/d/daan/publi
   TH1F *allBjetMassPhoWin = new TH1F("allBjetMass", ";M_{bb} [GeV/c^{2}];Number of Events", 30, 70, 200);
   allBjetMassPhoWin->SetFillColor(kBlack); allBjetMassPhoWin->SetLineColor(kBlack);
   
+  //histograms for diphoton mass with di-bjet mass window
+  TH1F *sigPhoMassBJetWin = new TH1F("sigPhoMassBJetWin", ";M_{#gamma#gamma} [GeV/c^{2}];Number of Events", 30, 100, 150);
+  sigPhoMassBJetWin->SetFillColor(kRed); sigPhoMassBJetWin->SetLineColor(kRed);
+  TH1F *bkgPhoMassBJetWin = new TH1F("bkgPhoMassBJetWin", ";M_{#gamma#gamma} [GeV/c^{2}];Number of Events", 30, 100, 150);
+  bkgPhoMassBJetWin->SetFillColor(kBlue); bkgPhoMassBJetWin->SetLineColor(kBlue);
+  TH1F *resPhoMassBJetWin = new TH1F("resPhoMassBJetWin", ";M_{#gamma#gamma} [GeV/c^{2}];Number of Events", 30, 100, 150);
+  resPhoMassBJetWin->SetFillColor(kOrange); resPhoMassBJetWin->SetLineColor(kOrange);
+  TH1F *nonresPhoMassBJetWin = new TH1F("nonresPhoMassBJetWin", ";M_{#gamma#gamma} [GeV/c^{2}];Number of Events", 30, 100, 150);
+  nonresPhoMassBJetWin->SetFillColor(kGreen); nonresPhoMassBJetWin->SetLineColor(kGreen);
+  TH1F *allPhoMassBJetWin = new TH1F("allPhoMassBJetWin", ";M_{#gamma#gamma} [GeV/c^{2}];Number of Events", 30, 100, 150);
+  allPhoMassBJetWin->SetFillColor(kBlack); allPhoMassBJetWin->SetLineColor(kBlack);
+  
   //2D histogram of Mgg and Mbb
   TH2F *sigMassPhoBjet = new TH2F ("sigMassPhoBjet",";M_{bb} [GeV/c^{2}]; M_{#gamma#gamma} [GeV/c^{2}]; Number of Events", 30, 70, 200, 30, 100, 150);
   sigMassPhoBjet->SetFillColor(kRed); sigMassPhoBjet->SetLineColor(kRed);
@@ -73,13 +85,17 @@ void MakeSignalBkgdTrees(const string filename = "/afs/cern.ch/work/d/daan/publi
   nonresMassPhoBjet->SetFillColor(kGreen); nonresMassPhoBjet->SetLineColor(kGreen);
   
   int eventsPassPhoWindow = 0;
+  int eventsPassBJetWindow = 0;
   int eventsNormally = 0;
   //Fill Trees
   cmsana::HHToBBGGEventTree event;
   event.LoadTree(filename.c_str());
   event.InitTree();
   double totalweight = 0;
+  cout << "Total Events: " << event.tree_->GetEntries() << "\n";
   for (int n=0;n<event.tree_->GetEntries();n++) { 
+    if (n%100000 == 0) cout << "Processing Event " << n << "\n";
+
     event.tree_->GetEntry(n);
     double weight = event.weight*intLumi;
     totalweight += weight;
@@ -136,14 +152,31 @@ void MakeSignalBkgdTrees(const string filename = "/afs/cern.ch/work/d/daan/publi
             nonresBjetMassPhoWin->Fill( event.dibjet.M() , weight);
           }
         }
+
+        //fill diphoton mass after applying di-bjet mass window
+        if (event.dibjet.M() > 105 && event.dibjet.M() < 145) {
+          eventsPassBJetWindow++;
+          allPhoMassBJetWin->Fill( event.diphoton.M() , weight);
+          if (event.sampletype == 1) {
+            sigPhoMassBJetWin->Fill( event.diphoton.M() , weight);
+          }
+          if (event.sampletype >= 2 && event.sampletype <= 4 || event.sampletype == 20) {
+            resPhoMassBJetWin->Fill( event.diphoton.M() , weight);
+          }
+          if (event.sampletype >= 5 && event.sampletype <= 10) {
+            nonresPhoMassBJetWin->Fill( event.diphoton.M() , weight);
+          }
+        }
+
       }
     }
   }
   
-  cout << eventsNormally << " | " << eventsPassPhoWindow << endl;
+  cout << "All Events: " << eventsNormally << " | EventsPassPhoWindow: " << eventsPassPhoWindow << " | EventsPassBJetWindow: " <<  eventsPassBJetWindow << endl;
   cout << "diPhoton {sig, bkg, res, nonres, all}: { " << sigPhoMass->Integral() << ", " <<  bkgPhoMass->Integral() << ", " <<  resPhoMass->Integral() << ", " <<  nonresPhoMass->Integral() << ", " <<  allPhoMass->Integral() << " }" << endl;
   cout << "diBjet {sig, bkg, res, nonres, all}: { " << sigBjetMass->Integral() << ", " <<  bkgBjetMass->Integral() << ", " << resBjetMass->Integral() << ", " <<  nonresBjetMass->Integral() << ", " <<  allBjetMass->Integral() << " }" << endl;
   cout << "diBjet w/ PhoWin {sig, res, nonres, all}: { " << sigBjetMassPhoWin->Integral() << ", " <<  resBjetMassPhoWin->Integral() << ", " <<  nonresBjetMassPhoWin->Integral() << ", " <<  allBjetMassPhoWin->Integral() << " }" << endl;
+  cout << "diphoton w/ BJetWin {sig, res, nonres, all}: { " << sigPhoMassBJetWin->Integral() << ", " <<  resPhoMassBJetWin->Integral() << ", " <<  nonresPhoMassBJetWin->Integral() << ", " <<  allPhoMassBJetWin->Integral() << " }" << endl;
   
   
   //--------------------------------------------------------------------------------------------------------------
@@ -180,12 +213,22 @@ void MakeSignalBkgdTrees(const string filename = "/afs/cern.ch/work/d/daan/publi
   file2->Close();
   delete file2;
   
-  TFile *file3 = TFile::Open("CMSAna/HHToBBGG/data/HHToBBGG_SignalBkgd_AfterCuts_twoDMass.root", "UPDATE");
+  TFile *file3 = TFile::Open("CMSAna/HHToBBGG/data/HHToBBGG_SignalBkgd_AfterCuts_diphotonMassBJetWin.root", "UPDATE");
   file3->cd();
-  file3->WriteTObject(sigMassPhoBjet, sigMassPhoBjet->GetName(), "WriteDelete");
-  file3->WriteTObject(resMassPhoBjet, resMassPhoBjet->GetName(), "WriteDelete");
-  file3->WriteTObject(nonresMassPhoBjet, nonresMassPhoBjet->GetName(), "WriteDelete");
+  file3->WriteTObject(sigPhoMassBJetWin, sigPhoMassBJetWin->GetName(), "WriteDelete");
+  file3->WriteTObject(bkgPhoMassBJetWin, bkgPhoMassBJetWin->GetName(), "WriteDelete");
+  file3->WriteTObject(resPhoMassBJetWin, resPhoMassBJetWin->GetName(), "WriteDelete");
+  file3->WriteTObject(nonresPhoMassBJetWin, nonresPhoMassBJetWin->GetName(), "WriteDelete");
+  file3->WriteTObject(allPhoMassBJetWin, allPhoMassBJetWin->GetName(), "WriteDelete");
   file3->Close();
   delete file3;
+
+  TFile *file4 = TFile::Open("CMSAna/HHToBBGG/data/HHToBBGG_SignalBkgd_AfterCuts_twoDMass.root", "UPDATE");
+  file4->cd();
+  file4->WriteTObject(sigMassPhoBjet, sigMassPhoBjet->GetName(), "WriteDelete");
+  file4->WriteTObject(resMassPhoBjet, resMassPhoBjet->GetName(), "WriteDelete");
+  file4->WriteTObject(nonresMassPhoBjet, nonresMassPhoBjet->GetName(), "WriteDelete");
+  file4->Close();
+  delete file4;
   
 }
