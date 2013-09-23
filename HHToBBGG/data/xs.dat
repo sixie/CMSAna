@@ -37,7 +37,10 @@ DiphotonBB_M60To200_14TeV-BBGG        136.4
 #For mistag bkg
 diphjets-START53_V7A                 1.46*1.15*75390
 DiPhotonJJ_M60To200_14TeV            22440
+ATLAS_DiPhotonJJ_14TeV               25230
+DiPhotonJJ_M60To200_14TeV_v2         21380
 DiPhotonCC_M60To200_14TeV            5482
+DiPhotonCC_M60To200_14TeV_v2         1287
 
 #LO XS from madgraph + pythia after jet matching
 bbjets-HT100To250-START53_V7A        133800000
