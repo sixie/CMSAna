@@ -96,7 +96,7 @@ void plotErrVsRes(const string scanOption, Float_t relativeError[], Float_t sigm
     gr = new TGraphErrors(11, xpho,relativeError, expho,sigmaOfRelativeError);
     gr->SetTitle(""); gr->SetMinimum(0.0); gr->SetMaximum(100.);
     gr->GetXaxis()->SetTitle("M_{#gamma#gamma} Signal Width [GeV/c^{2}]");
-    gr->GetYaxis()->SetTitle("Relative Uncertainty on Fitted Signal Yield");
+    gr->GetYaxis()->SetTitle("Relative Uncertainty on Fitted Signal Yield (%)");
     gr->GetYaxis()->SetTitleSize(0.04);
     gr->SetMarkerColor(2); gr->SetMarkerStyle(20); gr->SetMarkerSize(1.2);
     gr->Draw("ALP");
@@ -111,6 +111,7 @@ void plotErrVsRes(const string scanOption, Float_t relativeError[], Float_t sigm
     line->SetLineWidth(3); line->SetLineColor(kBlue);
     line->Draw();
     cv->SaveAs("Plots/AllSignalBkgd/Fits/PullPlots/ResolutionPhotonSteps.gif");
+    cv->SaveAs("Plots/AllSignalBkgd/Fits/PullPlots/ResolutionPhotonSteps.pdf");
   }
 	
   else if (scanOption == "jet") {
@@ -123,7 +124,7 @@ void plotErrVsRes(const string scanOption, Float_t relativeError[], Float_t sigm
     gr = new TGraphErrors(11, xbjet,relativeError, exbjet,sigmaOfRelativeError);
     gr->SetTitle(""); gr->SetMinimum(0.0); gr->SetMaximum(100.);
     gr->GetXaxis()->SetTitle("M_{bb} Signal Width [GeV/c^{2}]");
-    gr->GetYaxis()->SetTitle("Relative Uncertainty on Fitted Signal Yield");
+    gr->GetYaxis()->SetTitle("Relative Uncertainty on Fitted Signal Yield (%)");
     gr->GetYaxis()->SetTitleSize(0.04);
     gr->SetMarkerColor(2); gr->SetMarkerStyle(20); gr->SetMarkerSize(1.2);
     gr->Draw("ALP");
@@ -131,13 +132,28 @@ void plotErrVsRes(const string scanOption, Float_t relativeError[], Float_t sigm
     tex->SetNDC();
     tex->SetTextSize(0.040);
     tex->SetTextFont(42);
-    tex->DrawLatex(0.5, 0.85, "Resolution at 140 Pileup");
+    tex->SetTextColor(kGreen+3);
+    tex->DrawLatex(0.5, 0.85, "Resolution");
+    tex->DrawLatex(0.5, 0.80, "(140 Pileup)");
     tex->Draw();
     cv->Update();
     line = new TLine(20.0,0,20.0,100.);
-    line->SetLineWidth(3); line->SetLineColor(kBlue);
+    line->SetLineWidth(3); line->SetLineColor(kGreen+3);
     line->Draw();
+    TLatex *tex2 = new TLatex();
+    tex2->SetNDC();
+    tex2->SetTextSize(0.040);
+    tex2->SetTextFont(42);
+    tex2->SetTextColor(kBlue);
+    tex2->DrawLatex(0.17, 0.85, "Resolution");
+    tex2->DrawLatex(0.17, 0.80, "(LHC Run1)");
+    tex2->Draw();
+
+    TLine *line2 = new TLine(14.29,0,14.29,100.);
+    line2->SetLineWidth(3); line2->SetLineColor(kBlue);
+    line2->Draw();
     cv->SaveAs("Plots/AllSignalBkgd/Fits/PullPlots/ResolutionJetEnergySteps.gif");
+    cv->SaveAs("Plots/AllSignalBkgd/Fits/PullPlots/ResolutionJetEnergySteps.pdf");
   }
   
   else {
@@ -150,7 +166,7 @@ void plotErrVsRes(const string scanOption, Float_t relativeError[], Float_t sigm
     gr = new TGraphErrors(13, x,relativeError, ex,sigmaOfRelativeError);
     gr->SetTitle(""); gr->SetMinimum(0.0); gr->SetMaximum(100.);
     gr->GetXaxis()->SetTitle("Integrated Luminosity [10^{3} fb^{-1}]");
-    gr->GetYaxis()->SetTitle("Relative Uncertainty on Fitted Signal Yield");
+    gr->GetYaxis()->SetTitle("Relative Uncertainty on Fitted Signal Yield (%)");
     gr->GetYaxis()->SetTitleSize(0.04);
     gr->SetMarkerColor(2); gr->SetMarkerStyle(20); gr->SetMarkerSize(1.2);
     gr->Draw("ALP");
@@ -158,13 +174,14 @@ void plotErrVsRes(const string scanOption, Float_t relativeError[], Float_t sigm
     tex->SetNDC();
     tex->SetTextSize(0.040);
     tex->SetTextFont(42);
-    tex->DrawLatex(0.34, 0.82, "Nominal Luminosity");
+    tex->DrawLatex(0.40, 0.82, "Nominal Luminosity");
     tex->Draw();
     cv->Update();
     line = new TLine(3.,0,3.,100.);
     line->SetLineWidth(3); line->SetLineColor(kBlue);
     line->Draw();
     cv->SaveAs("Plots/AllSignalBkgd/Fits/PullPlots/ResolutionLumiSteps.gif");
+    cv->SaveAs("Plots/AllSignalBkgd/Fits/PullPlots/ResolutionLumiSteps.pdf");
   }
 
 }

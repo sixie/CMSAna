@@ -126,9 +126,9 @@ void FitMassPhotonResolutionSystematics(const string workspaceFile = "/afs/cern.
 
     //move jet energy resolution up/down
     if (SystematicsUpOrDown == 1) {
-      sigmaPho->setVal(inputSigmaPho*1.3);
+      sigmaPho->setVal(inputSigmaPho*1.15);
     } else if (SystematicsUpOrDown == -1) {
-      sigmaPho->setVal(inputSigmaPho/1.3);
+      sigmaPho->setVal(inputSigmaPho/1.15);
     }
 
     cout << "After: " << sigmaPho->getVal() << " \n";
