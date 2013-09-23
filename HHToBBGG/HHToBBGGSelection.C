@@ -22,6 +22,7 @@
 #include <string>                   // C++ string class
 #include <sstream>                  // class for parsing strings
 #include <TH1F.h>                
+#include <TRandom3.h>                
 
 // define structures to read in ntuple
 #include "CMSAna/DataTree/interface/Types.h"
@@ -73,6 +74,7 @@ void HHToBBGGSelection(const string inputfile,          // input file
   correctionParameters.push_back(cmsana::JetCorrectorParameters( ( getenv("CMSSW_BASE") + string("/src/CMSAna/JetEnergyCorrections/data/GR_R_52_V9_L3Absolute_AK5PF.txt")).c_str()));
   cmsana::FactorizedJetCorrector *JetCorrector = new cmsana::FactorizedJetCorrector(correctionParameters);
 
+  TRandom3 *MyRandom = new TRandom3( time(NULL) );
 
   //--------------------------------------------------------------------------------------------------------------
   // Main analysis code 
@@ -529,7 +531,10 @@ void HHToBBGGSelection(const string inputfile,          // input file
     outputEventTree->dibjet = null;    
 
     if (bjet1) {
-      bjet1v.SetPt(bjet1->pt);
+      
+      //apply extra smearing for pileup effect
+
+      bjet1v.SetPt(bjet1->pt*(1.0+MyRandom->Gaus(0.0,0.14)));
       bjet1v.SetEta(bjet1->eta);
       bjet1v.SetPhi(bjet1->phi);
       bjet1v.SetM(bjet1->mass);
@@ -540,7 +545,7 @@ void HHToBBGGSelection(const string inputfile,          // input file
     }
 
     if (bjet2) {
-      bjet2v.SetPt(bjet2->pt);
+      bjet2v.SetPt(bjet2->pt*(1.0+MyRandom->Gaus(0.0,0.14)));
       bjet2v.SetEta(bjet2->eta);
       bjet2v.SetPhi(bjet2->phi);
       bjet2v.SetM(bjet2->mass);
