@@ -408,22 +408,22 @@ void HHToBBGGSelectionMistags(const string inputfile,          // input file
           pho1EffScalingForPU140 = (0.85/0.95)*(0.85/0.95);
           pho2EffScalingForPU140 = (0.85/0.95)*(0.85/0.95);
 
-          //Don't do extrapolation for mistag rate at this point in time
-//           if ( abs(bjet1->matchedPdgId) == 4) {
-//             bjet1EffScalingForPU140 = 0.15/0.10;
-//           } else {
-//             bjet1EffScalingForPU140 = 0.03/0.015;
-//           }
-//           if ( abs(bjet2->matchedPdgId) == 4) {
-//             bjet2EffScalingForPU140 = 0.15/0.10;
-//           } else {
-//             bjet2EffScalingForPU140 = 0.03/0.015;
-//           }
-
+          //charm and mistags go in opposite directions
+          if ( abs(bjet1->matchedPdgId) == 4) {
+            bjet1EffScalingForPU140 = 0.10/0.15;
+          } else {
+            bjet1EffScalingForPU140 = 0.03/0.015;
+          }
+          if ( abs(bjet2->matchedPdgId) == 4) {
+            bjet2EffScalingForPU140 = 0.10/0.15;
+          } else {
+            bjet2EffScalingForPU140 = 0.03/0.015;
+          }
+          
           if (applyExtrapWeightTo140PU) {
             outputEventTree->weight = outputEventTree->weight * pho1EffScalingForPU140*pho2EffScalingForPU140*bjet1EffScalingForPU140*bjet2EffScalingForPU140;
           }
-
+          
 
           //********************************************************
           //Fill Output Tree

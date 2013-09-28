@@ -96,7 +96,7 @@ void FitMassTwoD(const string inputfilePho = "/afs/cern.ch/work/d/daan/public/re
   RooRealVar *nOthers = ws->var("nOthers"); nOthers->setConstant();
   
   //Create TTree to store the resulting yield data
-  TFile *f = new TFile("CMSAna/HHToBBGG/data/MassFitResults/MassFitTwoD.root", "RECREATE");
+  TFile *f = new TFile("CMSAna/HHToBBGG/data/MassFitResults/MassFitTwoD_test.root", "RECREATE");
   TTree *resultTree = new TTree("resultTree", "Parameter results from fitting");
   Float_t nsigOut, nresOut, nnonresOut;
   Float_t nsigStd, nresStd, nnonresStd;
@@ -113,7 +113,7 @@ void FitMassTwoD(const string inputfilePho = "/afs/cern.ch/work/d/daan/public/re
     
     nsig->setVal(constNsig.getVal()); nres->setVal(constNres.getVal()); nnonres->setVal(constNnonres.getVal());
     expRateBjet->setVal(constexpBjet.getVal()); expRatePho->setVal(constexpPho.getVal());
-    Float_t ran = randomnumber->Poisson(325.);
+    Float_t ran = randomnumber->Poisson(120.91);
     RooDataSet *pseudoData2D = model2Dpdf->generate(RooArgList(*massBjet,*massPho), ran);
     RooFitResult *fitResult2D = model2Dpdf->fitTo(*pseudoData2D, RooFit::Save(), RooFit::Extended(kTRUE), RooFit::Strategy(2));
     ws->import(*pseudoData2D, kTRUE);
@@ -261,7 +261,7 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   RooRealVar resSigmaBjet("resSigmaBjet", "#sigma_{bb} (ResBkg)", parBkgBjet[2], 5., 15., "GeV/c^{2}");
   RooRealVar resAlpha("resAlpha","#alpha_{bb} (ResBkg) (cut)", -1.1, -2., -0.1);
   RooRealVar resPower("resPower", "n_{bb} (ResBkg) (power)", 3., 1., 5.);
-  RooRealVar resExpo("resExpo", "#lambda_{bb} (ResBkg)", -.01, -.1, 0);
+  RooRealVar resExpo("resExpo", "#lambda_{bb} (ResBkg)", -.01, -.1, 0.);
   //Non-Resonant Background diBjet
   RooRealVar expRateBjet("expRateBjet", "#lambda_{bb}", parBkgBjet[4]);
   //Weights for Resonant Background
@@ -275,9 +275,9 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   RooRealVar expRatePho("expRatePho", "#lambda_{#gamma#gamma}", parBkgPho[4]);
   
   //Weights for the 2D fit
-  RooRealVar nsig("N (Sig)", "# signal events", 16.3, -50,100);
-  RooRealVar nres("N (ResBkg)", "# resonant background events", 27.4, -50,100);
-  RooRealVar nnonres("N (NonResBkg)", "# non-resonant background events", 281.3, 0,1000);
+  RooRealVar nsig("N (Sig)", "# signal events", 4.93, -50,100);
+  RooRealVar nres("N (ResBkg)", "# resonant background events", 7.88, -50,100);
+  RooRealVar nnonres("N (NonResBkg)", "# non-resonant background events", 108.1, 0,1000);
   
   //-------------------------------------------------------------
   //Make PDFs for Signal + Background
@@ -336,9 +336,9 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   RooRealVar *nres = ws->var("N (ResBkg)");
   RooRealVar *nnonres = ws->var("N (NonResBkg)");
   //Select and plot only one experiment
-  if (! (nsig->getVal() >= 15.6 && nsig->getVal() <= 17.0
-  				&& nres->getVal() >= 27.9 && nres->getVal() <= 28.0
-  				&& nnonres->getVal() <= 287.))
+  if (! (nsig->getVal() >= 4.6 && nsig->getVal() <= 5.2
+  				&& nres->getVal() >= 7.5 && nres->getVal() <= 8.3
+  				&& nnonres->getVal() <= 120.))
   	return;
   if (alreadyPlotted) return;  
   alreadyPlotted = 1;
@@ -378,7 +378,7 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   
   //Plot the Crystal Ball Fit for Signal Bjet
   cv = new TCanvas("cv","cv",800,600);
-  framex = massBjetCut->frame(Bins(50));
+  framex = massBjetCut->frame(Bins(25));
   sigBjetData->plotOn(framex, DrawOption("B"), DataError(RooAbsData::None), FillColor(kRed));
   sigPDFBjetCut->plotOn(framex);
   framex->SetTitle(""); framex->SetXTitle("M_{bb} [GeV/c^{2}]");  framex->SetYTitle("Number of Events");
@@ -397,12 +397,12 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   
   //Plot the Crystal Ball Fit for Bjet Resonant Background
   cv = new TCanvas("cv","cv",800,600);
-  framex = massBjetExt->frame(Bins(50));
+  framex = massBjetExt->frame(Bins(25));
   resBjetDataExt->plotOn(framex, DrawOption("B"), DataError(RooAbsData::None), FillColor(kOrange));
   resPDFBjetExt->plotOn(framex);
   framex->SetTitle(""); framex->SetXTitle("M_{bb} [GeV/c^{2}]");  framex->SetYTitle("Number of Events");
   framex->Draw();
-  TLatex *tex = new TLatex();
+  tex = new TLatex();
   tex->SetNDC();
   tex->SetTextSize(0.048);
   tex->SetTextFont(42);
@@ -438,8 +438,8 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   
   //Plot of massBjet and massPho projections from 2D fit
   massPho->setRange("PhoWindow",120,130);
-  framex = massBjet->frame(Bins(50)); 
-  framex->SetTitle(""); framex->SetXTitle("M_{bb} [GeV/c^{2}]");  framex->SetYTitle("Number of Events");
+  framex = massBjet->frame(Bins(20)); 
+  framex->SetTitle(""); framex->SetXTitle("M_{bb} [GeV/c^{2}]");  framex->SetYTitle("Number of Events / 6.5 GeV/c^{2}");
   pseudoData2D->plotOn(framex, CutRange("PhoWindow"));
   model2Dpdf->plotOn(framex, ProjectionRange("PhoWindow"), VisualizeError(*fitResult2D), FillStyle(3001));
   model2Dpdf->plotOn(framex, ProjectionRange("PhoWindow"));
@@ -448,7 +448,7 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   model2Dpdf->plotOn(framex, ProjectionRange("PhoWindow"), Components("nonresPDFBjet"), LineStyle(kDashed), LineColor(kGreen));
   
   framey = massPho->frame(Bins(50)); 
-  framey->SetTitle(""); framey->SetXTitle("M_{#gamma#gamma} [GeV/c^{2}]");  framey->SetYTitle("Number of Events");
+  framey->SetTitle(""); framey->SetXTitle("M_{#gamma#gamma} [GeV/c^{2}]");  framey->SetYTitle("Number of Events / GeV/c^{2}");
   pseudoData2D->plotOn(framey);
   model2Dpdf->plotOn(framey, VisualizeError(*fitResult2D), FillStyle(3001));
   model2Dpdf->plotOn(framey);
@@ -459,19 +459,19 @@ void MakePlots(RooWorkspace *ws, RooFitResult *fitResult2D) {
   cv = new TCanvas("cv","cv",1600,600);
   cv->Divide(2);
   cv->cd(1); framex->Draw();
-  TLatex *tex = new TLatex();
+  tex = new TLatex();
   tex->SetNDC();
   tex->SetTextSize(0.042);
   tex->SetTextFont(42);
-  tex->DrawLatex(0.52, 0.84, Form("N_{Sig} = %.2f +/- %.2f", nsig->getVal(), nsig->getPropagatedError(*fitResult2D)));
-  tex->DrawLatex(0.52, 0.79, Form("N_{ResBkg} = %.2f +/- %.2f", nres->getVal(), nres->getPropagatedError(*fitResult2D)));
-  tex->DrawLatex(0.52, 0.74, Form("N_{NonResBkg} = %.2f +/- %.2f", nnonres->getVal(), nnonres->getPropagatedError(*fitResult2D)));
+  tex->DrawLatex(0.52, 0.84, Form("N_{Sig} = %.1f +/- %.1f", nsig->getVal(), nsig->getPropagatedError(*fitResult2D)));
+  tex->DrawLatex(0.52, 0.79, Form("N_{ResBkg} = %.1f +/- %.1f", nres->getVal(), nres->getPropagatedError(*fitResult2D)));
+  tex->DrawLatex(0.52, 0.74, Form("N_{NonResBkg} = %.0f +/- %.0f", nnonres->getVal(), nnonres->getPropagatedError(*fitResult2D)));
   tex->Draw();
   cv->Update();
   cv->cd(2); framey->Draw();
-  tex->DrawLatex(0.52, 0.84, Form("N_{Sig} = %.2f +/- %.2f", nsig->getVal(), nsig->getPropagatedError(*fitResult2D)));
-  tex->DrawLatex(0.52, 0.79, Form("N_{ResBkg} = %.2f +/- %.2f", nres->getVal(), nres->getPropagatedError(*fitResult2D)));
-  tex->DrawLatex(0.52, 0.74, Form("N_{NonResBkg} = %.2f +/- %.2f", nnonres->getVal(), nnonres->getPropagatedError(*fitResult2D)));
+  tex->DrawLatex(0.6, 0.84, Form("N_{Sig} = %.1f +/- %.1f", nsig->getVal(), nsig->getPropagatedError(*fitResult2D)));
+  tex->DrawLatex(0.6, 0.79, Form("N_{ResBkg} = %.1f +/- %.1f", nres->getVal(), nres->getPropagatedError(*fitResult2D)));
+  tex->DrawLatex(0.6, 0.74, Form("N_{NonResBkg} = %.0f +/- %.0f", nnonres->getVal(), nnonres->getPropagatedError(*fitResult2D)));
   tex->Draw();
   cv->Update();
   cv->SaveAs(Form("Plots/AllSignalBkgd/Fits/Toys/projectionFits_%d.gif",1));

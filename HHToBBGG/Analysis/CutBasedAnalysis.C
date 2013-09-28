@@ -28,20 +28,20 @@ string bkgLegendLabels[NBkgComponents] = { "HH#rightarrow bb#gamma#gamma",
                                            "ttH & bbH ",
                                            "#gamma#gamma bb",
                                            "#gamma#gamma jj",
-                                           "4-jets",
+                                           "bbj#gamma & bbjj & jjjj",
                                            "t #bar{t}"};
-Int_t bkgSampleTypes[NBkgComponents][3] = { {1,-1,-1} , 
-                                            {3,-1,-1} , 
-                                            {2, 4,-1} , 
-                                            {6,-1,-1} , 
-                                            {7,-1,-1} , 
-                                            {8, 9,10} , 
-                                            {5,-1,-1}   };
+Int_t bkgSampleTypes[NBkgComponents][4] = { {1,-1,-1,-1} , 
+                                            {3,-1,-1,-1} , 
+                                            {2, 4,-1,-1} , 
+                                            {6,-1,-1,-1} , 
+                                            {7,-1,-1,-1} , 
+                                            {8, 9,10,11} , 
+                                            {5,-1,-1,-1} };
 
 Int_t BkgComponentIndex( Int_t sampletype ) {
 
   for (uint i=0; i<NBkgComponents; ++i) {
-    for (uint j=0; j<3; ++j) {
+    for (uint j=0; j<4; ++j) {
       if (sampletype == bkgSampleTypes[i][j]) {
         return i;        
       }
@@ -74,7 +74,7 @@ TH1F* NormalizeHist(TH1F *originalHist) {
 //------------------------------------------------------------------------------
 // PlotHiggsRes_LP
 //------------------------------------------------------------------------------
-void CutBasedAnalysis ( string InputFilename    = "/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/normalizedNtuples/HHToBBGGNtuple.main.root")
+void CutBasedAnalysis ( string InputFilename    = "/data1/sixie/Phase2Upgrade/HHtoBBGG/normalizedNtuples/V00-00-04/HHToBBGGNtuple.ExtrapTo140PU.Tight.AllProcessesCombined.root")
 {
 
   double intLumi = 3000; //in units of fb^-1
@@ -197,13 +197,26 @@ void CutBasedAnalysis ( string InputFilename    = "/afs/cern.ch/work/s/sixie/pub
     double weight = event.weight*intLumi;
 
     //make sure the sample type makes sense
-    assert(event.sampletype >= 1 && event.sampletype <= 10);
+    assert(event.sampletype >= 1 && event.sampletype <= 15);
     
      if (event.bjet1.Pt() > 30.0 && event.bjet2.Pt() > 30.0
          && event.pho1.Pt() > 25.0 && event.pho2.Pt() > 25.0
          && fmax(event.pho1.Pt(),event.pho2.Pt()) > 40.0
          && fabs(event.pho1.Eta()) < 2.5 && fabs(event.pho2.Eta()) < 2.5
          && fabs(event.bjet1.Eta()) < 2.4 && fabs(event.bjet2.Eta()) < 2.4
+
+
+//          //use barrel only for subleading photon
+//          && (
+//            (event.pho1.Pt() > event.pho2.Pt() && abs(event.pho2.Eta()) < 1.5) 
+//            || 
+//            (event.pho1.Pt() < event.pho2.Pt() && abs(event.pho1.Eta()) < 1.5) 
+//            )
+
+         //use barrel photons only 
+         && abs(event.pho2.Eta()) < 1.5 && abs(event.pho1.Eta()) < 1.5 
+           
+
        ) {
 
       if (event.diphoton.M() > 100 && event.diphoton.M() < 150
@@ -239,14 +252,11 @@ void CutBasedAnalysis ( string InputFilename    = "/afs/cern.ch/work/s/sixie/pub
             && event.DRgg < 2.0 && event.DRbb < 2.0 && event.minDRgb > 1.5
             && event.diphoton.M() > 120 && event.diphoton.M() < 130
             && event.dibjet.M() > 105 && event.dibjet.M() < 145
-          ) {         
+          ) {
           bbggMass[BkgComponentIndex(event.sampletype)]->Fill( event.bbgg.M(), weight);           
         }
 
       } //fit mass window requirements
-
-
-
 
 
 
@@ -387,6 +397,7 @@ void CutBasedAnalysis ( string InputFilename    = "/afs/cern.ch/work/s/sixie/pub
       normHist->SetLineWidth(3);
       legend->AddEntry(normHist,bkgLegendLabels[i].c_str(), "L");
       normHist->GetYaxis()->SetTitle("Fraction of Events");
+      normHist->SetMaximum(1.1);
       if (!firstdrawn) {
         normHist->Draw("hist");
         firstdrawn = true;
@@ -452,6 +463,7 @@ void CutBasedAnalysis ( string InputFilename    = "/afs/cern.ch/work/s/sixie/pub
       normHist->SetLineWidth(3);
       legend->AddEntry(normHist,bkgLegendLabels[i].c_str(), "L");
       normHist->GetYaxis()->SetTitle("Fraction of Events");
+      normHist->SetMaximum(0.65);
       if (!firstdrawn) {
         normHist->Draw("hist");
         firstdrawn = true;
@@ -713,6 +725,10 @@ void CutBasedAnalysis ( string InputFilename    = "/afs/cern.ch/work/s/sixie/pub
     cout << "sample " << i << " : " << diphotonMassAfterScheme1Selection[i]->GetSumOfWeights() << "\n";
     if (diphotonMassAfterScheme1Selection[i]->Integral() > 0) {
       stackDiphotonMassAfterScheme1Selection->Add(diphotonMassAfterScheme1Selection[i]);
+    }
+  }
+  for (Int_t i = 0; i< diphotonMassAfterScheme1Selection.size(); i++) {
+    if (diphotonMassAfterScheme1Selection[i]->Integral() > 0) {
       legend->AddEntry(diphotonMassAfterScheme1Selection[i],bkgLegendLabels[i].c_str(), "F");
     }
   }
@@ -737,9 +753,14 @@ void CutBasedAnalysis ( string InputFilename    = "/afs/cern.ch/work/s/sixie/pub
   for (Int_t i = dibjetMassAfterScheme1Selection.size()-1; i >= 0; i--) {
     if (dibjetMassAfterScheme1Selection[i]->Integral() > 0) {
       stackDibjetMassAfterScheme1Selection->Add(dibjetMassAfterScheme1Selection[i]);
+    }
+  }
+  for (Int_t i = 0; i < dibjetMassAfterScheme1Selection.size(); i++) {
+    if (dibjetMassAfterScheme1Selection[i]->Integral() > 0) {
       legend->AddEntry(dibjetMassAfterScheme1Selection[i],bkgLegendLabels[i].c_str(), "F");
     }
   }
+
 
   stackDibjetMassAfterScheme1Selection->Draw();
   stackDibjetMassAfterScheme1Selection->GetHistogram()->GetXaxis()->SetTitle(((TH1F*)(stackDibjetMassAfterScheme1Selection->GetHists()->At(0)))->GetXaxis()->GetTitle());

@@ -49,6 +49,7 @@ bbjets-HT250To500-START53_V7A        5528000
 #LO XS from madgraph
 BBJJ_M110To140_14TeV                 214000000
 CCJJ_M110To140_14TeV                 214400000
+BBJJ_M60To200_14TeV                  606800000
 JJJJ_14TeV                           20440000000
 
 #heft XS from madgraph 

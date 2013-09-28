@@ -169,6 +169,17 @@ void HHToBBGGSelectionBBFakePhotons(const string inputfile,          // input fi
 //       cout << p->pdgid << " " << p->status << " " << p->pt << " " << p->eta << " " << p->phi 
 //            << " | " << p->motherPdgID << "\n";
 
+      if ( SampleType == cmsana::HHToBBGGEventTree::BBPlusTwoFakePhotons) {
+        if (abs(p->pdgid) == 5 && p->status == 3) {
+          if (!genB1) {
+            genB1 = p;
+          } else {
+            if (!genB2) genB2 = p;
+          }
+        }
+      }
+
+
       if ( SampleType == cmsana::HHToBBGGEventTree::HHToBBGG) {
         if (abs(p->pdgid) == 5 && p->motherPdgID == 25 && p->status == 2) {
           if (!genB1) {
@@ -216,6 +227,7 @@ void HHToBBGGSelectionBBFakePhotons(const string inputfile,          // input fi
     //********************************************************
     for(Int_t gen=0; gen<genjetArr->GetEntriesFast(); gen++) {
       const cmsana::TGenJet *genJ = (cmsana::TGenJet*)((*genjetArr)[gen]);
+//       cout << "GenJet " << gen << " : " << genJ->pt << " " << genJ->eta << " " << genJ->phi << " " << genJ->matchedPdgId << "\n";
       if (fabs(genJ->matchedPdgId) == 5) { 
 	if (genJ->pt < 30) continue;
 	if (fabs(genJ->eta) > 2.4) continue;
@@ -234,7 +246,9 @@ void HHToBBGGSelectionBBFakePhotons(const string inputfile,          // input fi
     if (genPhoton1) continue;
     
     // Cut out events without 2 bjets
-    if (!(bjet1 && bjet2)) continue;
+    if (!(bjet1 && bjet2)) {
+      continue;
+    }
     
     // Count the number of events with 2 bjets
     N2bjets->Fill(0);
@@ -245,7 +259,7 @@ void HHToBBGGSelectionBBFakePhotons(const string inputfile,          // input fi
     if (SampleType == 1) stype = cmsana::HHToBBGGEventTree::HHToBBGG;
     if (SampleType == 2) stype = cmsana::HHToBBGGEventTree::ttHgg;
     if (SampleType == 3) stype = cmsana::HHToBBGGEventTree::ZHgg;
-    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::ggHgg;
+    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::bbHgg;
     if (SampleType == 5) stype = cmsana::HHToBBGGEventTree::ttbar;
     if (SampleType == 6) stype = cmsana::HHToBBGGEventTree::BBGG;
     if (SampleType == 7) stype = cmsana::HHToBBGGEventTree::GGPlusTwoMistag;
@@ -298,6 +312,7 @@ void HHToBBGGSelectionBBFakePhotons(const string inputfile,          // input fi
       genb2v.SetM(0);   
       outputEventTree->genb2 = genb2v;
     }
+//     if (genB1 && genB2) cout << "DiBQuark Mass: " << (genb1v+genb2v).M() << "\n";
     
     //Fill the event bjets and genbjets
     cmsana::FourVectorM bjet1v;
@@ -338,7 +353,21 @@ void HHToBBGGSelectionBBFakePhotons(const string inputfile,          // input fi
     genbjet2v.SetPhi(genBJet2->phi);
     genbjet2v.SetM(genBJet2->mass);   
     outputEventTree->genbjet2 = genbjet2v; 
-    
+
+//     if (genBJet1 && genBJet1) {
+//       cout << "DiBJet Mass: " << (genbjet1v+genbjet2v).M() << "\n";
+//       if ((genbjet1v+genbjet2v).M() < 100) {
+//         for(Int_t gen=0; gen<genjetArr->GetEntriesFast(); gen++) {
+//           const cmsana::TGenJet *genJ = (cmsana::TGenJet*)((*genjetArr)[gen]);
+//           cout << "GenJet " << gen << " : " << genJ->pt << " " << genJ->eta << " " << genJ->phi << " " << genJ->matchedPdgId << "\n";
+//         }
+//         for(Int_t i=0; i<genparticleArr->GetEntriesFast(); i++) {
+//           const cmsana::TGenParticle *p = (cmsana::TGenParticle*)((*genparticleArr)[i]);
+//           if (abs(p->pdgid) == 5) cout << "B quark: " << p->pt << " " << p->eta << " " << p->phi << " | " << p->status << " \n";
+//         }
+//       }
+//     }
+
     
     Int_t addgenjets = 0;
     for(Int_t c=0; c<genjetArr->GetEntriesFast(); c++) {
@@ -538,6 +567,13 @@ void HHToBBGGSelectionBBFakePhotons(const string inputfile,          // input fi
 	//********************************************************
 	//Fill Output Tree
 	//********************************************************
+
+        //Temporary Measure:Reduce Fake-rate by factor of 4 when we use Tight Photon selection instead of Loose
+        FakeRate1 = FakeRate1 / 4.0;
+        FakeRate2 = FakeRate2 / 4.0;
+        //reduction from pileup;
+        FakeRate3 = FakeRate3 * (0.55/0.65);
+        FakeRate4 = FakeRate4 * (0.55/0.65) ;
 
 	outputEventTree->weight = FakeRate1 * FakeRate2 * FakeRate3 *FakeRate4;
 	outputEventTree->tree_->Fill();

@@ -64,7 +64,7 @@ int alreadyPlotted = 0;
 
 Float_t phoResolution[13] = {0.9/1.53, 1.15/1.53, 1.4/1.53, 1.65/1.53, 1.9/1.53, 2.15/1.53, 2.4/1.53, 2.65/1.53, 2.9/1.53, 3.15/1.53, 3.4/1.53, 3.65/1.53, 3.9/1.53};
 Float_t bjetResolution[13] = {10./14.31, 12.5/14.31, 15.0/14.31, 17.5/14.31, 20./14.31, 22.5/14.31, 25./14.31, 27.5/14.31, 30./14.31, 32.5/14.31, 35.0/14.31, 37.5/14.31, 40.0/14.31};
-Float_t luminosity[13] = {0.5/3., 1./3., 1.5/3., 2./3., 2.5/3., 3./3., 4./3., 5./3., 6./3., 7./3., 8./3., 9./3., 10./3.}; 
+Float_t luminosity[13] = {1.5/3., 2./3., 2.5/3., 3./3., 4./3., 5./3., 6./3., 7./3., 8./3., 9./3., 10./3., 11./3., 12./3.}; 
 
 void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfileBjet, const string inputfileTwoD, const string scanOption, Int_t s);
 
@@ -104,8 +104,16 @@ void FitScenariosTwoD(const string inputfilePho = "/afs/cern.ch/work/d/daan/publ
     nres->setVal(constNres.getVal());
     nnonres->setVal(constNnonres.getVal());
     Float_t ran;
-    if (scanOption == "lum") ran = randomNumber->Poisson(325.*luminosity[s]);
-    else ran = randomNumber->Poisson(325.);
+    //OptionA
+//     if (scanOption == "lum") ran = randomNumber->Poisson(194.82*luminosity[s]);
+//     else ran = randomNumber->Poisson(194.82);
+//     //NoEndcaps
+//     if (scanOption == "lum") ran = randomNumber->Poisson(120.91*luminosity[s]);
+//     else ran = randomNumber->Poisson(120.91);
+    //NoEndcaps (lumi*2)
+     if (scanOption == "lum") ran = randomNumber->Poisson(241.82*luminosity[s]);
+     else ran = randomNumber->Poisson(241.82);
+
     RooDataSet *pseudoData2D = model2Dpdf->generate(RooArgList(*massBjet,*massPho), ran);
     RooFitResult *fitResult2D = model2Dpdf->fitTo(*pseudoData2D, RooFit::Save(), RooFit::Extended(kTRUE), RooFit::Strategy(2));
     ws->import(*pseudoData2D, kTRUE);
@@ -189,25 +197,38 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   RooRealVar expRatePho("expRatePho", "#lambda_{#gamma#gamma}", -.027, -.1, 0.);
   
   //Weights for the 2D fit
-  RooRealVar nsig("N (Sig)", "# signal events", 16.3, -100,1000);
-  RooRealVar nres("N (ResBkg)", "# resonant background events", 27.4, -50,1000);
-  RooRealVar nnonres("N (NonResBkg)", "# non-resonant background events", 281.3, 0,5000);
+//OptionA
+//   RooRealVar nsig("N (Sig)", "# signal events", 5.36, -100,1000);
+//   RooRealVar nres("N (ResBkg)", "# resonant background events", 8.86, -50,1000);
+//   RooRealVar nnonres("N (NonResBkg)", "# non-resonant background events", 180.6, 0,5000);
+
+// //NoEndcap
+//   RooRealVar nsig("N (Sig)", "# signal events", 4.93, -100,1000);
+//   RooRealVar nres("N (ResBkg)", "# resonant background events", 7.88, -50,1000);
+//   RooRealVar nnonres("N (NonResBkg)", "# non-resonant background events", 108.1, 0,5000);
+
+//NoEndcap (Lumi * 2)
+   RooRealVar nsig("N (Sig)", "# signal events", 9.86, -100,1000);
+   RooRealVar nres("N (ResBkg)", "# resonant background events", 15.76, -50,1000);
+   RooRealVar nnonres("N (NonResBkg)", "# non-resonant background events", 216.2, 0,5000);
+
+
   if (scanOption == "pho") {
-    //nsig.setVal(nsig.getVal()*phoResolution[s]);
-    //	nres.setVal(nres.getVal()*phoResolution[s]);
-    //nnonres.setVal(nnonres.getVal()*phoResolution[s]);
+//     nsig.setVal(nsig.getVal()*phoResolution[s]);
+//     nres.setVal(nres.getVal()*phoResolution[s]);
+//     nnonres.setVal(nnonres.getVal()*phoResolution[s]);
   }
   else if (scanOption == "jet") {
-    //nsig.setVal(nsig.getVal()*bjetResolution[s]);
-    //nres.setVal(nres.getVal()*bjetResolution[s]);
-    //nnonres.setVal(nnonres.getVal()*bjetResolution[s]);
+//     nsig.setVal(nsig.getVal()*bjetResolution[s]);
+//     nres.setVal(nres.getVal()*bjetResolution[s]);
+//     nnonres.setVal(nnonres.getVal()*bjetResolution[s]);
   }
   else {
     nsig.setVal(nsig.getVal()*luminosity[s]);
-  	nres.setVal(nres.getVal()*luminosity[s]);
-  	nnonres.setVal(nnonres.getVal()*luminosity[s]);
+    nres.setVal(nres.getVal()*luminosity[s]);
+    nnonres.setVal(nnonres.getVal()*luminosity[s]);
   }
-
+  
   //-------------------------------------------------------------
   //Make PDFs for Signal + Background
   //=============================================================
@@ -270,6 +291,11 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   resExpo.setConstant(); nbbH.setConstant(); nOthers.setConstant();
   expRateBjet.setConstant();  expRatePho.setConstant();
   
+  if (scanOption == "lum") {
+    sigSigmaBjet.setVal(sigSigmaBjet.getVal()*(20./14.31));
+    resSigmaBjet.setVal(resSigmaBjet.getVal()*(20./14.31));
+  }
+
   if (scanOption == "jet") {
     cout << "Jet Energy Resolution Scan : " << s << " : " << sigSigmaBjet.getVal() << " * " << bjetResolution[s] << " = " << sigSigmaBjet.getVal()*bjetResolution[s] << "\n";
     sigSigmaBjet.setVal(sigSigmaBjet.getVal()*bjetResolution[s]);
@@ -278,6 +304,10 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   if (scanOption == "pho") {
     sigSigmaPho.setVal(sigSigmaPho.getVal()*phoResolution[s]);
     resSigmaPho.setVal(resSigmaPho.getVal()*phoResolution[s]);
+
+    //set bjet energy resolution to high pileup conditions
+    sigSigmaBjet.setVal(sigSigmaBjet.getVal()*(20./14.31));
+    resSigmaBjet.setVal(resSigmaBjet.getVal()*(20./14.31));
   }
   
   //Add all 2D stuff to workspace

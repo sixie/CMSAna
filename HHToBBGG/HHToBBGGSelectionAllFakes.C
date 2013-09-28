@@ -247,7 +247,7 @@ void HHToBBGGSelectionAllFakes(const string inputfile,          // input file
     if (SampleType == 1) stype = cmsana::HHToBBGGEventTree::HHToBBGG;
     if (SampleType == 2) stype = cmsana::HHToBBGGEventTree::ttHgg;
     if (SampleType == 3) stype = cmsana::HHToBBGGEventTree::ZHgg;
-    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::ggHgg;
+    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::bbHgg;
     if (SampleType == 5) stype = cmsana::HHToBBGGEventTree::ttbar;
     if (SampleType == 6) stype = cmsana::HHToBBGGEventTree::BBGG;
     if (SampleType == 7) stype = cmsana::HHToBBGGEventTree::GGPlusTwoMistag;
@@ -586,6 +586,12 @@ void HHToBBGGSelectionAllFakes(const string inputfile,          // input file
 	    //********************************************************
 	    //Fill Output Tree
 	    //********************************************************
+
+            //Temporary Measure:Reduce Fake-rate by factor of 4 when we use Tight Photon selection instead of Loose
+            FakeRate1 = FakeRate1 / 4.0;
+            FakeRate2 = FakeRate2 / 4.0;
+
+
 	    outputEventTree->weight = FakeRate1*FakeRate2*FakeRate3*FakeRate4;
 	    outputEventTree->tree_->Fill();
 	    nEvents++;

@@ -156,7 +156,7 @@ void MakePhotonFakeRateNtuple(const string inputFilename, const string outputFil
   for(UInt_t ientry=0; ientry < eventTree->GetEntries(); ientry++) {       	
     infoBr->GetEntry(ientry);
 		
-    if (ientry % 1 == 0) cout << "Event " << ientry << endl;
+    if (ientry % 1000 == 0) cout << "Event " << ientry << endl;
 
     Double_t eventweight = info->eventweight;
 
@@ -224,7 +224,7 @@ void MakePhotonFakeRateNtuple(const string inputFilename, const string outputFil
           double DR = cmsana::deltaR(pho->eta,pho->phi,genjet->eta,genjet->phi);
           if (!(DR < 0.5)) continue;
 
-          if ( !(passPhotonIDSimpleLoose( pho, pfcandidateArr, info->RhoKt6PFJets,
+          if ( !(passPhotonIDSimpleTight( pho, pfcandidateArr, info->RhoKt6PFJets,
                                           kDataEra_2012_MC, false))) continue;
           
           pass = true;

@@ -28,20 +28,20 @@ string bkgLegendLabels[NBkgComponents] = { "HH#rightarrow bb#gamma#gamma",
                                            "ttH",
                                            "#gamma#gamma bb",
                                            "#gamma#gamma jj",
-                                           "4-jets",
+                                           "bbj#gamma & bbjj & jjjj",
                                            "t #bar{t}"};
-Int_t bkgSampleTypes[NBkgComponents][3] = { {1,-1,-1} , 
-                                            {3,-1,-1} , 
-                                            {2, 4,-1} , 
-                                            {6,-1,-1} , 
-                                            {7,-1,-1} , 
-                                            {8, 9,10} , 
-                                            {5,-1,-1}   };
+Int_t bkgSampleTypes[NBkgComponents][4] = { {1,-1,-1,-1} , 
+                                            {3,-1,-1,-1} , 
+                                            {2, 4,-1,-1} , 
+                                            {6,-1,-1,-1} , 
+                                            {7,-1,-1,-1} , 
+                                            {8, 9,10,11} , 
+                                            {5,-1,-1,-1} };
 
 Int_t BkgComponentIndex( Int_t sampletype ) {
 
   for (uint i=0; i<NBkgComponents; ++i) {
-    for (uint j=0; j<3; ++j) {
+    for (uint j=0; j<4; ++j) {
       if (sampletype == bkgSampleTypes[i][j]) {
         return i;        
       }
@@ -74,7 +74,7 @@ TH1F* NormalizeHist(TH1F *originalHist) {
 //------------------------------------------------------------------------------
 // PlotHiggsRes_LP
 //------------------------------------------------------------------------------
-void MakeKinematicSelectionPlots ( string InputFilename    = "/data1/sixie/Phase2Upgrade/HHtoBBGG/normalizedNtuples/V00-00-04/HHToBBGGNtuple.AllProcessesCombined.root")
+void MakeKinematicSelectionPlots ( string InputFilename    = "/data1/sixie/Phase2Upgrade/HHtoBBGG/normalizedNtuples/V00-00-04/HHToBBGGNtuple.ExtrapTo140PU.Tight.AllProcessesCombined.root")
 {
 
   double intLumi = 3000; //in units of fb^-1
@@ -124,17 +124,17 @@ void MakeKinematicSelectionPlots ( string InputFilename    = "/data1/sixie/Phase
     ncentraljets[i-1]->SetLineColor(bkgColors[i-1]);
     ncentraljets[i-1]->SetStats(false);
 
-    dRgg.push_back( new TH1F( Form("dRgg_%d",i), ";#Delta R(#gamma,#gamma);Fraction of Events", 50, 0, 5));
+    dRgg.push_back( new TH1F( Form("dRgg_%d",i), ";#Delta R(#gamma,#gamma);Fraction of Events", 25, 0, 5));
     dRgg[i-1]->SetFillColor(bkgColors[i-1]);
     dRgg[i-1]->SetLineColor(bkgColors[i-1]);
     dRgg[i-1]->SetStats(false);
 
-    dRbb.push_back( new TH1F( Form("dRgg_%d",i), ";#Delta R(b,b);Fraction of Events", 50, 0, 5));
+    dRbb.push_back( new TH1F( Form("dRgg_%d",i), ";#Delta R(b,b);Fraction of Events", 25, 0, 5));
     dRbb[i-1]->SetFillColor(bkgColors[i-1]);
     dRbb[i-1]->SetLineColor(bkgColors[i-1]);
     dRbb[i-1]->SetStats(false);
 
-    minDRgb.push_back( new TH1F( Form("dRgg_%d",i), ";min #Delta R(#gamma,b);Fraction of Events", 50, 0, 5));
+    minDRgb.push_back( new TH1F( Form("dRgg_%d",i), ";min #Delta R(#gamma,b);Fraction of Events", 25, 0, 5));
     minDRgb[i-1]->SetFillColor(bkgColors[i-1]);
     minDRgb[i-1]->SetLineColor(bkgColors[i-1]);
     minDRgb[i-1]->SetStats(false);
@@ -198,7 +198,10 @@ void MakeKinematicSelectionPlots ( string InputFilename    = "/data1/sixie/Phase
 
     //make sure the sample type makes sense
     //assert(event.sampletype >= 1 && event.sampletype <= 10);
-    if (!(event.sampletype == 1 || event.sampletype == 2 || event.sampletype == 6 || event.sampletype == 7))
+    if (!(event.sampletype == 1 || event.sampletype == 6 || event.sampletype == 7 
+          || event.sampletype == 8 
+          || event.sampletype == 11 )
+      )
       continue;
     
     if (event.bjet1.Pt() > 30.0 && event.bjet2.Pt() > 30.0
@@ -206,6 +209,10 @@ void MakeKinematicSelectionPlots ( string InputFilename    = "/data1/sixie/Phase
         && fmax(event.pho1.Pt(),event.pho2.Pt()) > 40.0
         && fabs(event.pho1.Eta()) < 2.5 && fabs(event.pho2.Eta()) < 2.5
         && fabs(event.bjet1.Eta()) < 2.4 && fabs(event.bjet2.Eta()) < 2.4
+
+        //use barrel photons only 
+        && abs(event.pho2.Eta()) < 1.5 && abs(event.pho1.Eta()) < 1.5 
+        
       ) {
       
       if (event.diphoton.M() > 100 && event.diphoton.M() < 150
@@ -394,6 +401,7 @@ void MakeKinematicSelectionPlots ( string InputFilename    = "/data1/sixie/Phase
       legend->AddEntry(normHist,bkgLegendLabels[i].c_str(), "L");
       normHist->GetYaxis()->SetTitle("Fraction of Events");
       if (!firstdrawn) {
+        normHist->SetMaximum(1.1);
         normHist->Draw("hist");
         firstdrawn = true;
       } else {
@@ -459,6 +467,7 @@ void MakeKinematicSelectionPlots ( string InputFilename    = "/data1/sixie/Phase
       legend->AddEntry(normHist,bkgLegendLabels[i].c_str(), "L");
       normHist->GetYaxis()->SetTitle("Fraction of Events");
       if (!firstdrawn) {
+        normHist->SetMaximum(0.65);
         normHist->Draw("hist");
         firstdrawn = true;
       } else {
@@ -606,7 +615,7 @@ void MakeKinematicSelectionPlots ( string InputFilename    = "/data1/sixie/Phase
       legend->AddEntry(normHist,bkgLegendLabels[i].c_str(), "L");
       if (!firstdrawn) {
         normHist->Draw("hist");
-        normHist->SetMaximum(normHist->GetMaximum()*1.5);
+        normHist->SetMaximum(normHist->GetMaximum()*2.0);
         firstdrawn = true;
       } else {
         normHist->Draw("hist,same");

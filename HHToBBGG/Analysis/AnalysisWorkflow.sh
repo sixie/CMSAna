@@ -1,4 +1,17 @@
 ####################################
+# Make Photon Efficiency
+####################################
+root -l CMSAna/ObjectStudies/Photons/ComputePhotonEfficiency.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonEfficiency/ntuples/PhotonEfficiencyNtuple.Tight.diphjets-START53_V7A.root",22,-1,"PromptPhotonTight")'
+root -l CMSAna/ObjectStudies/Photons/ComputePhotonEfficiency.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonEfficiency/ntuples/PhotonEfficiencyNtuple.diphjets-START53_V7A.root",22,-1,"PromptPhotonLoose")'
+
+####################################
+# Make Jet To Photon Fake Rate
+####################################
+root -l CMSAna/ObjectStudies/Photons/ComputePhotonEfficiency.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonFakeRate/ntuples/PhotonFakeRateNtuple.Tight.qcd.root",-10,-1,"JetToPhotonTightFakeRate")'
+root -l CMSAna/ObjectStudies/Photons/ComputePhotonEfficiency.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/PhotonFakeRate/ntuples/PhotonFakeRateNtuple.Loose.qcd.root",-10,-1,"JetToPhotonLooseFakeRate")'
+
+
+####################################
 # Make Electron To Photon Fake Rate
 ####################################
 root -l CMSAna/ObjectStudies/Photons/ComputePhotonEfficiency.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/ElectronToPhotonFakeRate/ntuples/ElectronToPhotonFakeRateNtuple.ttjll-START53_V7A.root",11,-1,"ElectronToPhotonFakeRate")'
@@ -11,8 +24,8 @@ root -l CMSAna/HHToBBGG/Analysis/PlotEfficiencies.C+'("CMSAna/HHToBBGG/data/Phot
 root -l CMSAna/HHToBBGG/Analysis/PlotEfficiencies.C+'("CMSAna/HHToBBGG/data/BTaggingEfficiency_BJetEfficiency.root","Efficiency_PtEta","B Jet p_{T} [GeV/c]","B Jet #eta","BJet", 0.0, 1.0)'
 
 
-root -l CMSAna/HHToBBGG/Analysis/PlotEfficiencies.C+'("CMSAna/HHToBBGG/data/PhotonEfficiency_GluonJetFakeRate.root","MistagRate_CSVMedium_PtEta","Photon p_{T} [GeV/c]","Photon #eta","GluonJetFakesPhoton", 0.00001, 0.1, true)'
-root -l CMSAna/HHToBBGG/Analysis/PlotEfficiencies.C+'("CMSAna/HHToBBGG/data/PhotonEfficiency_QuarkJetFakeRate.root","MistagRate_CSVMedium_PtEta","Photon p_{T} [GeV/c]","Photon #eta","QuarkJetFakesPhoton", 0.0001, 0.1, true)'
+root -l CMSAna/HHToBBGG/Analysis/PlotEfficiencies.C+'("CMSAna/HHToBBGG/data/PhotonEfficiency_GluonJetFakeRate.root","Efficiency_PtEta","Photon p_{T} [GeV/c]","Photon #eta","GluonJetFakesPhoton", 0.00001, 0.1, true)'
+root -l CMSAna/HHToBBGG/Analysis/PlotEfficiencies.C+'("CMSAna/HHToBBGG/data/PhotonEfficiency_QuarkJetFakeRate.root","Efficiency_PtEta","Photon p_{T} [GeV/c]","Photon #eta","QuarkJetFakesPhoton", 0.0001, 0.1, true)'
 
 root -l CMSAna/HHToBBGG/Analysis/PlotEfficiencies.C+'("CMSAna/HHToBBGG/data/BTaggingEfficiency_LightJetsMistagRate.root","MistagRate_CSVMedium_Pt_Eta","Jet p_{T} [GeV/c]","Jet #eta","LightJetMistag", 0.0, 0.05, false, 30, 150)'
 root -l CMSAna/HHToBBGG/Analysis/PlotEfficiencies.C+'("CMSAna/HHToBBGG/data/BTaggingEfficiency_CharmJetsMistagRate.root","MistagRate_CSVMedium_Pt_Eta","Jet p_{T} [GeV/c]","Jet #eta","CharmJetMistag", 0.0, 0.5, false, 30, 150)'
@@ -31,7 +44,7 @@ root -l CMSAna/HHToBBGG/Analysis/PlotEfficiencies.C+'("CMSAna/HHToBBGG/data/Phot
  HHToBBGGEvent->Draw("diphoton.M()","3000*weight*(pho1.Pt()>25 && pho2.Pt()>25 && max(pho1.Pt(),pho2.Pt())>40 && abs(pho1.Eta())<2.5 && abs(pho2.Eta())<2.5 && bjet1.Pt()>30 && bjet2.Pt() > 30 && abs(bjet1.Eta())<2.4 && abs(bjet2.Eta())<2.4 && diphoton.M() > 120 && diphoton.M() < 130 && dibjet.M() > 105 && dibjet.M() < 145)");
 
 ##Cut Stage3
- HHToBBGGEvent->Draw("diphoton.Pt()","3000*weight*(pho1.Pt()>25 && pho2.Pt()>25 && max(pho1.Pt(),pho2.Pt())>40 && abs(pho1.Eta())<2.5 && abs(pho2.Eta())<2.5 && bjet1.Pt()>30 && bjet2.Pt() > 30 && abs(bjet1.Eta())<2.4 && abs(bjet2.Eta())<2.4 && diphoton.M() > 120 && diphoton.M() < 130 && dibjet.M() > 105 && dibjet.M() < 145 && DRgg < 2 && minDRgb>1 && ncentraljets < 4)");
+ HHToBBGGEvent->Draw("diphoton.Pt()","3000*weight*(pho1.Pt()>25 && pho2.Pt()>25 && max(pho1.Pt(),pho2.Pt())>40 && abs(pho1.Eta())<2.5 && abs(pho2.Eta())<2.5 && bjet1.Pt()>30 && bjet2.Pt() > 30 && abs(bjet1.Eta())<2.4 && abs(bjet2.Eta())<2.4 && diphoton.M() > 120 && diphoton.M() < 130 && dibjet.M() > 105 && dibjet.M() < 145 && DRgg < 2 && minDRgb>1.5 && DRbb < 2 && ncentraljets < 4)");
 
 
  HHToBBGGEvent->Draw("diphoton.M()","3000*weight*(pho1.Pt()>25 && pho2.Pt()>25 && abs(pho1.Eta())<2.5 && abs(pho2.Eta())<2.5 && bjet1.Pt()>30 && bjet2.Pt() > 30 && abs(bjet1.Eta())<2.4 && abs(bjet2.Eta())<2.4 && DRgg < 2 && minDRgb>1)");

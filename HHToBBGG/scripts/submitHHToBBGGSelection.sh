@@ -132,11 +132,6 @@ end
 
 
 
-
-
-
-
-
 ########################################################################################################
 #
 # HH -> BB Gamma Gamma Selection , Extrapolation to 140 Pileup
@@ -151,7 +146,7 @@ end
 set i=0
 foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/HHtoBBGG-14tev-START53_V7A.txt `)
   echo $file " " $i
-  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_HHtoBBGG-14tev-START53_V7A_${i}.out -J HHToBBGGSelection_HHtoBBGG-14tev-START53_V7A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.HHtoBBGG-14tev-START53_V7A.${i}.root\",1,true\) HHToBBGGNtuple.ExtrapTo140PU.HHtoBBGG-14tev-START53_V7A.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_HHtoBBGG-14tev-START53_V7A_${i}.out -J HHToBBGGSelection_HHtoBBGG-14tev-START53_V7A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PUAndSmearJetEnergyTo140PU.Tight.HHtoBBGG-14tev-START53_V7A.${i}.root\",1,true\) HHToBBGGNtuple.ExtrapTo140PUAndSmearJetEnergyTo140PU.Tight.HHtoBBGG-14tev-START53_V7A.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
   @ i = $i + 1
 end
 
@@ -172,7 +167,7 @@ end
 set i=0
 foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/ZHgg-125-START53_V7A.txt`)
   echo $file " " $i
-  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_ZHgg-125-START53_V7A_${i}.out -J HHToBBGGSelection_ZHgg-125-START53_V7A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.ZHgg-125-START53_V7A.${i}.root\",3,true\) HHToBBGGNtuple.ExtrapTo140PU.ZHgg-125-START53_V7A.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_ZHgg-125-START53_V7A_${i}.out -J HHToBBGGSelection_ZHgg-125-START53_V7A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PUAndSmearJetEnergyTo140PU.ZHgg-125-START53_V7A.${i}.root\",3,true\) HHToBBGGNtuple.ExtrapTo140PUAndSmearJetEnergyTo140PU.ZHgg-125-START53_V7A.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
   @ i = $i + 1
 end
 
@@ -186,7 +181,7 @@ end
 set i=0
 foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/DiPhotonBB_M60To200_14TeV.txt`)
   echo $file " " $i
-  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_BBGG_DiPhotonBB_M60To200_14TeV_${i}.out -J HHToBBGGSelection_BBGG_DiPhotonBB_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection_BBGG.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.DiPhotonBB_M60To200_14TeV-BBGG.${i}.root\",6,true\) HHToBBGGNtuple.ExtrapTo140PU.DiPhotonBB_M60To200_14TeV-BBGG.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_BBGG_DiPhotonBB_M60To200_14TeV_${i}.out -J HHToBBGGSelection_BBGG_DiPhotonBB_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection_BBGG.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.Tight.DiPhotonBB_M60To200_14TeV-BBGG.${i}.root\",6,true\) HHToBBGGNtuple.ExtrapTo140PU.Tight.DiPhotonBB_M60To200_14TeV-BBGG.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
   sleep 0.5
   @ i = $i + 1
 end
@@ -199,7 +194,7 @@ end
 set i=0
 foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/DiPhotonJJ_M60To200_14TeV.txt`)
   echo $file " " $i
-  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_DiPhotonJJ_M60To200_14TeV_${i}.out -J HHToBBGGSelection_DiPhotonJJ_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelectionMistags.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.DiPhotonJJ_M60To200_14TeV.${i}.root\",7,true\) HHToBBGGNtuple.ExtrapTo140PU.DiPhotonJJ_M60To200_14TeV.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_DiPhotonJJ_M60To200_14TeV_${i}.out -J HHToBBGGSelection_DiPhotonJJ_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelectionMistags.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.Tight.DiPhotonJJ_M60To200_14TeV.${i}.root\",7,true\) HHToBBGGNtuple.ExtrapTo140PU.Tight.DiPhotonJJ_M60To200_14TeV.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
   sleep 0.5
   @ i = $i + 1
 end
@@ -213,10 +208,68 @@ end
 set i=0
 foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/bbH_M60To200_14TeV.txt`)
   echo $file " " $i
-  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_BBHGG_bbH_M60To200_14TeV_${i}.out -J HHToBBGGSelection_BBHGG_bbH_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection_BBHGG.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.bbH_M60To200_14TeV.${i}.root\",4,true\) HHToBBGGNtuple.ExtrapTo140PU.bbH_M60To200_14TeV.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_BBHGG_bbH_M60To200_14TeV_${i}.out -J HHToBBGGSelection_BBHGG_bbH_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection_BBHGG.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.Tight.bbH_M60To200_14TeV.${i}.root\",4,true\) HHToBBGGNtuple.ExtrapTo140PU.Tight.bbH_M60To200_14TeV.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
   sleep 0.25
   @ i = $i + 1
 end
 
 
+
+
+#############
+# BBJJ 
+#############
+
+
+set i=0
+foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/BBJJ_M60To200_14TeV_v2.txt`)
+  echo $file " " $i
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_BBJJ_M60To200_14TeV_${i}.out -J HHToBBGGSelection_BBJJ_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelectionBBFakePhotons.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.BBJJ_M60To200_14TeV.${i}.root\",8\) HHToBBGGNtuple.ExtrapTo140PU.BBJJ_M60To200_14TeV.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  sleep 0.25
+  @ i = $i + 1
+end
+
+
+
+#############
+# BBJG
+#############
+
+
+set i=0
+foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/BBJG_M60To200_14TeV.txt`)
+  echo $file " " $i
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_BBJG_M60To200_14TeV_${i}.out -J HHToBBGGSelection_BBJG_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelectionBBOneFakePhoton.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.Tight.BBJG_M60To200_14TeV.${i}.root\",11\) HHToBBGGNtuple.ExtrapTo140PU.Tight.BBJG_M60To200_14TeV.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  sleep 0.25
+  @ i = $i + 1
+end
+
+
+#############
+# JJJJ
+#############
+
+
+set i=0
+foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/JJJJ_14TeV.txt`)
+  echo $file " " $i
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_JJJJ_M60To200_14TeV_${i}.out -J HHToBBGGSelection_JJJJ_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelectionAllFakes.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.Tight.JJJJ_M60To200_14TeV.${i}.root\",10\) HHToBBGGNtuple.ExtrapTo140PU.Tight.JJJJ_M60To200_14TeV.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  sleep 0.25
+  @ i = $i + 1
+end
+
+
+
+
+#############
+# ttbar
+#############
+
+set i=0
+foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/ttjll-START53_V7A.txt `)
+  echo $file " " $i
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_ttjll-START53_V7A_${i}.out -J HHToBBGGSelection_ttjll-START53_V7A_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelection_TTBAR.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ttjll-START53_V7A.${i}.root\",5\) HHToBBGGNtuple.ttjll-START53_V7A.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  sleep 0.25
+  @ i = $i + 1
+end
 

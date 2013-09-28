@@ -380,7 +380,7 @@ void HHToBBGGSelection(const string inputfile,          // input file
       if (!(fabs(pho->scEta) < 2.5)) continue;
       if (fabs(pho->scEta) > 1.4442 && fabs(pho->scEta) < 1.566) continue;
 
-      if ( !(passPhotonIDSimpleLoose( pho, pfcandidateArr, info->RhoKt6PFJets,
+      if ( !(passPhotonIDSimpleTight( pho, pfcandidateArr, info->RhoKt6PFJets,
                                        kDataEra_2012_MC, false))) continue;
 
       //Do tighter electron veto
@@ -474,6 +474,9 @@ void HHToBBGGSelection(const string inputfile,          // input file
       jet->pt = JEC * rawjet->rawPt;
       jet->mass = JEC * rawjet->mass;
 
+      //apply additional smearing on jets to extrapolate to 140 pileup
+      jet->pt = jet->pt*(1.0+MyRandom->Gaus(0.0,0.14));
+
       bool passCuts = true;
 
       //remove jets matching to selected photons
@@ -534,7 +537,7 @@ void HHToBBGGSelection(const string inputfile,          // input file
       
       //apply extra smearing for pileup effect
 
-      bjet1v.SetPt(bjet1->pt*(1.0+MyRandom->Gaus(0.0,0.14)));
+      bjet1v.SetPt(bjet1->pt);
       bjet1v.SetEta(bjet1->eta);
       bjet1v.SetPhi(bjet1->phi);
       bjet1v.SetM(bjet1->mass);
@@ -545,7 +548,7 @@ void HHToBBGGSelection(const string inputfile,          // input file
     }
 
     if (bjet2) {
-      bjet2v.SetPt(bjet2->pt*(1.0+MyRandom->Gaus(0.0,0.14)));
+      bjet2v.SetPt(bjet2->pt);
       bjet2v.SetEta(bjet2->eta);
       bjet2v.SetPhi(bjet2->phi);
       bjet2v.SetM(bjet2->mass);
@@ -706,7 +709,7 @@ void HHToBBGGSelection(const string inputfile,          // input file
         if (!(fabs(pho->scEta) < 2.5)) continue;
         if (fabs(pho->scEta) > 1.4442 && fabs(pho->scEta) < 1.566) continue;
         cout << "Photon " << i << " : " << pho->pt << " " << pho->eta << " " << pho->phi << " : " 
-             << passPhotonIDSimpleLoose( pho, pfcandidateArr, info->RhoKt6PFJets, kDataEra_2012_MC, false)
+             << passPhotonIDSimpleTight( pho, pfcandidateArr, info->RhoKt6PFJets, kDataEra_2012_MC, false)
              << "\n";
       }
       for(Int_t i=0; i<jetArr->GetEntriesFast(); i++) {

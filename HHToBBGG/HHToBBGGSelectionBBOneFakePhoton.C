@@ -245,11 +245,20 @@ void HHToBBGGSelectionBBOneFakePhoton(const string inputfile,          // input 
       }
     }
     // Discount all events without any photons and with more than one photon
-    if (!genPhoton1) continue;
-    if (genPhoton2) continue;
+    if (!genPhoton1) {
+//       cout << "nophoton\n";
+      continue;
+    }
+    if (genPhoton2) {
+//       cout << "2nd photon\n";
+      continue;
+    }
     
     // Cut out events without 2 bjets
-    if (!(bjet1 && bjet2)) continue;
+    if (!(bjet1 && bjet2)) {
+//       cout << "no 2 bjets\n";
+      continue;
+    }
     
     // Count the number of events with 2 bjets
     N2bjets->Fill(0);
@@ -260,16 +269,16 @@ void HHToBBGGSelectionBBOneFakePhoton(const string inputfile,          // input 
     if (SampleType == 1) stype = cmsana::HHToBBGGEventTree::HHToBBGG;
     if (SampleType == 2) stype = cmsana::HHToBBGGEventTree::ttHgg;
     if (SampleType == 3) stype = cmsana::HHToBBGGEventTree::ZHgg;
-    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::ggHgg;
+    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::bbHgg;
     if (SampleType == 5) stype = cmsana::HHToBBGGEventTree::ttbar;
     if (SampleType == 6) stype = cmsana::HHToBBGGEventTree::BBGG;
     if (SampleType == 7) stype = cmsana::HHToBBGGEventTree::GGPlusTwoMistag;
     if (SampleType == 8) stype = cmsana::HHToBBGGEventTree::BBPlusTwoFakePhotons;
     if (SampleType == 9) stype = cmsana::HHToBBGGEventTree::CCMistagPlusTwoFakePhotons;
     if (SampleType == 10) stype = cmsana::HHToBBGGEventTree::TwoLightJetsMistagPlusTwoFakePhotons;
-    if (SampleType == 11) stype = cmsana::HHToBBGGEventTree::bbjg;
-    if (SampleType == 12) stype = cmsana::HHToBBGGEventTree::ccjg;
-    if (SampleType == 13) stype = cmsana::HHToBBGGEventTree::jjjg;
+    if (SampleType == 11) stype = cmsana::HHToBBGGEventTree::BBJG;
+    if (SampleType == 12) stype = cmsana::HHToBBGGEventTree::CCJG;
+    if (SampleType == 13) stype = cmsana::HHToBBGGEventTree::JJJG;
 
     outputEventTree->sampletype = stype;
     outputEventTree->run = info->runNum;
@@ -480,8 +489,8 @@ void HHToBBGGSelectionBBOneFakePhoton(const string inputfile,          // input 
 	Int_t NLeptons = 0;
 	Float_t ElectronsPt = 0;
 	Float_t MuonsPt = 0;
-	for(Int_t i=0; i<muonArr->GetEntriesFast(); i++) {
-	  const cmsana::TMuon *mu = (cmsana::TMuon*)((*muonArr)[i]);
+	for(Int_t j=0; j<muonArr->GetEntriesFast(); j++) {
+	  const cmsana::TMuon *mu = (cmsana::TMuon*)((*muonArr)[j]);
 	  
 	  if (!(mu->pt > 10)) continue;
 	  if (!(fabs(mu->eta) < 2.4)) continue;
@@ -499,8 +508,8 @@ void HHToBBGGSelectionBBOneFakePhoton(const string inputfile,          // input 
 	  MuonsPt+= mu->pt;
 	  NLeptons++;
 	}
-	for(Int_t i=0; i<electronArr->GetEntriesFast(); i++) {
-	  const cmsana::TElectron *ele = (cmsana::TElectron*)((*electronArr)[i]);
+	for(Int_t j=0; j<electronArr->GetEntriesFast(); j++) {
+	  const cmsana::TElectron *ele = (cmsana::TElectron*)((*electronArr)[j]);
 	  
 	  if (!(ele->pt > 20)) continue;
 	  if (!(fabs(ele->scEta) < 2.5)) continue;
@@ -547,6 +556,13 @@ void HHToBBGGSelectionBBOneFakePhoton(const string inputfile,          // input 
 	//********************************************************
 	//Fill Output Tree
 	//********************************************************
+        //Temporary Measure:Reduce Fake-rate by factor of 4 when we use Tight Photon selection instead of Loose
+        FakeRate2 = FakeRate2 / 4;
+
+        //reduction from pileup;
+        FakeRate1 = FakeRate1 * (0.85/0.95)*(0.85/0.95);
+        FakeRate3 = FakeRate3 * (0.55/0.65);
+        FakeRate4 = FakeRate4 * (0.55/0.65);
 
 	outputEventTree->weight = FakeRate1 * FakeRate2 * FakeRate3 *FakeRate4;
 	outputEventTree->tree_->Fill();
