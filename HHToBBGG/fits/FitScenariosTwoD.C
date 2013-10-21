@@ -65,6 +65,7 @@ int alreadyPlotted = 0;
 Float_t phoResolution[13] = {0.9/1.53, 1.15/1.53, 1.4/1.53, 1.65/1.53, 1.9/1.53, 2.15/1.53, 2.4/1.53, 2.65/1.53, 2.9/1.53, 3.15/1.53, 3.4/1.53, 3.65/1.53, 3.9/1.53};
 Float_t bjetResolution[13] = {10./14.31, 12.5/14.31, 15.0/14.31, 17.5/14.31, 20./14.31, 22.5/14.31, 25./14.31, 27.5/14.31, 30./14.31, 32.5/14.31, 35.0/14.31, 37.5/14.31, 40.0/14.31};
 Float_t luminosity[13] = {1.5/3., 2./3., 2.5/3., 3./3., 4./3., 5./3., 6./3., 7./3., 8./3., 9./3., 10./3., 11./3., 12./3.}; 
+Float_t fakerate[7] = {0, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03}; 
 
 void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfileBjet, const string inputfileTwoD, const string scanOption, Int_t s);
 
@@ -83,7 +84,8 @@ void FitScenariosTwoD(const string inputfilePho = "/afs/cern.ch/work/d/daan/publ
   RooRealVar *nnonres = ws->var("N (NonResBkg)"); RooRealVar constNnonres(*nnonres);
   
   //Create TTree to store the resulting yield data
-  TFile *f = new TFile(Form(("CMSAna/HHToBBGG/data/MassFitResults/ResolutionAnalysis/"+scanOption+"FitScenario%d.root").c_str(), s), "RECREATE");
+  TFile *f = new TFile(Form(("CMSAna/HHToBBGG/data/MassFitResults/ResolutionAnalysis/WithEndcap_LumiTimes2/"+scanOption+"FitScenario%d.root").c_str(), s), "RECREATE");
+//   TFile *f = new TFile(Form(("CMSAna/HHToBBGG/data/MassFitResults/ResolutionAnalysis/WithEndcap/"+scanOption+"FitScenario%d.root").c_str(), s), "RECREATE");
   TTree *resultTree = new TTree("resultTree", "Parameter results from fitting");
   Float_t nsigOut, nresOut, nnonresOut;
   Float_t nsigStd, nresStd, nnonresStd;
@@ -111,8 +113,9 @@ void FitScenariosTwoD(const string inputfilePho = "/afs/cern.ch/work/d/daan/publ
 //     if (scanOption == "lum") ran = randomNumber->Poisson(120.91*luminosity[s]);
 //     else ran = randomNumber->Poisson(120.91);
     //NoEndcaps (lumi*2)
-     if (scanOption == "lum") ran = randomNumber->Poisson(241.82*luminosity[s]);
-     else ran = randomNumber->Poisson(241.82);
+    if (scanOption == "lum") ran = randomNumber->Poisson(241.82*luminosity[s]);
+    else if (scanOption == "photonFakerate") ran = randomNumber->Poisson(2*(112.18 + 254.66*( fakerate[s] / 0.003 )));
+    else ran = randomNumber->Poisson(241.82);   
 
     RooDataSet *pseudoData2D = model2Dpdf->generate(RooArgList(*massBjet,*massPho), ran);
     RooFitResult *fitResult2D = model2Dpdf->fitTo(*pseudoData2D, RooFit::Save(), RooFit::Extended(kTRUE), RooFit::Strategy(2));
@@ -222,6 +225,11 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
 //     nsig.setVal(nsig.getVal()*bjetResolution[s]);
 //     nres.setVal(nres.getVal()*bjetResolution[s]);
 //     nnonres.setVal(nnonres.getVal()*bjetResolution[s]);
+  } else if (scanOption == "photonFakerate") {
+    nsig.setVal( 2*6.11 );
+    nres.setVal( 2*10.29 );
+    nnonres.setVal( 2*(95.78 + 254.66*( fakerate[s] / 0.003 ))  );
+    cout << "Photon Fake rate scan: " << fakerate[s] << " | nnonres = " << nnonres.getVal() << "\n";
   }
   else {
     nsig.setVal(nsig.getVal()*luminosity[s]);
@@ -291,10 +299,10 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   resExpo.setConstant(); nbbH.setConstant(); nOthers.setConstant();
   expRateBjet.setConstant();  expRatePho.setConstant();
   
-  if (scanOption == "lum") {
-    sigSigmaBjet.setVal(sigSigmaBjet.getVal()*(20./14.31));
-    resSigmaBjet.setVal(resSigmaBjet.getVal()*(20./14.31));
-  }
+
+  //by default use high pileup degraded jet energy resolution
+  sigSigmaBjet.setVal(sigSigmaBjet.getVal()*(20./14.31));
+  resSigmaBjet.setVal(resSigmaBjet.getVal()*(20./14.31));
 
   if (scanOption == "jet") {
     cout << "Jet Energy Resolution Scan : " << s << " : " << sigSigmaBjet.getVal() << " * " << bjetResolution[s] << " = " << sigSigmaBjet.getVal()*bjetResolution[s] << "\n";
@@ -304,10 +312,6 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   if (scanOption == "pho") {
     sigSigmaPho.setVal(sigSigmaPho.getVal()*phoResolution[s]);
     resSigmaPho.setVal(resSigmaPho.getVal()*phoResolution[s]);
-
-    //set bjet energy resolution to high pileup conditions
-    sigSigmaBjet.setVal(sigSigmaBjet.getVal()*(20./14.31));
-    resSigmaBjet.setVal(resSigmaBjet.getVal()*(20./14.31));
   }
   
   //Add all 2D stuff to workspace

@@ -74,8 +74,8 @@ void PlotYields(const string inputfile = "/afs/cern.ch/work/d/daan/public/releas
   TH1F *nonresErr = new TH1F("nonresErr", ";Non-Resonant Background Error;Number of Events", 50, 0,5);
   nonresErr->SetLineColor(kGreen); nonresErr->SetLineWidth(4);
   
-  Float_t nsigActual = 4.93;
-  //Float_t nsigActual = 9.86;
+//   Float_t nsigActual = 6.11*1.25*1.25*1.25*1.25;
+  Float_t nsigActual = 6.11;
   //Fill pull histograms
   for (int i=0; i < nTree->GetEntries(); i++) {
     nTree->GetEntry(i);
@@ -85,8 +85,7 @@ void PlotYields(const string inputfile = "/afs/cern.ch/work/d/daan/public/releas
   	//Float_t nonresbkg = (nnonresOut - 284.4) / nnonresStd; //53.7, 95.6, 284.4
   	
   	//This is relative error (how many % off from the mean)
-//   	Float_t signalPercent = (nsigOut - nsigActual) / nsigActual;
-  	Float_t signalPercent = (nsigOut - 4.93) / 4.93;
+   	Float_t signalPercent = (nsigOut - nsigActual) / nsigActual;
 
   	//Float_t resbkgPercent = (nresOut - 27.5) / 27.5;
   	//Float_t nonresbkgPercent = (nnonresOut - 284.4) / 284.4;
@@ -123,7 +122,7 @@ void PlotYields(const string inputfile = "/afs/cern.ch/work/d/daan/public/releas
   */
   
   //Fit histograms to gaussians
-  TF1 *sigFit = new TF1("N (Sig) Fit","gaus", -1.5, 8);
+  TF1 *sigFit = new TF1("N (Sig) Fit","gaus", -2.5, 8);
 //   TF1 *sigFit = new TF1("N (Sig) Fit","gaus", -5, 8);
 //   TF1 *resFit = new TF1("N (ResBkg) Fit","gaus", -5, 8);
   //TF1 *nonresFit = new TF1("N (NonResBkg) Fit","gaus", -8, 8);
@@ -146,6 +145,8 @@ void plotFit(TH1F *hist, TH1F *histPercent, TH1F *histErr, TF1 *func, const stri
   hist->SetStats(kFALSE);
   hist->GetYaxis()->SetTitle("Number of Toy Experiments"); hist->GetYaxis()->SetTitleOffset(1.3);
   hist->GetXaxis()->SetTitle("(N^{signal}_{fit} - N^{signal}_{input}) / #sigma_{fit}"); hist->GetXaxis()->SetRangeUser(-6,8);
+  hist->GetXaxis()->SetTitleOffset(0.95);
+
   std::cout << hist->Integral() << std::endl;
   std::cout << "Pull Mean: " << hist->GetMean() << "\n";
   std::cout << "Pull RMS: " << hist->GetRMS() << "\n";
@@ -159,9 +160,9 @@ void plotFit(TH1F *hist, TH1F *histPercent, TH1F *histErr, TF1 *func, const stri
   tex->SetNDC();
   tex->SetTextSize(0.042);
   tex->SetTextFont(42);
-  tex->DrawLatex(0.55, 0.84, Form("Pull Mean = %.3f +/- %.3f", func->GetParameter(1), func->GetParError(1)));
-  tex->DrawLatex(0.55, 0.79, Form("Pull Width = %.3f +/- %.3f", func->GetParameter(2), func->GetParError(2)));
-  tex->DrawLatex(0.55, 0.74, Form("Avg Bias = %.1f%%", histPercent->GetMean()*100.));
+  tex->DrawLatex(0.58, 0.84, Form("Pull Mean = %.3f +/- %.3f", func->GetParameter(1), func->GetParError(1)));
+  tex->DrawLatex(0.58, 0.79, Form("Pull Width = %.3f +/- %.3f", func->GetParameter(2), func->GetParError(2)));
+  tex->DrawLatex(0.58, 0.74, Form("Avg Bias = %.1f%%", histPercent->GetMean()*100.));
   tex->Draw();
   cv->Update();
   cv->SaveAs(("Plots/AllSignalBkgd/Fits/PullPlots/"+outputName+".gif").c_str());

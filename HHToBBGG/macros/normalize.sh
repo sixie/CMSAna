@@ -41,4 +41,8 @@ root -l -b -q CMSAna/HHToBBGG/macros/NormalizeNtuple.C+'("/afs/cern.ch/work/s/si
 
 root -l -b -q CMSAna/HHToBBGG/macros/NormalizeNtuple.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/HHToBBGGNtuple.ExtrapTo140PU.Tight.BBJG_M60To200_14TeV.root","BBJG_M60To200_14TeV","/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/normalizedNtuples/HHToBBGGNtuple.ExtrapTo140PU.Tight.BBJG_M60To200_14TeV.normalized.root")'
 
+root -l -b -q CMSAna/HHToBBGG/macros/NormalizeNtuple.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/HHToBBGGNtuple.ExtrapTo140PU.Tight.CCJG_M60To200_14TeV.root","CCJG_M60To200_14TeV","/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/normalizedNtuples/HHToBBGGNtuple.ExtrapTo140PU.Tight.CCJG_M60To200_14TeV.normalized.root")'
+
+root -l -b -q CMSAna/HHToBBGG/macros/NormalizeNtuple.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/HHToBBGGNtuple.ExtrapTo140PU.Tight.CCJJ_M60To200_14TeV.root","CCJJ_M60To200_14TeV","/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/normalizedNtuples/HHToBBGGNtuple.ExtrapTo140PU.Tight.CCJJ_M60To200_14TeV.normalized.root")'
+
 root -l -b -q CMSAna/HHToBBGG/macros/NormalizeNtuple.C+'("/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/HHToBBGGNtuple.ExtrapTo140PU.Tight.JJJJ_M60To200_14TeV.root","JJJJ_14TeV","/afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/normalizedNtuples/HHToBBGGNtuple.ExtrapTo140PU.Tight.JJJJ_M60To200_14TeV.normalized.root")'

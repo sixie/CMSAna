@@ -244,6 +244,34 @@ foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ca
   @ i = $i + 1
 end
 
+#############
+# CCJG
+#############
+
+
+set i=0
+foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/CCJG_M60To200_14TeV.txt`)
+  echo $file " " $i
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_CCJG_M60To200_14TeV_${i}.out -J HHToBBGGSelection_CCJG_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelectionBBOneFakePhoton.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.Tight.CCJG_M60To200_14TeV.${i}.root\",12\) HHToBBGGNtuple.ExtrapTo140PU.Tight.CCJG_M60To200_14TeV.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  sleep 0.25
+  @ i = $i + 1
+end
+
+
+
+#############
+# CCJJ 
+#############
+
+
+set i=0
+foreach file(`cat /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/catalog/CCJJ_M60To200_14TeV.txt`)
+  echo $file " " $i
+  bsub -q 1nd -o /afs/cern.ch/user/s/sixie/work/private/condor/res/HHToBBGG/HHToBBGGSelection_CCJJ_M60To200_14TeV_${i}.out -J HHToBBGGSelection_CCJJ_M60To200_14TeV_${i} /afs/cern.ch/work/s/sixie/public/condor/bin/runRootJob_upgrade.csh /afs/cern.ch/user/s/sixie/CMSSW_upgrade/src/CMSAna/HHToBBGG/ HHToBBGGSelectionCCFakePhotons.C +\(\"root://eoscms//eos/cms/${file}\",\"HHToBBGGNtuple.ExtrapTo140PU.Tight.CCJJ_M60To200_14TeV.${i}.root\",9\) HHToBBGGNtuple.ExtrapTo140PU.Tight.CCJJ_M60To200_14TeV.${i}.root /afs/cern.ch/work/s/sixie/public/Phase2Upgrade/HHToBBGG/ntuples/jobs/
+  sleep 0.25
+  @ i = $i + 1
+end
+
 
 #############
 # JJJJ

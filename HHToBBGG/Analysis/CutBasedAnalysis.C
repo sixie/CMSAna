@@ -30,18 +30,18 @@ string bkgLegendLabels[NBkgComponents] = { "HH#rightarrow bb#gamma#gamma",
                                            "#gamma#gamma jj",
                                            "bbj#gamma & bbjj & jjjj",
                                            "t #bar{t}"};
-Int_t bkgSampleTypes[NBkgComponents][4] = { {1,-1,-1,-1} , 
-                                            {3,-1,-1,-1} , 
-                                            {2, 4,-1,-1} , 
-                                            {6,-1,-1,-1} , 
-                                            {7,-1,-1,-1} , 
-                                            {8, 9,10,11} , 
-                                            {5,-1,-1,-1} };
+Int_t bkgSampleTypes[NBkgComponents][5] = { {1,-1,-1,-1,-1} , 
+                                            {3,-1,-1,-1,-1} , 
+                                            {2, 4,-1,-1,-1} , 
+                                            {6,-1,-1,-1,-1} , 
+                                            {7,-1,-1,-1,-1} , 
+                                            {8, 9,10,11,12} , 
+                                            {5,-1,-1,-1,-1} };
 
 Int_t BkgComponentIndex( Int_t sampletype ) {
 
   for (uint i=0; i<NBkgComponents; ++i) {
-    for (uint j=0; j<4; ++j) {
+    for (uint j=0; j<5; ++j) {
       if (sampletype == bkgSampleTypes[i][j]) {
         return i;        
       }
@@ -213,8 +213,11 @@ void CutBasedAnalysis ( string InputFilename    = "/data1/sixie/Phase2Upgrade/HH
 //            (event.pho1.Pt() < event.pho2.Pt() && abs(event.pho1.Eta()) < 1.5) 
 //            )
 
-         //use barrel photons only 
-         && abs(event.pho2.Eta()) < 1.5 && abs(event.pho1.Eta()) < 1.5 
+//          //use barrel photons only  (cat0)
+          && (abs(event.pho2.Eta()) < 1.5 && abs(event.pho1.Eta()) < 1.5 )
+
+         //cat1
+//          && !(abs(event.pho2.Eta()) < 1.5 && abs(event.pho1.Eta()) < 1.5 )
            
 
        ) {
@@ -773,26 +776,26 @@ void CutBasedAnalysis ( string InputFilename    = "/data1/sixie/Phase2Upgrade/HH
 
 
 
-  //*******************************************************************************************
-  //bbgg mass
-  //*******************************************************************************************
-  cv = new TCanvas("cv","cv", 800,600);
-  legend = new TLegend(0.54,0.54,0.90,0.84);
-  legend->SetTextSize(0.03);
-  legend->SetBorderSize(0);
-  legend->SetFillStyle(0);
+ //  //*******************************************************************************************
+//   //bbgg mass
+//   //*******************************************************************************************
+//   cv = new TCanvas("cv","cv", 800,600);
+//   legend = new TLegend(0.54,0.54,0.90,0.84);
+//   legend->SetTextSize(0.03);
+//   legend->SetBorderSize(0);
+//   legend->SetFillStyle(0);
 
-  THStack *stackbbggMass = new THStack();
-  for (Int_t i = bbggMass.size()-1; i >= 0; i--) {
-    if (bbggMass[i]->Integral() > 0) {
-      stackbbggMass->Add(bbggMass[i]);
-      legend->AddEntry(bbggMass[i],bkgLegendLabels[i].c_str(), "F");
-    }
-  }
-  stackbbggMass->Draw();
-  stackbbggMass->GetHistogram()->GetXaxis()->SetTitle(((TH1F*)(stackbbggMass->GetHists()->At(0)))->GetXaxis()->GetTitle());
-  legend->Draw();
-  cv->SaveAs("bbggMass_AfterSelStep2.gif");
+//   THStack *stackbbggMass = new THStack();
+//   for (Int_t i = bbggMass.size()-1; i >= 0; i--) {
+//     if (bbggMass[i]->Integral() > 0) {
+//       stackbbggMass->Add(bbggMass[i]);
+//       legend->AddEntry(bbggMass[i],bkgLegendLabels[i].c_str(), "F");
+//     }
+//   }
+//   stackbbggMass->Draw();
+//   stackbbggMass->GetHistogram()->GetXaxis()->SetTitle(((TH1F*)(stackbbggMass->GetHists()->At(0)))->GetXaxis()->GetTitle());
+//   legend->Draw();
+//   cv->SaveAs("bbggMass_AfterSelStep2.gif");
 
 
 

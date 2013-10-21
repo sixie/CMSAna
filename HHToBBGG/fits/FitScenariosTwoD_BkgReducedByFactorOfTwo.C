@@ -105,8 +105,8 @@ void FitScenariosTwoD_BkgReducedByFactorOfTwo(const string inputfilePho = "/afs/
     nnonres->setVal(constNnonres.getVal());
     Float_t ran;
 
-    if (scanOption == "lum") ran = randomNumber->Poisson(66.91*luminosity[s]);
-    else ran = randomNumber->Poisson(66.91);
+    if (scanOption == "lum") ran = randomNumber->Poisson(98.91*luminosity[s]);
+    else ran = randomNumber->Poisson(98.91);
 
 
     RooDataSet *pseudoData2D = model2Dpdf->generate(RooArgList(*massBjet,*massPho), ran);
@@ -192,10 +192,10 @@ void AddModels(RooWorkspace *ws, const string inputfilePho, const string inputfi
   RooRealVar expRatePho("expRatePho", "#lambda_{#gamma#gamma}", -.027, -.1, 0.);
   
   //Weights for the 2D fit
-  //NoEndcap
-  RooRealVar nsig("N (Sig)", "# signal events", 4.93, -100,1000);
-  RooRealVar nres("N (ResBkg)", "# resonant background events", 7.88, -50,1000);
-  RooRealVar nnonres("N (NonResBkg)", "# non-resonant background events", 54.1, 0,5000);
+  //With Endcap photons, but assuming factor of 10 reduction in endcap fake photons
+  RooRealVar nsig("N (Sig)", "# signal events", 6.11, -100,1000);
+  RooRealVar nres("N (ResBkg)", "# resonant background events", 10.29, -50,1000);
+  RooRealVar nnonres("N (NonResBkg)", "# non-resonant background events", 82.51, 0,5000);
 
 
   if (scanOption == "pho") {

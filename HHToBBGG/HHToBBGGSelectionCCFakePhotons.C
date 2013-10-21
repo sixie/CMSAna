@@ -253,7 +253,7 @@ void HHToBBGGSelectionCCFakePhotons(const string inputfile,          // input fi
     if (SampleType == 1) stype = cmsana::HHToBBGGEventTree::HHToBBGG;
     if (SampleType == 2) stype = cmsana::HHToBBGGEventTree::ttHgg;
     if (SampleType == 3) stype = cmsana::HHToBBGGEventTree::ZHgg;
-    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::ggHgg;
+    if (SampleType == 4) stype = cmsana::HHToBBGGEventTree::bbHgg;
     if (SampleType == 5) stype = cmsana::HHToBBGGEventTree::ttbar;
     if (SampleType == 6) stype = cmsana::HHToBBGGEventTree::BBGG;
     if (SampleType == 7) stype = cmsana::HHToBBGGEventTree::GGPlusTwoMistag;
@@ -477,8 +477,8 @@ void HHToBBGGSelectionCCFakePhotons(const string inputfile,          // input fi
 	Int_t NLeptons = 0;
 	Float_t ElectronsPt = 0;
 	Float_t MuonsPt = 0;
-	for(Int_t i=0; i<muonArr->GetEntriesFast(); i++) {
-	  const cmsana::TMuon *mu = (cmsana::TMuon*)((*muonArr)[i]);
+	for(Int_t j=0; j<muonArr->GetEntriesFast(); j++) {
+	  const cmsana::TMuon *mu = (cmsana::TMuon*)((*muonArr)[j]);
 	  
 	  if (!(mu->pt > 10)) continue;
 	  if (!(fabs(mu->eta) < 2.4)) continue;
@@ -496,8 +496,8 @@ void HHToBBGGSelectionCCFakePhotons(const string inputfile,          // input fi
 	  MuonsPt+= mu->pt;
 	  NLeptons++;
 	}
-	for(Int_t i=0; i<electronArr->GetEntriesFast(); i++) {
-	  const cmsana::TElectron *ele = (cmsana::TElectron*)((*electronArr)[i]);
+	for(Int_t j=0; j<electronArr->GetEntriesFast(); j++) {
+	  const cmsana::TElectron *ele = (cmsana::TElectron*)((*electronArr)[j]);
 	  
 	  if (!(ele->pt > 20)) continue;
 	  if (!(fabs(ele->scEta) < 2.5)) continue;
@@ -544,6 +544,13 @@ void HHToBBGGSelectionCCFakePhotons(const string inputfile,          // input fi
 	//********************************************************
 	//Fill Output Tree
 	//********************************************************
+
+        //Temporary Measure:Reduce Fake-rate by factor of 4 when we use Tight Photon selection instead of Loose
+        FakeRate1 = FakeRate1 / 4.0;
+        FakeRate2 = FakeRate2 / 4.0;
+        //reduction from pileup;
+        FakeRate3 = FakeRate3 * (0.10/0.15);
+        FakeRate4 = FakeRate4 * (0.10/0.15);
 
 	outputEventTree->weight = FakeRate1 * FakeRate2 * FakeRate3 * FakeRate4;
 	outputEventTree->tree_->Fill();
