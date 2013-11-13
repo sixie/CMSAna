@@ -468,21 +468,15 @@ void FitLeptonResponseModels(const string Label = "ZZ", Int_t Option = 0, Int_t 
 //       //********* OLD DEFAULTS *************************************************************
 //         RooRealVar     *mean  = new RooRealVar("mean","mean",-0.006,-10,10);
 //         RooRealVar     *sigma = new RooRealVar("sigma","sigma",0.02,0.00001,0.1);
-// //       RooRealVar     *alpha = new RooRealVar("alpha","alpha",5,0,20);
-// //       RooRealVar     *n     = new RooRealVar("n","n",3,0,10);
-      
-//         RooRealVar     *alphaL = new RooRealVar("alphaL","alphaL",5,0,50);
-//         RooRealVar     *nL     = new RooRealVar("nL","nL",3,0,30);
-//         RooRealVar     *alphaR = new RooRealVar("alphaR","alphaR",5,0,50);
-//         RooRealVar     *nR     = new RooRealVar("nR","nR",3,0,30);
-
-// //        RooRealVar     *sigmaL = new RooRealVar("sigmaL","sigmaL",0.02,0.00001,0.1);
-// //        RooRealVar     *sigmaR = new RooRealVar("sigmaR","sigmaR",0.02,0.00001,0.1);
+//         RooRealVar     *alphaL = new RooRealVar("alphaL","alphaL",1.25,0,50);
+//         RooRealVar     *nL     = new RooRealVar("nL","nL",2.83,0,30);
+//         RooRealVar     *alphaR = new RooRealVar("alphaR","alphaR",1.44,0,50);
+//         RooRealVar     *nR     = new RooRealVar("nR","nR",0.1,0,30);
 //       //************************************************************************************
 
 
        RooRealVar     *mean  = new RooRealVar("mean","mean",-0.006,-10,10);
-       RooRealVar     *sigma = new RooRealVar("sigma","sigma",0.02,0.00001,0.1);
+       RooRealVar     *sigma = new RooRealVar("sigma","sigma",0.018,0.00001,0.1);
        RooRealVar     *alphaL = new RooRealVar("alphaL","alphaL",1.25,0,50);
        RooRealVar     *nL     = new RooRealVar("nL","nL",2.83,0,30);
        RooRealVar     *alphaR = new RooRealVar("alphaR","alphaR",1.44,0,50);
@@ -583,33 +577,20 @@ void FitLeptonResponseModels(const string Label = "ZZ", Int_t Option = 0, Int_t 
       //********* OLD DEFAULTS *************************************************************
 //        RooRealVar     *mean  = new RooRealVar("mean","mean",-0.006,-10,10);
 //        RooRealVar     *sigma = new RooRealVar("sigma","sigma",0.02,0.00001,0.1);
-//       RooRealVar     *alpha = new RooRealVar("alpha","alpha",5,0,20);
-//       RooRealVar     *n     = new RooRealVar("n","n",3,0,10);
-      
-//        RooRealVar     *alphaL = new RooRealVar("alphaL","alphaL",5,0,50);
-//        RooRealVar     *nL     = new RooRealVar("nL","nL",3,0,30);
-//        RooRealVar     *alphaR = new RooRealVar("alphaR","alphaR",5,0,50);
-//        RooRealVar     *nR     = new RooRealVar("nR","nR",3,0,30);
-
-//       RooRealVar     *sigmaL = new RooRealVar("sigmaL","sigmaL",0.02,0.00001,0.1);
-//       RooRealVar     *sigmaR = new RooRealVar("sigmaR","sigmaR",0.02,0.00001,0.1);
+//        RooRealVar     *alphaL = new RooRealVar("alphaL","alphaL",2.15,0,50);
+//        RooRealVar     *nL     = new RooRealVar("nL","nL",4.42,0,30);
+//        RooRealVar     *alphaR = new RooRealVar("alphaR","alphaR",1.95,0,50);
+//        RooRealVar     *nR     = new RooRealVar("nR","nR",6.59,0,30);
       //************************************************************************************
 
  
-//       RooRealVar     *mean  = new RooRealVar("mean","mean",0.00,-10,10);
-//       RooRealVar     *sigma = new RooRealVar("sigma","sigma",0.02, 0.0018, 0.0314);
-//       RooRealVar     *alphaL = new RooRealVar("alphaL","alphaL",5,0,50);
-//       RooRealVar     *nL     = new RooRealVar("nL","nL",3,0,30);
-//       RooRealVar     *alphaR = new RooRealVar("alphaR","alphaR",5,0,50);
-//       RooRealVar     *nR     = new RooRealVar("nR","nR",3,0,30);
-
        RooRealVar     *mean  = new RooRealVar("mean","mean",0.00,-10,10);
-       RooRealVar     *sigma = new RooRealVar("sigma","sigma",0.015, 0.0015, 0.0514);
-       RooRealVar     *alphaL = new RooRealVar("alphaL","alphaL",2.15,0,50);
-       RooRealVar     *nL     = new RooRealVar("nL","nL",4.42,0,30);
-       RooRealVar     *alphaR = new RooRealVar("alphaR","alphaR",1.95,0,50);
-       RooRealVar     *nR     = new RooRealVar("nR","nR",6.59,0,30);
-      //sigma->setConstant(true);
+       RooRealVar     *sigma = new RooRealVar("sigma","sigma",0.01865, 0.0015, 0.0514);
+       RooRealVar     *alphaL = new RooRealVar("alphaL","alphaL",1.93,0,50);
+       RooRealVar     *nL     = new RooRealVar("nL","nL",1.85,0,30);
+       RooRealVar     *alphaR = new RooRealVar("alphaR","alphaR",2.10,0,50);
+       RooRealVar     *nR     = new RooRealVar("nR","nR",3.05,0,30);
+       sigma->setConstant(true);
       // alphaL->setConstant(true);
       // alphaR->setConstant(true);
       // nL->setConstant(true);

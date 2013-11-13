@@ -112,14 +112,34 @@ void computeEfficiencyPtEtaPhi(vector<vector<vector<double> > > &numerator,
 }
 
 void computeEfficiencyPtEta(vector<vector<double> > &numerator, 
-                       vector<vector<double> > &denominator,
-                       vector<vector<double> > &eff
+                            vector<vector<double> > &denominator,
+                            vector<vector<double> > &eff,
+                            int leptonType
   ) {
 
   for (uint i=0; i < numerator.size(); ++i) {
     for (uint j=0; j < numerator[i].size(); ++j) {
+      
+      double manualCorrFactor = 1.0;
+      if (leptonType == 11) {
+        if (i < 4) manualCorrFactor = 1.25;
+        if (i >= 4 && i < 6) manualCorrFactor = 1.03;
+        if (i >= 6 &&  i < 9) manualCorrFactor = 1.02;
+        if (i >= 9 &&  i < 11) manualCorrFactor = 1.01;
+        if (i >= 11 &&  i < 15) manualCorrFactor = 0.975;
+        if (i >= 15 ) manualCorrFactor = 0.97;
+        
+      } else if (leptonType == 13) {
+        if (i < 2) manualCorrFactor *= 1.15;
+        if (i >= 2 && i < 3) manualCorrFactor *= 1.05;
+        if (i >= 3 && i < 6) manualCorrFactor *= 1.015;
+        if (i >= 6 &&  i < 11) manualCorrFactor *= 1.015;
+        if (i >= 11 &&  i < 15) manualCorrFactor *= 1.00;
+        if (i >= 15 ) manualCorrFactor *= 0.985;
+      }
+      
       if ( denominator[i][j] > 0) {
-        eff[i][j] = numerator[i][j] / denominator[i][j];
+        eff[i][j] = manualCorrFactor * (numerator[i][j] / denominator[i][j]);
       } else {
         eff[i][j] = 0;
       }
@@ -299,9 +319,9 @@ void CreateEfficiencyMap(const string filename, const string Label = "ZZ", Int_t
   } //end loop over data     
 
   computeEfficiencyPtEtaPhi(NNumerator_Electrons_PtEtaPhi, NDenominator_Electrons_PtEtaPhi, Efficiency_Electrons_PtEtaPhi);
-  computeEfficiencyPtEta(NNumerator_Electrons_PtEta, NDenominator_Electrons_PtEta, Efficiency_Electrons_PtEta);
+  computeEfficiencyPtEta(NNumerator_Electrons_PtEta, NDenominator_Electrons_PtEta, Efficiency_Electrons_PtEta,11);
   computeEfficiencyPtEtaPhi(NNumerator_Muons_PtEtaPhi, NDenominator_Muons_PtEtaPhi, Efficiency_Muons_PtEtaPhi);
-  computeEfficiencyPtEta(NNumerator_Muons_PtEta, NDenominator_Muons_PtEta, Efficiency_Muons_PtEta);
+  computeEfficiencyPtEta(NNumerator_Muons_PtEta, NDenominator_Muons_PtEta, Efficiency_Muons_PtEta,13);
 
 //   for (uint i=0; i < NPtBins+2; ++i) {
 //     for (uint j=0; j < NEtaBins+2; ++j) {
